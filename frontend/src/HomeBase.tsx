@@ -6,7 +6,7 @@ import NavBox from "./NavBox"
 function HomeBase() {
     return (
         <Flex direction="column" h="100%">    
-            <Box borderRadius="md" bg="blue.700" maxWidth="full" m="1" p="1" px="2">
+            <Box borderRadius="md" bg="blue.700" maxWidth="full" m="1" p="4" px="8">
                 <Flex>
                     <Heading fontSize="4xl">Dyslexicon</Heading>
                     <Spacer />
