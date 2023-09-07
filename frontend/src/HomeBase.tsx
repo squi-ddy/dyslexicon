@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Spacer, VStack } from "@chakra-ui/react"
+import { Box, Flex, Heading, Spacer } from "@chakra-ui/react"
 import { NavLink, Outlet } from "react-router-dom"
 import { homeRoutes } from "./routes"
 import NavBox from "./NavBox"
