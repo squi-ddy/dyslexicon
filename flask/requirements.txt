@@ -2,5 +2,11 @@ flask
 python-dotenv
 requests
 transformers
-python-doctr
+pytesseract
 librosa
+torch
+hifigan
+lightning
+einops
+pydub
+g2p_en 
