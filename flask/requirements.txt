@@ -1,0 +1,6 @@
+flask
+python-dotenv
+requests
+transformers
+python-doctr
+librosa
