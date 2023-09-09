@@ -3,21 +3,37 @@ import Home from "./Home"
 import Login from "./Login"
 import HomeBase from "./HomeBase"
 
-const homeRoutes: (RouteObject & {navTitle: string})[] = [
+const homeNav = [
+    {
+        name: "Read",
+        path: "read",
+    }, 
+    {
+        name: "Scan",
+        path: "scan",
+    },
+    {
+        name: "Revise",
+        path: "revise",
+    }
+]
+
+const homeRoutes: (RouteObject & {navTitle?: string})[] = [
+    {
+        path: "",
+        element: <Home />,
+    },
     {
         path: "read",
         element: <Home />,
-        navTitle: "Read",
     },
     {
         path: "scan",
         element: <Home />,
-        navTitle: "Scan",
     },
     {
         path: "revise",
         element: <Home />,
-        navTitle: "Revise",
     }
 ]
 
@@ -33,4 +49,4 @@ const globalRoutes: RouteObject[] = [
     },
 ]
 
-export {globalRoutes, homeRoutes}
+export {globalRoutes, homeRoutes, homeNav}

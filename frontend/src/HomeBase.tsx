@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/react"
 import { NavLink, Outlet } from "react-router-dom"
-import { homeRoutes } from "./routes"
+import { homeNav } from "./routes"
 import NavBox from "./NavBox"
 
 function HomeBase() {
@@ -16,16 +16,16 @@ function HomeBase() {
             <Flex flexGrow={1} fontSize="3xl">
                 <Box borderRadius="md" bg="blue.700" width="10vw" m="1" p="1" mt="0" py="2">
                     <nav style={{height: "100%"}}>
-                        <Flex direction={"column"} gap={15} grow={1} h="full">
+                        <Flex direction={"column"} gap={2.5} grow={1} h="full">
                             <Spacer />
-                            {homeRoutes.map(x => <NavLink style={{width: "100%"}} key={x.path!!} to={x.path!!}>{
-                                ({isActive}) => (<NavBox highlight={isActive}>{x.navTitle}</NavBox>)
+                            {homeNav.map(x => <NavLink style={{width: "100%"}} key={x.path!!} to={x.path!!}>{
+                                ({isActive}) => (<NavBox highlight={isActive}>{x.name}</NavBox>)
                             }</NavLink>)}
                             <Spacer />
                         </Flex>
                     </nav>
                 </Box>
-                <Box>
+                <Box w="full" mr="1" mb="1">
                     <Outlet />
                 </Box>
             </Flex>

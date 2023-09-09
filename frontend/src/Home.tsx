@@ -1,5 +1,11 @@
+import { Box } from "@chakra-ui/react"
+
 function Home() {
-    return <div>Hi!</div>
+    return (
+        <Box bg="blue.700" w="full" minH="full" borderRadius={"md"}>
+            
+        </Box>
+    )
 }
 
 export default Home
