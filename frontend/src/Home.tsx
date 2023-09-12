@@ -1,11 +1,17 @@
 import { Box } from "@chakra-ui/react"
 
-function Home() {
+export function Home() {
     return (
-        <Box bg="blue.700" w="full" minH="full" borderRadius={"md"}>
-            
+        <Box
+            bg="blue.700"
+            w="full"
+            minH="full"
+            borderRadius={"md"}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+        >
+            ← Choose one of the options on the left to get started!
         </Box>
     )
 }
-
-export default Home
