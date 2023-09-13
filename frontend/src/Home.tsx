@@ -1,17 +1,9 @@
-import { Box } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 
 export function Home() {
     return (
-        <Box
-            bg="blue.700"
-            w="full"
-            minH="full"
-            borderRadius={"md"}
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
-        >
+        <Flex minH={"full"} justify={"center"} align={"center"}>
             ← Choose one of the options on the left to get started!
-        </Box>
+        </Flex>
     )
 }

@@ -5,57 +5,65 @@ import { NavBox } from "./NavBox"
 
 export function HomeBase() {
     return (
-        <Flex direction="column" h="100%">
-            <Box
+        <Flex direction="column" h="full">
+            <Flex
                 borderRadius="md"
-                bg="blue.700"
+                bg="themeColors.primary"
                 maxWidth="full"
                 m="1"
                 p="4"
                 px="8"
             >
-                <Flex>
-                    <Heading size="2xl">Dyslexicon</Heading>
-                    <Spacer />
-                    <Text margin={"auto"} fontSize="lg">
-                        Hi <b>John Doe</b>!
-                    </Text>
-                </Flex>
-            </Box>
-            <Flex flexGrow={1} fontSize="3xl">
-                <Box
+                <Heading size="2xl">Dyslexicon</Heading>
+                <Spacer />
+                <Text margin={"auto"} fontSize="lg">
+                    Hi <b>John Doe</b>!
+                </Text>
+            </Flex>
+            <Flex grow={1} fontSize="3xl">
+                <Flex
                     borderRadius="md"
-                    bg="blue.700"
-                    width="10vw"
+                    bg="themeColors.primary"
+                    minW={150}
                     m="1"
                     p="1"
                     mt="0"
                     py="2"
+                    direction={"column"}
                 >
-                    <nav style={{ height: "100%" }}>
-                        <Flex direction={"column"} gap={2.5} grow={1} h="full">
-                            <Spacer />
-                            {homeNav.map((x) => (
-                                <NavLink
-                                    style={{ width: "100%" }}
-                                    key={x.path!}
-                                    to={x.path!}
-                                >
-                                    {({ isActive }) => (
-                                        <NavBox
-                                            tooltip={x.tooltip}
-                                            highlight={isActive}
-                                        >
-                                            {x.name}
-                                        </NavBox>
-                                    )}
-                                </NavLink>
-                            ))}
-                            <Spacer />
-                        </Flex>
-                    </nav>
-                </Box>
-                <Box w="full" mr="1" mb="1">
+                    <Spacer />
+                    <Flex as="nav" direction={"column"} gap={2.5}>
+                        {homeNav.map((x) => (
+                            <NavLink
+                                key={x.path!}
+                                to={x.path!}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                {({ isActive }) => (
+                                    <NavBox
+                                        tooltip={x.tooltip}
+                                        highlight={isActive}
+                                    >
+                                        {x.name}
+                                    </NavBox>
+                                )}
+                            </NavLink>
+                        ))}
+                    </Flex>
+                    <Spacer />
+                </Flex>
+                <Box
+                    w="full"
+                    bg="themeColors.primary"
+                    borderRadius={"md"}
+                    padding={4}
+                    mr="1"
+                    mb="1"
+                >
                     <Outlet />
                 </Box>
             </Flex>

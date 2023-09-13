@@ -14,14 +14,14 @@ const homeNav: HomeNav[] = [
         tooltip: "See your submitted content",
     },
     {
-        name: "Add",
-        path: "add",
-        tooltip: "Add new content",
-    },
-    {
         name: "Revise",
         path: "revise",
         tooltip: "Revise with flashcards",
+    },
+    {
+        name: "Forum",
+        path: "forum",
+        tooltip: "Learn with others",
     },
 ]
 
@@ -46,11 +46,11 @@ const homeRoutes: RouteObject[] = [
         ],
     },
     {
-        path: "add",
+        path: "revise",
         element: <Home />,
     },
     {
-        path: "revise",
+        path: "forum",
         element: <Home />,
     },
 ]
