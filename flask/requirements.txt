@@ -11,3 +11,4 @@ pydub
 g2p_en 
 gunicorn
 flask-restful
+unidecode

@@ -8,7 +8,7 @@ Apache 2.0 License
 
 import os
 import json
-import hifigan
+import models.hifigan as hifigan
 import torch
 import torch.nn as nn
 import math
