@@ -1,5 +1,9 @@
-function Home() {
-    return <div>Hi!</div>
-}
+import { Flex } from "@chakra-ui/react"
 
-export default Home
+export function Home() {
+    return (
+        <Flex minH={"full"} justify={"center"} align={"center"}>
+            ← Choose one of the options on the left to get started!
+        </Flex>
+    )
+}
