@@ -14,5 +14,5 @@ COPY ./app /app
 # launch server with gunicorn
 WORKDIR /app
 EXPOSE 1080
-CMD ["gunicorn", "main:app", "--timeout=0", "--preload", \
+CMD ["gunicorn", "app:app", "--timeout=0", "--preload", \
      "--workers=1", "--threads=4", "--bind=0.0.0.0:1080"]
