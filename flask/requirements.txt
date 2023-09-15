@@ -5,8 +5,10 @@ transformers
 pytesseract
 librosa
 torch
-hifigan
 lightning
 einops
 pydub
 g2p_en 
+gunicorn
+flask-restful
+unidecode

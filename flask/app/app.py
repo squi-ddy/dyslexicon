@@ -18,7 +18,7 @@ api = Api(app)
 toxicPipe = pipeline("text-classification", model="facebook/roberta-hate-speech-dynabench-r4-target")
 cardPipe = pipeline("text-generation", model="stabilityai/StableBeluga-7B")
 STTPipe = pipeline("automatic-speech-recognition", model="mesolitica/finetune-whisper-base-ms-singlish-v2")
-pytesseract.pytesseract.tesseract_cmd = 'C:/Users/Mahir/dyslexicon/flask/models/tesseract/tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = 'models/tesseract/tesseract.exe'
 preprocess_config = yaml.load(
         open("models/preprocess.yaml", "r"), Loader=yaml.FullLoader)
 lexicon, g2p = get_lexicon_and_g2p(preprocess_config)
@@ -58,7 +58,7 @@ class Card(Resource):
 
         prompt = f"Convert this text into concise q and a card with the format of\nQ:text\nA:text.\n {args['text']}"
 
-        out = {'Prediction': cardPipe(prompt, return_full_text=False, max_new_tokens=600)[0]['generated_text']}
+        out = {'Prediction': cardPipe(prompt, return_full_text=False, max_new_tokens=1000)[0]['generated_text']}
 
         return out, 200
 
