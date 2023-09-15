@@ -6,7 +6,7 @@ export type HomeNav = {
 
 export type UserContentData = {
     title: string
-    content: string
+    body: string
 }
 
 export type UserContentLoaderReturn = {

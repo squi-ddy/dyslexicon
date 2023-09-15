@@ -20,7 +20,7 @@ export function HomeBase() {
                     Hi <b>John Doe</b>!
                 </Text>
             </Flex>
-            <Flex grow={1} fontSize="3xl">
+            <Flex minH={0} grow={1} fontSize="3xl">
                 <Flex
                     borderRadius="md"
                     bg="themeColors.primary"
@@ -57,7 +57,8 @@ export function HomeBase() {
                     <Spacer />
                 </Flex>
                 <Box
-                    w="full"
+                    flexGrow={1}
+                    minW={0}
                     bg="themeColors.primary"
                     borderRadius={"md"}
                     padding={4}

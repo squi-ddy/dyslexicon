@@ -41,9 +41,6 @@ const siteTheme = extendTheme({
     },
     components: {
         Button: {
-            // baseStyle: {
-            //     bg: "transparent"
-            // },
             variants: {
                 outline: {
                     borderColor: "themeColors.accent1",
@@ -58,6 +55,60 @@ const siteTheme = extendTheme({
             },
             defaultProps: {
                 variant: "outline",
+            },
+        },
+        Input: {
+            variants: {
+                outline: {
+                    field: {
+                        display: "flex",
+                        borderColor: "themeColors.accent1",
+                        borderWidth: 2,
+                        _hover: {
+                            bg: "blackAlpha.200",
+                            borderColor: "themeColors.accent1",
+                        },
+                        _active: {
+                            bg: "blackAlpha.300",
+                        },
+                    },
+                },
+            },
+        },
+        Textarea: {
+            variants: {
+                outline: {
+                    borderColor: "themeColors.accent1",
+                    borderWidth: 2,
+                    _hover: {
+                        bg: "blackAlpha.200",
+                        borderColor: "themeColors.accent1",
+                    },
+                    _active: {
+                        bg: "blackAlpha.300",
+                    },
+                },
+            },
+        },
+        Select: {
+            variants: {
+                outline: {
+                    field: {
+                        display: "flex",
+                        borderColor: "themeColors.accent1",
+                        borderWidth: 2,
+                        _hover: {
+                            bg: "blackAlpha.200",
+                            borderColor: "themeColors.accent1",
+                        },
+                        _active: {
+                            bg: "blackAlpha.300",
+                        },
+                    },
+                    icon: {
+                        h: "full",
+                    },
+                },
             },
         },
         Divider: {
