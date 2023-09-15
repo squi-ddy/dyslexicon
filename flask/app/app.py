@@ -58,7 +58,7 @@ class Card(Resource):
 
         prompt = f"Convert this text into concise q and a card with the format of\nQ:text\nA:text.\n {args['text']}"
 
-        out = {'Prediction': cardPipe(prompt, return_full_text=False, max_new_tokens=600)[0]['generated_text']}
+        out = {'Prediction': cardPipe(prompt, return_full_text=False, max_new_tokens=1000)[0]['generated_text']}
 
         return out, 200
 
