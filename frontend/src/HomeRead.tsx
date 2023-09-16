@@ -28,7 +28,7 @@ export function HomeRead() {
         ? Math.min(cardIdealWidth, dims.width)
         : cardIdealWidth
 
-    // todo: pagination (after splash)
+    // TODO: pagination
 
     return (
         <VStack ref={VStackRef} spacing={4}>
@@ -39,6 +39,8 @@ export function HomeRead() {
                     placement={"left"}
                 >
                     <IconButton
+                        as={Link}
+                        to={"new"}
                         float={"right"}
                         aria-label={"add"}
                         icon={<AddIcon boxSize={5} />}
@@ -79,7 +81,7 @@ export function HomeRead() {
                                     overflow={"hidden"}
                                     maxH={"full"}
                                 >
-                                    {content.content}
+                                    {content.body}
                                 </Text>
                             </Box>
                         </CardBody>

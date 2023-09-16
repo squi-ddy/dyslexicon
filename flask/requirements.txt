@@ -12,3 +12,4 @@ g2p_en
 gunicorn
 pyfoal
 flask-restful
+unidecode

@@ -6,11 +6,12 @@ import { HomeRead } from "../HomeRead"
 import { HomeNav } from "./types"
 import { ReadContent } from "../ReadContent"
 import { userContentLoader } from "./loaders"
+import { AddContent } from "../AddContent"
 
 const homeNav: HomeNav[] = [
     {
         name: "Read",
-        path: "read",
+        path: "content",
         tooltip: "See your submitted content",
     },
     {
@@ -31,12 +32,16 @@ const homeRoutes: RouteObject[] = [
         element: <Home />,
     },
     {
-        path: "read",
+        path: "content",
         element: <Outlet />,
         children: [
             {
                 index: true,
                 element: <HomeRead />,
+            },
+            {
+                path: "new",
+                element: <AddContent />,
             },
             {
                 path: ":contentId",
