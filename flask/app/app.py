@@ -167,6 +167,8 @@ class Align(Resource):
             aligner=aligner,
             checkpoint=checkpoint,
             gpu=gpu)
+        
+        os.remove("temp.wav") 
 
         return alignment.json(), 200
 
