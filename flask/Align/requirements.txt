@@ -1,0 +1,4 @@
+flask
+pyfoal
+gunicorn
+flask-cors
