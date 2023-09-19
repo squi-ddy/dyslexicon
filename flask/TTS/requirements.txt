@@ -8,5 +8,5 @@ einops
 pydub
 g2p_en 
 gunicorn
-flask-restful
+flask-cors
 unidecode
