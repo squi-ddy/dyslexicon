@@ -15,7 +15,7 @@ def is_alive():
 
 @app.route("/stt", methods=["POST"])
 def predict():
-    args = request.get_json()
+    args = request.get_json()["instances"]
 
     speech = base64.decodebytes(args['speech'])
 

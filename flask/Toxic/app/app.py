@@ -15,7 +15,7 @@ def is_alive():
 
 @app.route("/toxic", methods=["POST"])
 def predict():
-    args = request.get_json()
+    args = request.get_json()["instances"]
 
     out = {'Prediction': toxicPipe(args['text'])[0]['label']}
 

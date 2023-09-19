@@ -15,7 +15,7 @@ def is_alive():
 
 @app.route("/align", methods=["POST"])
 def predict():
-    args = request.get_json()
+    args = request.get_json()["instances"]
     speech = base64.b64decode(args['speech'])
     wav_file = open("temp.wav", "wb")
     wav_file.write(speech)

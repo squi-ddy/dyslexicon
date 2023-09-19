@@ -35,7 +35,7 @@ def is_alive():
 
 def predict():
 
-    args = request.get_json()
+    args = request.get_json()["instances"]
 
     if (len(args['text']) > 4096):
         wavs = []
