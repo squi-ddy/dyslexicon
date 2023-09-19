@@ -5,6 +5,8 @@ COPY ./requirements.txt ./
 RUN pip install -r requirements.txt && \
     rm ./requirements.txt
 
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y ffmpeg
+
 # Setup container directories
 RUN mkdir /app
 

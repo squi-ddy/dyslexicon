@@ -19,7 +19,7 @@ def predict():
 
     speech = base64.b64decode(args['speech'])
 
-    out = {'Prediction': STTPipe(speech)[0]['text']}
+    out = {'Prediction': STTPipe(speech)['text']}
 
     return jsonify(out)
 
