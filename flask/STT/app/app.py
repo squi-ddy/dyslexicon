@@ -17,7 +17,7 @@ def is_alive():
 def predict():
     args = request.get_json()["instances"]
 
-    speech = base64.decodebytes(args['speech'])
+    speech = base64.b64decode(args['speech'])
 
     out = {'Prediction': STTPipe(speech)[0]['text']}
 
