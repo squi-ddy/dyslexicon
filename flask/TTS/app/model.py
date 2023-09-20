@@ -537,11 +537,13 @@ def write_to_file(wavs, preprocess_config, lengths=None, wav_path="outputs", fil
 
 def get_hifigan(checkpoint="models/hifigan/LJ_V2/generator_v2", infer_device=None, verbose=False):
     # get the main path
-    main_path = os.path.dirname(os.path.abspath(checkpoint))
-    json_config = os.path.join(main_path, "config.json")
-    if verbose:
-        print("Using config: ", json_config)
-        print("Using hifigan checkpoint: ", checkpoint)
+    #main_path = os.path.dirname(os.path.abspath(checkpoint))
+    #json_config = os.path.join(main_path, "config.json")
+    checkpoint = "models/hifigan/LJ_V2/generator_v2"
+    json_config = "/app/models/hifigan/LJ_V2/config.json"
+    #if verbose:
+    print("Using config: ", json_config)
+    print("Using hifigan checkpoint: ", checkpoint)
     with open(json_config, "r") as f:
         config = json.load(f)
 
@@ -636,9 +638,10 @@ class EfficientSpeech(LightningModule):
                  infer_device=None, 
                  verbose=False):
         super(EfficientSpeech, self).__init__()
-
+        preprocess_config = {'dataset': 'TTS', 'path': {'lexicon_path': 'lexicon/librispeech-lexicon.txt', 'preprocessed_path': './models'}, 'preprocessing': {'audio': {'max_wav_value': 32768.0, 'sampling_rate': 22050}, 'energy': {'feature': 'phoneme_level', 'normalization': True}, 'mel': {'mel_fmax': 8000, 'mel_fmin': 0, 'n_mel_channels': 80}, 'pitch': {'feature': 'phoneme_level', 'normalization': True}, 'stft': {'filter_length': 1024, 'hop_length': 256, 'win_length': 1024}, 'text': {'language': 'en', 'max_length': 4096, 'text_cleaners': ['english_cleaners']}, 'val_size': 512}}
         self.save_hyperparameters()
 
+#        preprocess_config = bababooey
         with open(os.path.join(preprocess_config["path"]["preprocessed_path"], "stats.json")) as f:
             stats = json.load(f)
             pitch_stats = stats["pitch"][:2]

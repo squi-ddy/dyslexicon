@@ -1,9 +1,7 @@
 dataset: TTS
 path:
-  corpus_path: /kaggle/input/tts-v2/content/output_dataset/corpus
-  lexicon_path: /kaggle/efficientspeech/lexicon/librispeech-lexicon.txt
-  preprocessed_path: /model
-  raw_path: /kaggle/input/tts-v2/content/output_dataset/raw_data
+  lexicon_path: lexicon/librispeech-lexicon.txt
+  preprocessed_path: ./models
 preprocessing:
   audio:
     max_wav_value: 32768.0
