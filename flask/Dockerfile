@@ -2,8 +2,6 @@ FROM python:3.10-slim
 
 # Install libraries
 COPY ./requirements.txt ./
-RUN wget https://raw.githubusercontent.com/readbeyond/aeneas/master/install_dependencies.sh
-RUN bash install_dependencies.sh
 RUN pip install -r requirements.txt && \
     rm ./requirements.txt
 
