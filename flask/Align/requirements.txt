@@ -1,5 +1,8 @@
-torch
+numpy
+librosa
+soundfile
+aeneas
 flask
-pyfoal
+torch
 gunicorn
 flask-cors
