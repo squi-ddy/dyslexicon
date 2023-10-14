@@ -11,16 +11,14 @@ WORKDIR /aeneas
 RUN pip install -r ./requirements.txt
 RUN python setup.py build_ext --inplace
 RUN python aeneas_check_setup.py
-WORKDIR /
 
 # Setup container directories
-RUN mkdir /app
-
 # Copy local code to the container
 COPY ./app /app
 
 # launch server with gunicorn
 WORKDIR /app
+RUN mv ../aeneas/aeneas ./
 EXPOSE 8080
 CMD ["gunicorn", "app:app", "--timeout=0", "--preload", \
      "--workers=1", "--threads=4", "--bind=0.0.0.0:8080"]

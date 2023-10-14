@@ -26,13 +26,13 @@ def predict():
     text = args['text']
     with open("text.txt", "w") as text_file:
         for i in text.split():
-            text_file.write(f"{i}\n")
+            text_file.write(i + "\n")
      
     config_string = u"task_language=eng|is_text_type=plain|os_task_file_format=json"
     task = Task(config_string=config_string)
-    task.audio_file_path_absolute = pathlib.Path(__file__).parent.resolve() + u"/temp.wav"
-    task.text_file_path_absolute = pathlib.Path(__file__).parent.resolve() + u"/text.txt"
-    task.sync_map_file_path_absolute = pathlib.Path(__file__).parent.resolve() + u"/syncmap.json"
+    task.audio_file_path_absolute = os.getcwd() + "/temp.wav"
+    task.text_file_path_absolute = os.getcwd() + "/text.txt"
+    task.sync_map_file_path_absolute = os.getcwd() + "/syncmap.json"
     ExecuteTask(task).execute()
     task.output_sync_map_file()
     os.remove("temp.wav")
