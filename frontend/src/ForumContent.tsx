@@ -1,11 +1,11 @@
-import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Divider, HStack, Heading, IconButton, VStack } from "@chakra-ui/react";
-import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { CustomTooltip } from "./CustomTooltip";
-import { ForumCard } from "./ForumCard";
-import { getForumContentById } from "./util/api";
-import { ForumContentLoaderReturn } from "./util/types";
+import { ArrowBackIcon } from "@chakra-ui/icons"
+import { Divider, HStack, Heading, IconButton, VStack } from "@chakra-ui/react"
+import { useState } from "react"
+import { useLoaderData, useNavigate } from "react-router-dom"
+import { CustomTooltip } from "./CustomTooltip"
+import { ForumCard } from "./ForumCard"
+import { getForumContentById } from "./util/api"
+import { ForumContentLoaderReturn } from "./util/types"
 
 export function ForumContent() {
     const { contentId, content } = useLoaderData() as ForumContentLoaderReturn
@@ -16,7 +16,8 @@ export function ForumContent() {
         setCurrentContent(Object.assign({}, getForumContentById(contentId)))
     }
 
-    return <VStack w={"full"} h={"full"} spacing={2}>
+    return (
+        <VStack w={"full"} h={"full"} spacing={2}>
             <HStack align={"center"} spacing={3} w={"full"}>
                 <CustomTooltip label={"Back"} placement={"right"}>
                     <IconButton
@@ -27,13 +28,14 @@ export function ForumContent() {
                 </CustomTooltip>
                 <Heading textAlign={"center"}>Forum Post</Heading>
             </HStack>
-        <Divider />
-        <ForumCard
-            styleProps={{overflowY: "hidden"}}
-            cardWidth={"full"}
-            content={currentContent}
-            id={contentId}
-            triggerReload={triggerReload}
-        ></ForumCard>
-    </VStack>
+            <Divider />
+            <ForumCard
+                styleProps={{ overflowY: "hidden" }}
+                cardWidth={"full"}
+                content={currentContent}
+                id={contentId}
+                triggerReload={triggerReload}
+            ></ForumCard>
+        </VStack>
+    )
 }

@@ -60,16 +60,21 @@ const homeRoutes: RouteObject[] = [
     {
         path: "forum",
         element: <Outlet />,
-        children: [{
-            index: true,
-        element: <Forum />},{
-            path: "new",
-            element: <AddForumContent />,
-        },{
-            path: ":contentId",
+        children: [
+            {
+                index: true,
+                element: <Forum />,
+            },
+            {
+                path: "new",
+                element: <AddForumContent />,
+            },
+            {
+                path: ":contentId",
                 element: <ForumContent />,
                 loader: forumContentLoader,
-        }]
+            },
+        ],
     },
 ]
 
