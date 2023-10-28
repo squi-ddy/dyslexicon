@@ -1,0 +1,6 @@
+torch
+flask
+transformers
+gunicorn
+flask-cors
+ffmpeg

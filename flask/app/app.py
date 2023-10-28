@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
 from transformers import pipeline
+import pyfoal
 import base64
 from model import EfficientSpeech, tts
 import pytesseract
@@ -139,12 +140,44 @@ class STT(Resource):
 
         return out, 200
 
+class Align(Resource):
+
+    @staticmethod
+    def post():
+        parser = reqparse.RequestParser()
+        parser.add_argument('text', required=True, type=str) 
+        parser.add_argument('speech', required=True, type=str) # base64 encoded wav file
+
+        args = parser.parse_args()  # creates dict
+
+        speech = base64.b64decode(args['speech'])
+        wav_file = open("temp.wav", "wb")
+        wav_file.write(speech)
+        wav_file.close()
+        audio = pyfoal.load.audio("temp.wav")
+        aligner = 'radtts'
+        checkpoint = pyfoal.DEFAULT_CHECKPOINT
+        gpu = 0
+        text = args['text']
+
+        alignment = pyfoal.from_text_and_audio(
+            text,
+            audio,
+            pyfoal.SAMPLE_RATE,
+            aligner=aligner,
+            checkpoint=checkpoint,
+            gpu=gpu)
+        
+        os.remove("temp.wav") 
+
+        return alignment.json(), 200
 
 api.add_resource(Toxic, '/toxic')
 api.add_resource(Card, '/card')
 api.add_resource(OCR, '/ocr')
 api.add_resource(STT, '/stt')
 api.add_resource(TTS, '/tts')
+api.add_resource(Align, '/align')
 
 if __name__ == '__main__':
     app.run(debug=True, port='1080')

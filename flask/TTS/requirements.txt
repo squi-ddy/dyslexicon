@@ -1,0 +1,12 @@
+flask
+python-dotenv
+requests
+librosa
+torch
+lightning
+einops
+pydub
+g2p_en 
+gunicorn
+flask-cors
+unidecode
