@@ -2,11 +2,14 @@ import { Outlet, RouteObject } from "react-router-dom"
 import { Home } from "../Home"
 import { Login } from "../Login"
 import { HomeBase } from "../HomeBase"
-import { HomeRead } from "../HomeRead"
+import { HomeRead } from "../Read"
 import { HomeNav } from "./types"
 import { ReadContent } from "../ReadContent"
-import { userContentLoader } from "./loaders"
-import { AddContent } from "../AddContent"
+import { forumContentLoader, userContentLoader } from "./loaders"
+import { AddReadContent } from "../AddReadContent"
+import { Forum } from "../Forum"
+import { ForumContent } from "../ForumContent"
+import { AddForumContent } from "../AddForumContent"
 
 const homeNav: HomeNav[] = [
     {
@@ -41,7 +44,7 @@ const homeRoutes: RouteObject[] = [
             },
             {
                 path: "new",
-                element: <AddContent />,
+                element: <AddReadContent />,
             },
             {
                 path: ":contentId",
@@ -56,7 +59,17 @@ const homeRoutes: RouteObject[] = [
     },
     {
         path: "forum",
-        element: <Home />,
+        element: <Outlet />,
+        children: [{
+            index: true,
+        element: <Forum />},{
+            path: "new",
+            element: <AddForumContent />,
+        },{
+            path: ":contentId",
+                element: <ForumContent />,
+                loader: forumContentLoader,
+        }]
     },
 ]
 

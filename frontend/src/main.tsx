@@ -134,11 +134,9 @@ const siteTheme = extendTheme({
                         borderColor: "themeColors.accent1",
                         bg: "transparent",
                         _hover: {
-                            transform: "translateY(-5px)",
                             bg: "blackAlpha.200",
                         },
                         _active: {
-                            transform: "translateY(-5px)",
                             bg: "blackAlpha.300",
                         },
                         transition: "all 0.2s ease-in-out",

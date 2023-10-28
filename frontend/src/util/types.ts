@@ -13,3 +13,22 @@ export type UserContentLoaderReturn = {
     contentId: string
     content: UserContentData
 }
+
+export type ForumContentLoaderReturn = {
+    contentId: string
+    content: ForumContentData
+}
+
+export type ForumContentData = {
+    title: string
+    by: string
+    body: string
+    audio?: string
+    comments: ForumCommentData[]
+}
+
+export type ForumCommentData = {
+    by: string
+    body: string
+    audio?: string
+}

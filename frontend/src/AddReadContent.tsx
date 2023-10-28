@@ -23,7 +23,7 @@ import { GoCheck } from "react-icons/go"
 import { useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 
-export function AddContent() {
+export function AddReadContent() {
     const navigate = useNavigate()
     const [title, setTitle] = useState("New Content")
     const [contentType, setContentType] = useState("ai")

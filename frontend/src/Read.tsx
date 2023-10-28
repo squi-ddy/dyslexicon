@@ -31,7 +31,7 @@ export function HomeRead() {
     // TODO: pagination
 
     return (
-        <VStack ref={VStackRef} spacing={4}>
+        <VStack ref={VStackRef} spacing={4} maxH={"full"}>
             <Flex w={"full"} justify={"space-between"}>
                 <Heading textAlign={"center"}>Your content</Heading>
                 <CustomTooltip
@@ -52,6 +52,7 @@ export function HomeRead() {
                 columns={dims?.width ? Math.floor(dims.width / cardWidth) : 100}
                 spacing={2}
                 mt={4}
+                overflowY={"scroll"}
             >
                 {Object.entries(userContent).map(([id, content]) => (
                     <Card
