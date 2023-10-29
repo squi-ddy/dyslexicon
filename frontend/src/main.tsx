@@ -10,7 +10,7 @@ import {
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { globalRoutes } from "./util/routes.tsx"
 
-const router = createBrowserRouter(globalRoutes)
+const router = createBrowserRouter(globalRoutes, { basename: "/dyslexicon" })
 
 const siteTheme = extendTheme({
     config: {
