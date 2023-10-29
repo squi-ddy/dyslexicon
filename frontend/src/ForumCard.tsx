@@ -100,7 +100,7 @@ export function ForumCard(props: {
                                 >
                                     {comment.body}
                                     {comment.audio ? (
-                                        <Box as={"audio"} controls>
+                                        <Box as={"audio"} controls maxW={"full"}>
                                             <source src={comment.audio} />
                                         </Box>
                                     ) : (

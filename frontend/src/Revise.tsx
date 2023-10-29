@@ -36,7 +36,7 @@ export function Revise() {
                     spacing={2}
                 >
                     <HStack flexGrow={1}>
-                        <Text fontSize={"9xl"}>{flashcard}</Text>
+                        <Text fontSize={["3xl", "5xl", "9xl"]}>{flashcard}</Text>
                     </HStack>
                     <HStack>
                         <CustomTooltip
