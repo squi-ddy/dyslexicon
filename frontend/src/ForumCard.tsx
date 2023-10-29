@@ -77,39 +77,45 @@ export function ForumCard(props: {
                         </Box>
                     )}
                     <Divider borderWidth={2} />
-                    <VStack
-                        w={"full"}
-                        spacing={2}
-                        maxH={props.limitHeight ? 200 : undefined}
-                        overflowY={"scroll"}
-                        flexShrink={1}
-                    >
-                        {props.content.comments.map((comment) => (
-                            <Text
-                                as={Box}
-                                borderWidth={2}
-                                borderColor={"themeColors.accent1"}
-                                borderRadius={"md"}
-                                p={2}
-                                w={"full"}
-                                fontSize="sm"
-                                display={"inline-block"}
-                                mb={0}
-                            >
-                                {comment.body}
-                                {comment.audio ? (
-                                    <Box as={"audio"} controls>
-                                        <source src={comment.audio} />
-                                    </Box>
-                                ) : (
-                                    <>&nbsp;</>
-                                )}
-                                <Text fontSize="xs" display={"inline-block"}>
-                                    ~{comment.by}
+                    {props.content.comments.length > 0 && (
+                        <VStack
+                            w={"full"}
+                            spacing={2}
+                            maxH={props.limitHeight ? 200 : undefined}
+                            overflowY={"scroll"}
+                            flexShrink={1}
+                        >
+                            {props.content.comments.map((comment) => (
+                                <Text
+                                    as={Box}
+                                    borderWidth={2}
+                                    borderColor={"themeColors.accent1"}
+                                    borderRadius={"md"}
+                                    p={2}
+                                    w={"full"}
+                                    fontSize={"sm"}
+                                    whiteSpace={"pre-wrap"}
+                                    display={"inline-block"}
+                                    mb={0}
+                                >
+                                    {comment.body}
+                                    {comment.audio ? (
+                                        <Box as={"audio"} controls>
+                                            <source src={comment.audio} />
+                                        </Box>
+                                    ) : (
+                                        <>&nbsp;</>
+                                    )}
+                                    <Text
+                                        fontSize="xs"
+                                        display={"inline-block"}
+                                    >
+                                        ~{comment.by}
+                                    </Text>
                                 </Text>
-                            </Text>
-                        ))}
-                    </VStack>
+                            ))}
+                        </VStack>
+                    )}
                     <HStack w={"full"}>
                         <Input
                             value={commentText}
@@ -126,6 +132,9 @@ export function ForumCard(props: {
                             <IconButton
                                 float={"right"}
                                 aria-label={"Add audio"}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                }}
                                 icon={<BsMic boxSize={5} />}
                             ></IconButton>
                         </CustomTooltip>
@@ -140,6 +149,7 @@ export function ForumCard(props: {
                                             body: commentText,
                                             by: getLoggedInUser(),
                                         })
+                                        setCommentText("")
                                         props.triggerReload()
                                         e.stopPropagation()
                                     }}

@@ -22,6 +22,7 @@ import { useEffect, useRef, useState } from "react"
 import { GoCheck } from "react-icons/go"
 import { useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
+import { addUserContent } from "./util/api"
 
 export function AddReadContent() {
     const navigate = useNavigate()
@@ -31,6 +32,7 @@ export function AddReadContent() {
     const fileUploadRef = useRef<HTMLInputElement>(null)
     const [fileAccept, setFileAccept] = useState("")
     const [fileUploaded, setFileUploaded] = useState<File | null>(null)
+    const [invalid, setInvalid] = useState(false)
 
     useEffect(() => {
         fileUploadRef.current!.value = ""
@@ -43,8 +45,14 @@ export function AddReadContent() {
     }, [contentType])
 
     function addContent() {
+        setInvalid(title === "" || contentType !== "text")
+        if (title === "" || contentType !== "text") return
         if (contentType === "text") {
-            // TODO: add ability to add content
+            addUserContent({
+                title,
+                body,
+            })
+            navigate(-1)
         } else {
             // TODO: other content types
         }
@@ -70,7 +78,7 @@ export function AddReadContent() {
                 </CustomTooltip>
             </Flex>
             <Divider />
-            <FormControl isInvalid={title === ""} isRequired>
+            <FormControl isInvalid={invalid && title === ""} isRequired>
                 <FormLabel>Name</FormLabel>
                 <Input
                     value={title}
@@ -80,7 +88,7 @@ export function AddReadContent() {
                 />
                 <FormErrorMessage>A title is required.</FormErrorMessage>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={invalid && contentType !== "text"}>
                 <FormLabel>Content Type</FormLabel>
                 <Select
                     value={contentType}
@@ -93,6 +101,7 @@ export function AddReadContent() {
                     <option value={"image"}>Image</option>
                     <option value={"audio"}>Audio</option>
                 </Select>
+                <FormErrorMessage>(Note: not implemented yet)</FormErrorMessage>
             </FormControl>
             <Input
                 ref={fileUploadRef}
@@ -142,13 +151,11 @@ export function AddReadContent() {
                                     : "No file selected"}
                             </Text>
                         </HStack>
-                        {fileUploaded ? (
+                        {fileUploaded && (
                             <Image
                                 minH={0}
                                 src={URL.createObjectURL(fileUploaded)}
                             />
-                        ) : (
-                            <></>
                         )}
                     </VStack>
                 </FormControl>

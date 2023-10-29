@@ -4,14 +4,20 @@ import hello2Url from "/hello2.mp3"
 
 // TODO: use firestore
 
-const userContent: { [id: string]: UserContentData } = {
-    "1293": {
-        title: "Lorem Ipsum",
-        body: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz\nhi",
-    },
-    "2977": {
-        title: "Test",
-        body: "The\nquick\nbrown\nfox\njumps\nover\nthe\nlazy\ndog",
+const userContent: { [username: string]: { [id: string]: UserContentData } } = {
+    johndoe: {
+        "1": {
+            title: "Lorem Ipsum",
+            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        },
+        "1293": {
+            title: "Test1",
+            body: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz\nhi",
+        },
+        "2977": {
+            title: "Test",
+            body: "The\nquick\nbrown\nfox\njumps\nover\nthe\nlazy\ndog",
+        },
     },
 }
 
@@ -46,16 +52,30 @@ const forumContent: { [id: string]: ForumContentData } = {
     },
 }
 
+let loggedInUser = ""
+
+const reviseWords: { [username: string]: string[] } = {
+    johndoe: ["hello", "world", "goodbye", "goodnight", "pronunciation"],
+}
+
+const users: { [username: string]: string } = {
+    user1: "user1",
+    user2: "user2",
+    user3: "user3",
+    user4: "user4",
+    johndoe: "password123",
+}
+
 export function getForumContent() {
     return forumContent
 }
 
 export function getUserContent() {
-    return userContent
+    return userContent[getLoggedInUser()]
 }
 
 export function getUserContentById(id: string) {
-    return userContent[id]
+    return userContent[getLoggedInUser()][id]
 }
 
 export function getForumContentById(id: string) {
@@ -66,6 +86,77 @@ export function addComment(contentId: string, comment: ForumCommentData) {
     forumContent[contentId].comments.push(comment)
 }
 
+export function addForumPost(content: ForumContentData) {
+    forumContent[crypto.randomUUID()] = content
+}
+
+export function addUserContent(content: UserContentData) {
+    userContent[getLoggedInUser()][crypto.randomUUID()] = content
+}
+
 export function getLoggedInUser() {
-    return "johndoe"
+    return loggedInUser
+}
+
+export function getNextReviseWord() {
+    return reviseWords[getLoggedInUser()][0]
+}
+
+export function editUserContent(id: string, content: UserContentData) {
+    userContent[getLoggedInUser()][id] = content
+}
+
+export function reviseFailure() {
+    const insertIndex =
+        Math.floor(
+            Math.random() * reviseWords[getLoggedInUser()].length * 0.3
+        ) + 2 // insert in first 30%, but never twice in a row
+    reviseWords[getLoggedInUser()].splice(
+        insertIndex,
+        0,
+        reviseWords[getLoggedInUser()][0]
+    )
+    reviseWords[getLoggedInUser()].shift()
+}
+
+export function reviseSuccess() {
+    const word = reviseWords[getLoggedInUser()].shift()
+    if (Math.random() < 0.3) {
+        // 30% chance of reinsertion
+        reviseWords[getLoggedInUser()].push(word!)
+    }
+}
+
+export function addToRevision(word: string) {
+    // push word to front of revision list
+    reviseWords[getLoggedInUser()].unshift(word)
+}
+
+export function logOut() {
+    loggedInUser = ""
+}
+
+export function isLoggedIn() {
+    return loggedInUser !== ""
+}
+
+export function logIn(username: string, password: string): boolean {
+    if (users[username] === password) {
+        loggedInUser = username
+        return true
+    } else {
+        return false
+    }
+}
+
+export function signUp(username: string, password: string): boolean {
+    if (users[username] === undefined) {
+        users[username] = password
+        reviseWords[username] = []
+        userContent[username] = {}
+        loggedInUser = username
+        return true
+    } else {
+        return false
+    }
 }

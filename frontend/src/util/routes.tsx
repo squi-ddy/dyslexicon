@@ -10,6 +10,7 @@ import { AddReadContent } from "../AddReadContent"
 import { Forum } from "../Forum"
 import { ForumContent } from "../ForumContent"
 import { AddForumContent } from "../AddForumContent"
+import { Revise } from "../Revise"
 
 const homeNav: HomeNav[] = [
     {
@@ -55,7 +56,7 @@ const homeRoutes: RouteObject[] = [
     },
     {
         path: "revise",
-        element: <Home />,
+        element: <Revise />,
     },
     {
         path: "forum",

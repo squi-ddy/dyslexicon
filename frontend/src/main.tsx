@@ -35,6 +35,7 @@ const siteTheme = extendTheme({
     colors: {
         themeColors: {
             background: theme.colors.gray["900"],
+            popoverBackground: theme.colors.blue["700"],
             primary: theme.colors.blue["800"],
             accent1: theme.colors.blue["600"],
         },

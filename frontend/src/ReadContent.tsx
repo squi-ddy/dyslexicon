@@ -26,9 +26,12 @@ import {
 import { useLoaderData, useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { UserContentLoaderReturn } from "./util/types"
+import { editUserContent } from "./util/api"
+import { ReadContentWord } from "./ReadContentWord"
+import { GiOpenBook } from "react-icons/gi"
 
 export function ReadContent() {
-    const { content } = useLoaderData() as UserContentLoaderReturn
+    const { contentId, content } = useLoaderData() as UserContentLoaderReturn
     const navigate = useNavigate()
     const [playing, setPlaying] = useBoolean(false)
     const [editing, setEditing] = useBoolean(false)
@@ -36,10 +39,62 @@ export function ReadContent() {
     const [body, setBody] = useState(content.body)
     const [newTitle, setNewTitle] = useState("")
     const [newBody, setNewBody] = useState("")
+    const [processedBody, setProcessedBody] = useState([""])
+    const [currentHighlightWord, setCurrentHighlightWord] = useState(0)
+    const [currentWord, setCurrentWord] = useState(1)
+    const [currentWordClicked, setCurrentWordClicked] = useState(false)
+    const [lastWordIdx, setLastWordIdx] = useState(0)
+    const [playingTimeout, setPlayingTimeout] = useState<number | undefined>(
+        undefined
+    )
 
     useEffect(() => {
-        // todo: api stuff when they change
-    }, [title, body])
+        const wordsOnly = body.split(/[^a-zA-Z0-9-]+/)
+        while (wordsOnly[wordsOnly.length - 1] === "") {
+            wordsOnly.pop()
+        }
+        const whitespaceOnly = body.split(/[a-zA-Z0-9-]+/)
+        const processed = []
+        for (
+            let i = 0;
+            i < Math.max(whitespaceOnly.length, wordsOnly.length);
+            i++
+        ) {
+            if (i < whitespaceOnly.length) {
+                processed.push(whitespaceOnly[i])
+            }
+            if (i < wordsOnly.length) {
+                processed.push(wordsOnly[i])
+                if (i === wordsOnly.length - 1) {
+                    setLastWordIdx(processed.length - 1)
+                }
+            }
+        }
+        setProcessedBody(processed)
+        console.log(processed)
+    }, [body])
+
+    useEffect(() => {
+        editUserContent(contentId, {
+            title,
+            body,
+        })
+    }, [title, body, contentId])
+
+    useEffect(() => {
+        if (playing) {
+            setCurrentWordClicked(false)
+            setPlayingTimeout(
+                setTimeout(() => {
+                    const nextIdx = currentWord + 2
+                    if (nextIdx <= lastWordIdx) setCurrentWord(nextIdx)
+                    else setPlaying.off()
+                }, 300)
+            )
+        } else {
+            clearTimeout(playingTimeout)
+        }
+    }, [playing, currentWord, lastWordIdx, playingTimeout, setPlaying])
 
     return (
         <VStack w={"full"} h={"full"} spacing={2}>
@@ -72,8 +127,8 @@ export function ReadContent() {
                         >
                             <IconButton
                                 onClick={() => {
-                                    setTitle(newTitle)
-                                    setBody(newBody)
+                                    setTitle(newTitle.trim())
+                                    setBody(newBody.trim())
                                     setEditing.off()
                                 }}
                                 aria-label="Accept changes"
@@ -136,14 +191,39 @@ export function ReadContent() {
                     borderWidth={2}
                     borderRadius={"md"}
                     borderColor={"themeColors.accent1"}
+                    onMouseDown={() => {
+                        setCurrentWordClicked(false)
+                    }}
                 >
                     <Text
+                        as={Box}
                         h={"full"}
+                        w={"full"}
                         overflowY={"scroll"}
+                        overflowX={"hidden"}
                         fontSize="2xl"
                         whiteSpace={"pre-wrap"}
+                        display={"inline-block"}
                     >
-                        {body}
+                        {processedBody.map((text, idx) =>
+                            idx % 2 === 1 ? (
+                                <ReadContentWord
+                                    word={text}
+                                    idx={idx}
+                                    highlighted={currentHighlightWord}
+                                    selected={currentWord}
+                                    clicked={currentWordClicked}
+                                    triggerHighlight={setCurrentHighlightWord}
+                                    triggerClick={(idx: number) => {
+                                        setCurrentWord(idx)
+                                        setCurrentWordClicked(true)
+                                        setPlaying.off()
+                                    }}
+                                />
+                            ) : (
+                                text
+                            )
+                        )}
                     </Text>
                 </Box>
             )}
@@ -151,14 +231,21 @@ export function ReadContent() {
             <ButtonGroup isDisabled={editing}>
                 <CustomTooltip label={"To Start"} placement={"top"}>
                     <IconButton
-                        onClick={() => {}}
+                        onClick={() => {
+                            setCurrentWord(1)
+                            setCurrentWordClicked(false)
+                        }}
                         aria-label="To Start"
                         icon={<Icon as={GoMoveToStart} boxSize={7} />}
                     ></IconButton>
                 </CustomTooltip>
                 <CustomTooltip label={"Back"} placement={"top"}>
                     <IconButton
-                        onClick={() => {}}
+                        onClick={() => {
+                            setCurrentWordClicked(false)
+                            const prevIdx = currentWord - 2
+                            if (prevIdx >= 1) setCurrentWord(prevIdx)
+                        }}
                         aria-label="Back"
                         icon={<Icon as={GoChevronLeft} boxSize={7} />}
                     ></IconButton>
@@ -177,16 +264,32 @@ export function ReadContent() {
                 </CustomTooltip>
                 <CustomTooltip label={"Next"} placement={"top"}>
                     <IconButton
-                        onClick={() => {}}
+                        onClick={() => {
+                            setCurrentWordClicked(false)
+                            const nextIdx = currentWord + 2
+                            if (nextIdx <= lastWordIdx) setCurrentWord(nextIdx)
+                        }}
                         aria-label="Next"
                         icon={<Icon as={GoChevronRight} boxSize={7} />}
                     ></IconButton>
                 </CustomTooltip>
                 <CustomTooltip label={"To End"} placement={"top"}>
                     <IconButton
-                        onClick={() => {}}
+                        onClick={() => {
+                            setCurrentWord(lastWordIdx)
+                            setCurrentWordClicked(false)
+                        }}
                         aria-label="To End"
                         icon={<Icon as={GoMoveToEnd} boxSize={7} />}
+                    ></IconButton>
+                </CustomTooltip>
+                <CustomTooltip label={"Quiz yourself"} placement={"top"}>
+                    <IconButton
+                        onClick={() => {
+                            alert("not implemented")
+                        }}
+                        aria-label="Quiz yourself"
+                        icon={<Icon as={GiOpenBook} boxSize={7} />}
                     ></IconButton>
                 </CustomTooltip>
             </ButtonGroup>

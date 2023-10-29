@@ -1,9 +1,26 @@
-import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react"
-import { NavLink, Outlet } from "react-router-dom"
-import { homeNav } from "./util/routes"
+import {
+    Box,
+    Flex,
+    Heading,
+    Icon,
+    IconButton,
+    Spacer,
+    Text,
+} from "@chakra-ui/react"
+import { useEffect } from "react"
+import { HiOutlineLogout } from "react-icons/hi"
+import { NavLink, Outlet, useNavigate } from "react-router-dom"
+import { CustomTooltip } from "./CustomTooltip"
 import { NavBox } from "./NavBox"
+import { getLoggedInUser, isLoggedIn, logOut } from "./util/api"
+import { homeNav } from "./util/routes"
 
 export function HomeBase() {
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (!isLoggedIn()) navigate("/login")
+    }, [navigate])
+
     return (
         <Flex direction="column" h="full">
             <Flex
@@ -13,12 +30,25 @@ export function HomeBase() {
                 m="1"
                 p="4"
                 px="8"
+                gap={2}
             >
                 <Heading size="2xl">Dyslexicon</Heading>
                 <Spacer />
                 <Text margin={"auto"} fontSize="lg">
-                    Hi <b>John Doe</b>!
+                    Hi <b>{getLoggedInUser()}</b>!
                 </Text>
+                <CustomTooltip label={"Log out"} placement={"left"}>
+                    <IconButton
+                        margin={"auto"}
+                        onClick={() => {
+                            logOut()
+                            navigate("/login")
+                        }}
+                        float={"right"}
+                        aria-label={"Log out"}
+                        icon={<Icon as={HiOutlineLogout} boxSize={5} />}
+                    ></IconButton>
+                </CustomTooltip>
             </Flex>
             <Flex minH={0} grow={1} fontSize="3xl">
                 <Flex

@@ -30,7 +30,7 @@ export function Forum() {
     // TODO: pagination
 
     return (
-        <VStack ref={VStackRef} spacing={4} maxH={"full"}>
+        <VStack ref={VStackRef} spacing={2} maxH={"full"}>
             <Flex w={"full"} justify={"space-between"}>
                 <Heading textAlign={"center"}>Forum</Heading>
                 <CustomTooltip label={"Make post"} placement={"left"}>
