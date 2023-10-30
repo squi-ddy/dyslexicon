@@ -32,6 +32,10 @@ const siteTheme = extendTheme({
             },
         },
     },
+    fonts: {
+        heading: "OpenDyslexic, sans-serif",
+        body: "OpenDyslexic, sans-serif",
+    },
     colors: {
         themeColors: {
             background: theme.colors.gray["900"],
