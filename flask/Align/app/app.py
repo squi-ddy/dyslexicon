@@ -6,6 +6,8 @@ import base64
 import os
 import pathlib
 import json
+import string
+import random
 
 app = Flask(__name__)
 CORS(app)
@@ -18,6 +20,7 @@ def is_alive():
 
 @app.route("/align", methods=["POST"])
 def predict():
+    rand_text = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(10))
     args = request.get_json()["instances"][0]
     speech = base64.b64decode(args['speech'])
     wav_file = open("temp.wav", "wb")
@@ -32,15 +35,15 @@ def predict():
     task = Task(config_string=config_string)
     task.audio_file_path_absolute = os.getcwd() + "/temp.wav"
     task.text_file_path_absolute = os.getcwd() + "/text.txt"
-    task.sync_map_file_path_absolute = os.getcwd() + "/syncmap.json"
+    task.sync_map_file_path_absolute = os.getcwd() + "/{}.json".format(rand_text)
     ExecuteTask(task).execute()
     task.output_sync_map_file()
     os.remove("temp.wav")
     os.remove("text.txt")
-    f = open('syncmap.json')
+    f = open("{}.json".format(rand_text))
     data = json.load(f)
-    os.remove("syncmap.json")
-    return data
+    os.remove("{}.json".format(rand_text))
+    return jsonify({"predictions":data})
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)

@@ -17,7 +17,7 @@ def is_alive():
 def predict():
     args = request.get_json()["instances"][0]
 
-    out = {'Prediction': toxicPipe(args['text'])[0]['label']}
+    out = {'predictions': toxicPipe(args['text'])[0]['label']}
 
     return jsonify(out)
 
