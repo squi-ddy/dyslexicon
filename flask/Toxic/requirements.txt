@@ -1,5 +1,5 @@
 torch
 flask
-transformers
+detoxify
 gunicorn
 flask-cors

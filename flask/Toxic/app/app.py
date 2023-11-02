@@ -1,12 +1,11 @@
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
-from transformers import pipeline
-
+from detoxify import Detoxify
 
 app = Flask(__name__)
 CORS(app)
 
-toxicPipe = pipeline("text-classification", model="facebook/roberta-hate-speech-dynabench-r4-target")
+model = Detoxify('unbiased')
 
 @app.route("/toxicalive")
 def is_alive():
@@ -16,8 +15,15 @@ def is_alive():
 @app.route("/toxic", methods=["POST"])
 def predict():
     args = request.get_json()["instances"][0]
+    pred = Detoxify.predict([args['text']])
 
-    out = {'predictions': toxicPipe(args['text'])[0]['label']}
+    output = 'Not-Toxic'
+    for _, value in pred.items():
+        if (value >= 0.5):
+            output = 'Toxic'
+            break    
+
+    out = {'predictions': output}
 
     return jsonify(out)
 
