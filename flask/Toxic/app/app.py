@@ -15,7 +15,8 @@ def is_alive():
 @app.route("/toxic", methods=["POST"])
 def predict():
     args = request.get_json()["instances"][0]
-    pred = Detoxify.predict([args['text']])
+    print(args)
+    pred = model.predict(args['text'])
 
     output = 'Not-Toxic'
     for _, value in pred.items():
