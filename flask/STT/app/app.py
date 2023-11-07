@@ -6,7 +6,7 @@ import base64
 app = Flask(__name__)
 CORS(app)
 
-STTPipe = pipeline("automatic-speech-recognition", model="mesolitica/finetune-whisper-base-ms-singlish-v2")
+STTPipe = pipeline("automatic-speech-recognition", model="distil-whisper/distil-large-v2")
 
 @app.route("/sttalive")
 def is_alive():
