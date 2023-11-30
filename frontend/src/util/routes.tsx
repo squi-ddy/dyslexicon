@@ -11,6 +11,7 @@ import { Forum } from "../Forum"
 import { ForumContent } from "../ForumContent"
 import { AddForumContent } from "../AddForumContent"
 import { Revise } from "../Revise"
+import { SignUp } from "../SignUp"
 
 const homeNav: HomeNav[] = [
     {
@@ -88,6 +89,10 @@ const globalRoutes: RouteObject[] = [
     {
         path: "login",
         element: <Login />,
+    },
+    {
+        path: "signup",
+        element: <SignUp />,
     },
 ]
 

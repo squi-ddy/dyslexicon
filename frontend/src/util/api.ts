@@ -1,6 +1,8 @@
 import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
+import { signUp, confirmSignUp, type ConfirmSignUpInput } from 'aws-amplify/auth';
+
 
 // TODO: use firestore
 
@@ -149,14 +151,58 @@ export function logIn(username: string, password: string): boolean {
     }
 }
 
-export function signUp(username: string, password: string): boolean {
-    if (users[username] === undefined) {
-        users[username] = password
-        reviseWords[username] = []
-        userContent[username] = {}
-        loggedInUser = username
-        return true
-    } else {
-        return false
-    }
+// export function signUp(username: string, password: string): boolean {
+//     if (users[username] === undefined) {
+//         users[username] = password
+//         reviseWords[username] = []
+//         userContent[username] = {}
+//         loggedInUser = username
+//         return true
+//     } else {
+//         return false
+//     }
+// }
+
+
+export type SignUpParameters = {
+  username: string;
+  password: string;
+  email: string;
+};
+
+export async function handleSignUp({
+  username,
+  password,
+  email,
+}: SignUpParameters) {
+  try {
+    const { isSignUpComplete, userId, nextStep } = await signUp({
+      username: email,
+      password: password,
+      options: {
+            userAttributes: {email: email},
+            validationData: {Name: "username", Value: username}
+        }})
+
+    console.log(userId);
+  } catch (error : any) {
+    if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
+        error.message = "Username already exists";  
+    }    
+    throw error;  
+  }
+}
+
+async function handleSignUpConfirmation({
+  username,
+  confirmationCode
+}: ConfirmSignUpInput) {
+  try {
+    await confirmSignUp({
+      username,
+      confirmationCode
+    });
+  } catch (error) {
+    console.log('error confirming sign up', error);
+  }
 }

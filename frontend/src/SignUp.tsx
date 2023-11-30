@@ -14,11 +14,13 @@ import {
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { logIn } from "./util/api"
+import { handleSignUp } from "./util/api"
 
-export function Login() {
+export function SignUp() {
     const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [confirm, setConfirm] = useState("")
     const [invalid, setInvalid] = useState(false)
     const navigate = useNavigate()
     const [show, setShow] = useState(false)
@@ -48,7 +50,7 @@ export function Login() {
                     mx="1"
                     mb="1"
                 >
-                    <Heading textAlign={"center"}>Login</Heading>
+                    <Heading textAlign={"center"}>Sign Up</Heading>
                     <Divider />
                     <VStack>
                         <FormControl
@@ -64,7 +66,22 @@ export function Login() {
                                 }}
                             />
                             <FormErrorMessage>
-                                Email empty or taken
+                                Username empty or taken
+                            </FormErrorMessage>
+                        </FormControl>
+                        <FormControl
+                            isInvalid={invalid && username === ""}
+                            isRequired
+                        >
+                            <FormLabel>Username</FormLabel>
+                            <Input
+                                value={username}
+                                onChange={(e) => {
+                                    setUsername(e.target.value)
+                                }}
+                            />
+                            <FormErrorMessage>
+                                Username empty or taken
                             </FormErrorMessage>
                         </FormControl>
                         <FormControl
@@ -90,26 +107,50 @@ export function Login() {
                                 Password empty or incorrect
                             </FormErrorMessage>
                         </FormControl>
-
+                        <FormControl
+                            isInvalid={password !== confirm}
+                            isRequired
+                        >
+                            <FormLabel>Confirm Password</FormLabel>
+                            <InputGroup>
+                                <Input
+                                    type={show ? 'text' : 'password'}
+                                    value={confirm}
+                                    onChange={(e) => {
+                                        setConfirm(e.target.value)
+                                    }}
+                                />
+                                <InputRightElement width='4.5rem'>
+                                    <Button h='1.75rem' size='sm' onClick={handleClick}>
+                                    {show ? 'Hide' : 'Show'}
+                                    </Button>
+                                </InputRightElement>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                Passwords do not match
+                            </FormErrorMessage>
+                        </FormControl>
                         <Button style={{width: '100%'}}
-                            onClick={() => {
+                            onClick={async () => {
                                 setInvalid(
                                     email === "" || password === ""
                                 )
-                                if (email === "" || password === "")
-                                    return
-                                if (logIn(email, password)) {
-                                    navigate("/")
-                                } else {
+
+                                try {
+                                    await handleSignUp({username, password, email})
+                                    navigate("/confirm")
+                                } catch (error : any) {
+                                    setUsername("")
+                                    setConfirm("")
                                     setPassword("")
                                     setInvalid(true)
                                 }
                             }}
                         >
-                            Login
+                            Sign Up
                         </Button>
                         <Text as="div" textAlign="center">
-                            <span  style={{ fontSize: 14, color: "#cbd3dc" }} >Don&lsquo;t have an account?  </span>
+                            <span  style={{ fontSize: 14, color: "#cbd3dc" }} >Already have an account?  </span>
                             <Button style={{ fontSize: 14 }} colorScheme="blue" variant="link"
                                 onClick={() => {
                                     // setInvalid(
@@ -123,10 +164,10 @@ export function Login() {
                                     //     setEmail("")
                                     //     setInvalid(true)
                                     // }
-                                    navigate("/signup")
+                                    navigate("/login")
                                 }}
                             >
-                                Sign up
+                                Login
                             </Button>
                         </Text>
                         {/* <Button style={{ fontSize: 14 }} colorScheme="blue" variant="link"
