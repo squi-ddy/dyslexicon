@@ -10,7 +10,9 @@ import {
     Input,
     VStack,
     InputRightElement,
-    InputGroup
+    InputGroup,
+    HStack,
+    Checkbox
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -91,20 +93,13 @@ export function SignUp() {
                             isRequired
                         >
                             <FormLabel>Password</FormLabel>
-                            <InputGroup>
-                                <Input
-                                    type={show ? 'text' : 'password'}
-                                    value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value)
-                                    }}
-                                />
-                                <InputRightElement width='4.5rem'>
-                                    <Button h='1.75rem' size='sm' onClick={handleClick}>
-                                    {show ? 'Hide' : 'Show'}
-                                    </Button>
-                                </InputRightElement>
-                            </InputGroup>
+                            <Input
+                                type={show ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                }}
+                            />
                             <FormErrorMessage>
                                 Password empty or incorrect
                             </FormErrorMessage>
@@ -114,25 +109,24 @@ export function SignUp() {
                             isRequired
                         >
                             <FormLabel>Confirm Password</FormLabel>
-                            <InputGroup>
-                                <Input
-                                    type={show ? 'text' : 'password'}
-                                    value={confirm}
-                                    onChange={(e) => {
-                                        setConfirm(e.target.value)
-                                    }}
-                                />
-                                <InputRightElement width='4.5rem'>
-                                    <Button h='1.75rem' size='sm' onClick={handleClick}>
-                                    {show ? 'Hide' : 'Show'}
-                                    </Button>
-                                </InputRightElement>
-                            </InputGroup>
+                            <Input
+                                type={show ? 'text' : 'password'}
+                                value={confirm}
+                                onChange={(e) => {
+                                    setConfirm(e.target.value)
+                                }}
+                            />
                             <FormErrorMessage>
                                 Passwords do not match
                             </FormErrorMessage>
                         </FormControl>
-                        <Button style={{width: '100%'}}
+                        <FormControl>
+                            <HStack w={"full"}>
+                                <FormLabel flexGrow={1} m={0}>Show Password</FormLabel>
+                                <Checkbox isChecked={show} onChange={(e) => setShow(e.target.checked)} />
+                            </HStack>
+                        </FormControl>
+                        <Button w={"full"} flexShrink={0}
                             onClick={async () => {
                                 setInvalid(
                                     email === "" || password === ""
@@ -151,27 +145,6 @@ export function SignUp() {
                         >
                             Sign Up
                         </Button>
-                        <Text as="div" textAlign="center">
-                            <span  style={{ fontSize: 14, color: "#cbd3dc" }} >Already have an account?  </span>
-                            <Button style={{ fontSize: 14 }} colorScheme="blue" variant="link"
-                                onClick={() => {
-                                    // setInvalid(
-                                    //     email === "" || password === ""
-                                    // )
-                                    // if (email === "" || password === "")
-                                    //     return
-                                    // if (signUp(email, password)) {
-                                    //     navigate("/")
-                                    // } else {
-                                    //     setEmail("")
-                                    //     setInvalid(true)
-                                    // }
-                                    navigate("/login")
-                                }}
-                            >
-                                Login
-                            </Button>
-                        </Text>
                         {/* <Button style={{ fontSize: 14 }} colorScheme="blue" variant="link"
                             onClick={() => {
                                 logIn("johndoe", "password123")
@@ -182,6 +155,27 @@ export function SignUp() {
                         </Button> */}
                     
                     </VStack>
+                    <Text as="div" textAlign="center">
+                        <span  style={{ fontSize: 14, color: "#cbd3dc" }} >Already have an account?  </span>
+                        <Button style={{ fontSize: 14 }} colorScheme="blue" variant="link"
+                            onClick={() => {
+                                // setInvalid(
+                                //     email === "" || password === ""
+                                // )
+                                // if (email === "" || password === "")
+                                //     return
+                                // if (signUp(email, password)) {
+                                //     navigate("/")
+                                // } else {
+                                //     setEmail("")
+                                //     setInvalid(true)
+                                // }
+                                navigate("/login")
+                            }}
+                        >
+                            Login
+                        </Button>
+                    </Text>
                 </VStack>
             </Flex>
         </Flex>
