@@ -12,7 +12,7 @@ import { HiOutlineLogout } from "react-icons/hi"
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { NavBox } from "./NavBox"
-import { getLoggedInUser, isLoggedIn, logOut } from "./util/api"
+import { getLoggedInUser, isLoggedIn, handleSignOut } from "./util/api"
 import { homeNav } from "./util/routes"
 
 export function HomeBase() {
@@ -41,7 +41,7 @@ export function HomeBase() {
                     <IconButton
                         margin={"auto"}
                         onClick={() => {
-                            logOut()
+                            handleSignOut()
                             navigate("/login")
                         }}
                         float={"right"}
