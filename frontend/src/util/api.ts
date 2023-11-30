@@ -1,8 +1,7 @@
 import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
-import { signUp, confirmSignUp, type ConfirmSignUpInput } from 'aws-amplify/auth';
-
+import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser  } from 'aws-amplify/auth';
 
 // TODO: use firestore
 
@@ -183,7 +182,7 @@ export async function handleSignUp({
             userAttributes: {email: email},
             validationData: {Name: "username", Value: username}
         }})
-
+        loggedInUser = userId!;
     console.log(userId);
   } catch (error : any) {
     if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
@@ -193,16 +192,36 @@ export async function handleSignUp({
   }
 }
 
-async function handleSignUpConfirmation({
-  username,
-  confirmationCode
-}: ConfirmSignUpInput) {
+export async function handleSignIn({ username, password }: SignInInput) {
+
   try {
-    await confirmSignUp({
-      username,
-      confirmationCode
-    });
+
+    const { isSignedIn, nextStep } = await signIn({ username, password });
+    return isSignedIn;
   } catch (error) {
-    console.log('error confirming sign up', error);
+
+    console.log('error signing in', error);
+
+  }
+
+}
+
+export async function handleSignOut() {
+    try {
+      await signOut(); 
+      loggedInUser = "";
+    } catch (error) {
+        console.log('error signing out: ', error);
+    }
+  }
+
+export async function currentAuthenticatedUser() {
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    console.log(`The username: ${username}`);
+    console.log(`The userId: ${userId}`);
+    console.log(`The signInDetails: ${signInDetails}`);
+  } catch (err) {
+    console.log(err);
   }
 }

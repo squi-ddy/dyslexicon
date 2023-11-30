@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { logIn } from "./util/api"
+import { handleSignIn } from "./util/api"
 
 export function Login() {
     const [email, setEmail] = useState("")
@@ -95,15 +95,20 @@ export function Login() {
                         </FormControl>
 
                         <Button w={"full"} flexShrink={0}
-                            onClick={() => {
+                            onClick={async () => {
                                 setInvalid(
                                     email === "" || password === ""
                                 )
                                 if (email === "" || password === "")
                                     return
-                                if (logIn(email, password)) {
-                                    navigate("/")
-                                } else {
+                                try {
+                                        if (await handleSignIn({username:email, password:password})) {
+                                        navigate("/")
+                                    } else {
+                                        setPassword("")
+                                        setInvalid(true)
+                                    }
+                                } catch (err) {
                                     setPassword("")
                                     setInvalid(true)
                                 }
