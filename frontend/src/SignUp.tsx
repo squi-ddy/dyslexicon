@@ -52,7 +52,9 @@ export function SignUp() {
                 >
                     <Heading textAlign={"center"}>Sign Up</Heading>
                     <Divider />
-                    <VStack>
+                    <VStack
+                        overflowY={"scroll"}
+                    >
                         <FormControl
                             isInvalid={invalid && email === ""}
                             isRequired

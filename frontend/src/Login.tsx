@@ -50,7 +50,9 @@ export function Login() {
                 >
                     <Heading textAlign={"center"}>Login</Heading>
                     <Divider />
-                    <VStack>
+                    <VStack
+                        overflowY={"scroll"}
+                    >
                         <FormControl
                             isInvalid={invalid && email === ""}
                             isRequired
