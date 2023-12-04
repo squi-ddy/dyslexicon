@@ -2,7 +2,6 @@ import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
 import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser  } from 'aws-amplify/auth';
-
 // TODO: use firestore
 
 const userContent: { [username: string]: { [id: string]: UserContentData } } = {
@@ -179,11 +178,10 @@ export async function handleSignUp({
       username: email,
       password: password,
       options: {
-            userAttributes: {email: email},
+            userAttributes: {email: email, preferred_username: username},
             validationData: {Name: "username", Value: username}
         }})
-        loggedInUser = userId!;
-    console.log(userId);
+        loggedInUser = username;
   } catch (error : any) {
     if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
         error.message = "Username already exists";  

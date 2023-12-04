@@ -12,7 +12,8 @@ import {
     InputRightElement,
     InputGroup,
     HStack,
-    Checkbox
+    Checkbox,
+    useToast
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -25,6 +26,7 @@ export function Login() {
     const navigate = useNavigate()
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)  
+    const toast = useToast()
 
     return (
         <Flex direction="column" h="full">
@@ -102,13 +104,17 @@ export function Login() {
                                 if (email === "" || password === "")
                                     return
                                 try {
-                                        if (await handleSignIn({username:email, password:password})) {
-                                        navigate("/")
-                                    } else {
-                                        setPassword("")
-                                        setInvalid(true)
-                                    }
-                                } catch (err) {
+                                    await handleSignIn({username:email, password:password})
+                                    navigate("/")
+                                    
+                                } catch (error) {
+                                    toast({
+                                        title: 'Error',
+                                        description: error.message,
+                                        status: 'error',
+                                        duration: 9000,
+                                        isClosable: true,
+                                      })
                                     setPassword("")
                                     setInvalid(true)
                                 }
