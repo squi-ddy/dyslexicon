@@ -12,11 +12,12 @@ import {
     InputRightElement,
     InputGroup,
     HStack,
-    Checkbox
+    Checkbox,
+    useToast
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { logIn } from "./util/api"
+import { handleSignIn } from "./util/api"
 
 export function Login() {
     const [email, setEmail] = useState("")
@@ -25,6 +26,7 @@ export function Login() {
     const navigate = useNavigate()
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)  
+    const toast = useToast()
 
     return (
         <Flex direction="column" h="full">
@@ -95,15 +97,24 @@ export function Login() {
                         </FormControl>
 
                         <Button w={"full"} flexShrink={0}
-                            onClick={() => {
+                            onClick={async () => {
                                 setInvalid(
                                     email === "" || password === ""
                                 )
                                 if (email === "" || password === "")
                                     return
-                                if (logIn(email, password)) {
+                                try {
+                                    await handleSignIn({username:email, password:password})
                                     navigate("/")
-                                } else {
+                                    
+                                } catch (error) {
+                                    toast({
+                                        title: 'Error',
+                                        description: error.message,
+                                        status: 'error',
+                                        duration: 9000,
+                                        isClosable: true,
+                                      })
                                     setPassword("")
                                     setInvalid(true)
                                 }

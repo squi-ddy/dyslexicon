@@ -1,9 +1,7 @@
 import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
-import { signUp, confirmSignUp, type ConfirmSignUpInput } from 'aws-amplify/auth';
-
-
+import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser  } from 'aws-amplify/auth';
 // TODO: use firestore
 
 const userContent: { [username: string]: { [id: string]: UserContentData } } = {
@@ -54,8 +52,7 @@ const forumContent: { [id: string]: ForumContentData } = {
     },
 }
 
-let loggedInUser = ""
-export let currentUsername = ""
+export let loggedInUser = ""
 
 const reviseWords: { [username: string]: string[] } = {
     johndoe: ["hello", "world", "goodbye", "goodnight", "pronunciation"],
@@ -177,16 +174,21 @@ export async function handleSignUp({
   email,
 }: SignUpParameters) {
   try {
-    currentUsername = username
     const { isSignUpComplete, userId, nextStep } = await signUp({
       username: email,
       password: password,
       options: {
-            userAttributes: {email: email},
+            userAttributes: {email: email, preferred_username: username},
             validationData: {Name: "username", Value: username}
-        }})
-
-    console.log(userId);
+    }})
+    loggedInUser = username;
+    if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+        return true
+    } else if (nextStep.signUpStep === "DONE") {
+        return false
+    } else {
+        // auto sign in stuff
+    }
   } catch (error : any) {
     console.log(error)
     if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
@@ -196,16 +198,50 @@ export async function handleSignUp({
   }
 }
 
-export async function handleSignUpConfirmation({
-  username,
-  confirmationCode
-}: ConfirmSignUpInput) {
+export async function handleSignIn({ username, password }: SignInInput) {
   try {
-    await confirmSignUp({
-      username,
-      confirmationCode
-    });
+
+    const { isSignedIn, nextStep } = await signIn({ username, password });
+    return isSignedIn;
   } catch (error) {
-    console.log('error confirming sign up', error);
+
+    console.log('error signing in', error);
+
+  }
+
+}
+
+export async function handleSignUpConfirmation({
+    username,
+    confirmationCode
+  }: ConfirmSignUpInput) {
+    try {
+      await confirmSignUp({
+        username,
+        confirmationCode
+      });
+    } catch (error) {
+      console.log('error confirming sign up', error);
+    }
+  }
+  
+
+export async function handleSignOut() {
+    try {
+      await signOut(); 
+      loggedInUser = "";
+    } catch (error) {
+        console.log('error signing out: ', error);
+    }
+  }
+
+export async function currentAuthenticatedUser() {
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    console.log(`The username: ${username}`);
+    console.log(`The userId: ${userId}`);
+    console.log(`The signInDetails: ${signInDetails}`);
+  } catch (err) {
+    console.log(err);
   }
 }
