@@ -136,7 +136,7 @@ export function Login() {
                                 //     setEmail("")
                                 //     setInvalid(true)
                                 // }
-                                navigate("/signup")
+                                navigate("/sign-up")
                             }}
                         >
                             Sign up

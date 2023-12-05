@@ -101,7 +101,7 @@ export function SignUp() {
                                 }}
                             />
                             <FormErrorMessage>
-                                Password empty or incorrect
+                                Password empty
                             </FormErrorMessage>
                         </FormControl>
                         <FormControl
@@ -134,7 +134,7 @@ export function SignUp() {
 
                                 try {
                                     await handleSignUp({username, password, email})
-                                    navigate("/confirm")
+                                    navigate("/sign-up/confirm")
                                 } catch (error : any) {
                                     setUsername("")
                                     setConfirm("")

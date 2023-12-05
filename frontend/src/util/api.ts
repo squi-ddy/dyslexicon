@@ -55,6 +55,7 @@ const forumContent: { [id: string]: ForumContentData } = {
 }
 
 let loggedInUser = ""
+export let currentUsername = ""
 
 const reviseWords: { [username: string]: string[] } = {
     johndoe: ["hello", "world", "goodbye", "goodnight", "pronunciation"],
@@ -176,6 +177,7 @@ export async function handleSignUp({
   email,
 }: SignUpParameters) {
   try {
+    currentUsername = username
     const { isSignUpComplete, userId, nextStep } = await signUp({
       username: email,
       password: password,
@@ -186,6 +188,7 @@ export async function handleSignUp({
 
     console.log(userId);
   } catch (error : any) {
+    console.log(error)
     if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
         error.message = "Username already exists";  
     }    
@@ -193,7 +196,7 @@ export async function handleSignUp({
   }
 }
 
-async function handleSignUpConfirmation({
+export async function handleSignUpConfirmation({
   username,
   confirmationCode
 }: ConfirmSignUpInput) {
