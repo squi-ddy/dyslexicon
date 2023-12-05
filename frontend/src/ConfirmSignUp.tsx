@@ -1,5 +1,5 @@
 import { Flex, Heading, VStack, Divider, FormControl, FormLabel, Input, FormErrorMessage, HStack, Checkbox, Button, Text } from "@chakra-ui/react"
-import { currentUsername, handleSignUpConfirmation } from "./util/api"
+import { loggedInUser, handleSignUpConfirmation } from "./util/api"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -9,7 +9,7 @@ export function ConfirmSignUp() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (currentUsername === "") {
+        if (loggedInUser === "") {
             navigate("/sign-up")
         }
     }, [])
@@ -69,7 +69,7 @@ export function ConfirmSignUp() {
                                 if (code === "") {
                                     return
                                 }
-                                await handleSignUpConfirmation({username: currentUsername, confirmationCode: code})
+                                await handleSignUpConfirmation({username: loggedInUser, confirmationCode: code})
                             }}
                         >
                             Confirm
