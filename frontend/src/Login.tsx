@@ -18,7 +18,6 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { handleSignIn } from "./util/api"
-import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
 
 export function Login() {
     const [email, setEmail] = useState("")
@@ -108,7 +107,7 @@ export function Login() {
                                     await handleSignIn({username:email, password:password})
                                     navigate("/")
                                     
-                                } catch (error) {
+                                } catch (error : any) {
                                     toast({
                                         title: 'Error',
                                         description: error.message,
@@ -148,7 +147,7 @@ export function Login() {
                                 //     setEmail("")
                                 //     setInvalid(true)
                                 // }
-                                navigate("/signup")
+                                navigate("/sign-up")
                             }}
                         >
                             Sign up

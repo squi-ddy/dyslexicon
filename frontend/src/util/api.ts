@@ -60,7 +60,7 @@ const forumContent: { [id: string]: ForumContentData } = {
     },
 }
 
-let loggedInUser = ""
+export let loggedInUser = ""
 
 const reviseWords: { [username: string]: string[] } = {
     johndoe: ["hello", "world", "goodbye", "goodnight", "pronunciation"],
@@ -215,15 +215,23 @@ export async function handleSignUp({
   email,
 }: SignUpParameters) {
   try {
-    await signUp({
+    const { isSignUpComplete, userId, nextStep } = await signUp({
       username: email,
       password: password,
       options: {
             userAttributes: {email: email, preferred_username: username},
             validationData: {Name: "username", Value: username}
-        }})
-        // loggedInUser = "1";
+    }})
+    loggedInUser = username;
+    if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+        return true
+    } else if (nextStep.signUpStep === "DONE") {
+        return false
+    } else {
+        // auto sign in stuff
+    }
   } catch (error : any) {
+    console.log(error)
     if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
         error.message = "Username already exists";  
     }    
@@ -232,7 +240,6 @@ export async function handleSignUp({
 }
 
 export async function handleSignIn({ username, password }: SignInInput) {
-
   try {
 
     const { isSignedIn, nextStep } = await signIn({ username, password });
@@ -240,11 +247,26 @@ export async function handleSignIn({ username, password }: SignInInput) {
     return isSignedIn;
   } catch (error) {
 
-    console.log('error signing in', error);
+        throw error;
 
   }
 
 }
+
+export async function handleSignUpConfirmation({
+    username,
+    confirmationCode
+  }: ConfirmSignUpInput) {
+    try {
+      await confirmSignUp({
+        username,
+        confirmationCode
+      });
+    } catch (error) {
+      console.log('error confirming sign up', error);
+    }
+  }
+  
 
 export async function handleSignOut() {
     try {
@@ -273,27 +295,3 @@ export async function handleFetchUserAttributes() {
   }
 }
 
-async function handleSignUpConfirmation({
-  username,
-  confirmationCode
-}: ConfirmSignUpInput) {
-  try {
-    await confirmSignUp({
-      username,
-      confirmationCode
-    });
-    const userAttributes = await fetchUserAttributes();
-    const result = await client.graphql({
-        query: createUser,
-        variables: {
-            input: {
-                id: userAttributes!.id!,
-                email: userAttributes!.email!,
-                username: userAttributes!.preferred_username!,
-            }
-        }
-    })
-  } catch (error) {
-    throw error;
-  }
-}

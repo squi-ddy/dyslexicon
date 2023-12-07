@@ -31,7 +31,6 @@ export function SignUp() {
     const toast = useToast()
 
     return (
-        <div>
             <Flex direction="column" h="full">
                 <Flex
                     borderRadius="md"
@@ -136,8 +135,12 @@ export function SignUp() {
                                     )
 
                                     try {
-                                        await handleSignUp({username, password, email})
-                                        navigate("/")
+                                        if (await handleSignUp({username, password, email})) {
+                                            navigate("/sign-up/confirm")
+                                        } else {
+                                            navigate("/")
+                                        }
+                                        // 
                                         toast({
                                             title: 'Success',
                                             description: "Account Created!",
@@ -197,7 +200,6 @@ export function SignUp() {
                         </Text>
                     </VStack>  
                 </Flex>
-            </Flex>
-        </div>                       
+            </Flex>                 
     )
 }
