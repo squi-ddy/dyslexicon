@@ -23,6 +23,7 @@ import { GoCheck } from "react-icons/go"
 import { useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { addUserContent } from "./util/api"
+import { Predictions } from '@aws-amplify/predictions';
 
 export function AddReadContent() {
     const navigate = useNavigate()
@@ -44,8 +45,8 @@ export function AddReadContent() {
         }
     }, [contentType])
 
-    function addContent() {
-        setInvalid(title === "" || contentType !== "text")
+    async function addContent() {
+        setInvalid(title === "" || (contentType !== "text" && contentType !== "image"))
         if (title === "" || contentType !== "text") return
         if (contentType === "text") {
             addUserContent({
@@ -53,8 +54,21 @@ export function AddReadContent() {
                 body,
             })
             navigate(-1)
-        } else {
+        } else if (contentType === "image") {
             // TODO: other content types
+            if (fileUploaded === null) return
+            const response = await Predictions.identify({
+                text: 
+                  { source: { file: fileUploaded } }});
+            
+            const body = String(response.text.fullText);
+            addUserContent({
+                title,
+                body
+            })
+            navigate(-1)
+        } else if (contentType === "audio") {
+            // TODO
         }
     }
 
@@ -88,7 +102,7 @@ export function AddReadContent() {
                 />
                 <FormErrorMessage>A title is required.</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={invalid && contentType !== "text"}>
+            <FormControl isInvalid={invalid && (contentType !== "text" && contentType !== "image")}>
                 <FormLabel>Content Type</FormLabel>
                 <Select
                     value={contentType}

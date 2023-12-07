@@ -12,10 +12,11 @@ import { HiOutlineLogout } from "react-icons/hi"
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { NavBox } from "./NavBox"
-import { getLoggedInUser, isLoggedIn, handleSignOut } from "./util/api"
+import { handleFetchUserAttributes, isLoggedIn, handleSignOut } from "./util/api"
 import { homeNav } from "./util/routes"
-
+const user = await handleFetchUserAttributes()
 export function HomeBase() {
+    
     const navigate = useNavigate()
     useEffect(() => {
         if (!isLoggedIn()) navigate("/login")
@@ -35,7 +36,7 @@ export function HomeBase() {
                 <Heading size="2xl">Dyslexicon</Heading>
                 <Spacer />
                 <Text margin={"auto"} fontSize="lg">
-                    Hi <b>{getLoggedInUser()}</b>!
+                    Hi <b>{user!.preferred_username}</b>!
                 </Text>
                 <CustomTooltip label={"Log out"} placement={"left"}>
                     <IconButton

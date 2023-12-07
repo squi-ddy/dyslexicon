@@ -1,8 +1,16 @@
 import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
-import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser  } from 'aws-amplify/auth';
+import { generateClient } from 'aws-amplify/api';
+import { uploadData } from 'aws-amplify/storage';
+import { Predictions } from '@aws-amplify/predictions';
+import { v4 as uuidv4 } from 'uuid';
+import { createAudionotes, updateAudionotes, deleteAudionotes, createUser, updateUser, deleteUser } from '../graphql/mutations';
+import {getUser} from '../graphql/queries';
+import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser, fetchUserAttributes  } from 'aws-amplify/auth';
 // TODO: use firestore
+
+const client = generateClient();
 
 const userContent: { [username: string]: { [id: string]: UserContentData } } = {
     johndoe: {
@@ -90,8 +98,41 @@ export function addForumPost(content: ForumContentData) {
     forumContent[crypto.randomUUID()] = content
 }
 
-export function addUserContent(content: UserContentData) {
-    userContent[getLoggedInUser()][crypto.randomUUID()] = content
+export async function addUserContent(content: UserContentData) {
+    // userContent[getLoggedInUser()][crypto.randomUUID()] = content
+    const user = await handleFetchUserAttributes();
+    Predictions.convert({
+    textToSpeech: {
+        source: {
+        text: content.body
+        }
+    }
+    })
+    .then(async (audio) => {
+        try {
+            const result = await uploadData({
+                key: `${user!.email}/audio/audionotes/${uuidv4()}.wav`,
+                data: audio.audioStream,
+                options: {
+                    accessLevel: 'private',
+                }
+            }).result;
+            const audionote = await client.graphql({
+                query: createAudionotes,
+                variables: {
+                  input: {
+                    content: content.body,
+                    title: content.title,
+                    userID: user!.id!,
+                    audioID: result.key,
+                  }  
+                }  
+              });
+        } catch (error) {
+            console.log('Error : ', error);
+        }
+    })
+    .catch(err => console.log({ err }));
 }
 
 export function getLoggedInUser() {
@@ -174,14 +215,14 @@ export async function handleSignUp({
   email,
 }: SignUpParameters) {
   try {
-    const { isSignUpComplete, userId, nextStep } = await signUp({
+    await signUp({
       username: email,
       password: password,
       options: {
             userAttributes: {email: email, preferred_username: username},
             validationData: {Name: "username", Value: username}
         }})
-        loggedInUser = username;
+        // loggedInUser = "1";
   } catch (error : any) {
     if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
         error.message = "Username already exists";  
@@ -195,6 +236,7 @@ export async function handleSignIn({ username, password }: SignInInput) {
   try {
 
     const { isSignedIn, nextStep } = await signIn({ username, password });
+    loggedInUser = "1";
     return isSignedIn;
   } catch (error) {
 
@@ -216,10 +258,42 @@ export async function handleSignOut() {
 export async function currentAuthenticatedUser() {
   try {
     const { username, userId, signInDetails } = await getCurrentUser();
-    console.log(`The username: ${username}`);
-    console.log(`The userId: ${userId}`);
-    console.log(`The signInDetails: ${signInDetails}`);
+    return { username: username, id: userId};
   } catch (err) {
     console.log(err);
+  }
+}
+
+export async function handleFetchUserAttributes() { 
+  try {
+    const userAttributes = await fetchUserAttributes();
+    return userAttributes;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function handleSignUpConfirmation({
+  username,
+  confirmationCode
+}: ConfirmSignUpInput) {
+  try {
+    await confirmSignUp({
+      username,
+      confirmationCode
+    });
+    const userAttributes = await fetchUserAttributes();
+    const result = await client.graphql({
+        query: createUser,
+        variables: {
+            input: {
+                id: userAttributes!.id!,
+                email: userAttributes!.email!,
+                username: userAttributes!.preferred_username!,
+            }
+        }
+    })
+  } catch (error) {
+    throw error;
   }
 }
