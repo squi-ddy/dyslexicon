@@ -23,23 +23,23 @@ def predict():
     rand_text = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(10))
     args = request.get_json()["instances"][0]
     speech = base64.b64decode(args['speech'])
-    wav_file = open("temp.wav", "wb")
+    wav_file = open(f"temp-{rand_text}.wav", "wb")
     wav_file.write(speech)
     wav_file.close()
     text = args['text']
-    with open("text.txt", "w") as text_file:
+    with open(f"text-{rand_text}.txt", "w") as text_file:
         for i in text.split():
             text_file.write(i + "\n")
      
     config_string = u"task_language=eng|is_text_type=plain|os_task_file_format=json"
     task = Task(config_string=config_string)
-    task.audio_file_path_absolute = os.getcwd() + "/temp.wav"
-    task.text_file_path_absolute = os.getcwd() + "/text.txt"
+    task.audio_file_path_absolute = os.getcwd() + f"/temp-{rand_text}.wav"
+    task.text_file_path_absolute = os.getcwd() + f"/text-{rand_text}.txt"
     task.sync_map_file_path_absolute = os.getcwd() + "/{}.json".format(rand_text)
     ExecuteTask(task).execute()
     task.output_sync_map_file()
-    os.remove("temp.wav")
-    os.remove("text.txt")
+    os.remove(f"temp-{rand_text}.wav")
+    os.remove(f"text-{rand_text}.txt")
     f = open("{}.json".format(rand_text))
     data = json.load(f)
     os.remove("{}.json".format(rand_text))
