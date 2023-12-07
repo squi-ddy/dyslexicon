@@ -44,6 +44,7 @@ type Audionotes @model @auth(rules: [{allow: owner, ownerField: "id", operations
   title: String
   content: String
   audioID: String
+  align: AWSJSON
   userID: ID! @index(name: "byUser")
   User: User @belongsTo(fields: ["userID"])
 }

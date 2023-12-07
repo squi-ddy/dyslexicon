@@ -422,6 +422,7 @@ export const onCreateAudionotes = /* GraphQL */ `subscription OnCreateAudionotes
     title
     content
     audioID
+    align
     userID
     User {
       id
@@ -450,6 +451,7 @@ export const onUpdateAudionotes = /* GraphQL */ `subscription OnUpdateAudionotes
     title
     content
     audioID
+    align
     userID
     User {
       id
@@ -478,6 +480,7 @@ export const onDeleteAudionotes = /* GraphQL */ `subscription OnDeleteAudionotes
     title
     content
     audioID
+    align
     userID
     User {
       id

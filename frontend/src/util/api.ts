@@ -7,10 +7,12 @@ import { Predictions } from '@aws-amplify/predictions';
 import { v4 as uuidv4 } from 'uuid';
 import { createAudionotes, updateAudionotes, deleteAudionotes, createUser, updateUser, deleteUser } from '../graphql/mutations';
 import {getUser} from '../graphql/queries';
+import axios from 'axios';
 import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser, fetchUserAttributes  } from 'aws-amplify/auth';
 // TODO: use firestore
 
 const client = generateClient();
+
 
 const userContent: { [username: string]: { [id: string]: UserContentData } } = {
     johndoe: {
@@ -117,17 +119,33 @@ export async function addUserContent(content: UserContentData) {
                     accessLevel: 'private',
                 }
             }).result;
-            const audionote = await client.graphql({
-                query: createAudionotes,
-                variables: {
-                  input: {
-                    content: content.body,
-                    title: content.title,
-                    userID: user!.id!,
-                    audioID: result.key,
-                  }  
-                }  
-              });
+            let bufferToBase64 = function (buffer : any) {
+                let bytes = new Uint8Array(buffer);
+                let len = buffer.byteLength;
+                let binary = "";
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary);
+            };
+            axios.post("http://13.251.105.180/align", 
+            {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
+                const audionote = await client.graphql({
+                    query: createAudionotes,
+                    variables: {
+                      input: {
+                        content: content.body,
+                        title: content.title,
+                        userID: user!.id!,
+                        audioID: result.key,
+                        align: res.data.predictions[0],
+                      }  
+                    }  
+                  });
+             })
+             .catch((err) => {
+                console.log(err.message);
+             });
         } catch (error) {
             console.log('Error : ', error);
         }

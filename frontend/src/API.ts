@@ -153,6 +153,7 @@ export type Audionotes = {
   title?: string | null,
   content?: string | null,
   audioID?: string | null,
+  align?: string | null,
   userID: string,
   User?: User | null,
   createdAt: string,
@@ -284,6 +285,7 @@ export type CreateAudionotesInput = {
   title?: string | null,
   content?: string | null,
   audioID?: string | null,
+  align?: string | null,
   userID: string,
 };
 
@@ -291,6 +293,7 @@ export type ModelAudionotesConditionInput = {
   title?: ModelStringInput | null,
   content?: ModelStringInput | null,
   audioID?: ModelStringInput | null,
+  align?: ModelStringInput | null,
   userID?: ModelIDInput | null,
   and?: Array< ModelAudionotesConditionInput | null > | null,
   or?: Array< ModelAudionotesConditionInput | null > | null,
@@ -302,6 +305,7 @@ export type UpdateAudionotesInput = {
   title?: string | null,
   content?: string | null,
   audioID?: string | null,
+  align?: string | null,
   userID?: string | null,
 };
 
@@ -370,6 +374,7 @@ export type ModelAudionotesFilterInput = {
   title?: ModelStringInput | null,
   content?: ModelStringInput | null,
   audioID?: ModelStringInput | null,
+  align?: ModelStringInput | null,
   userID?: ModelIDInput | null,
   and?: Array< ModelAudionotesFilterInput | null > | null,
   or?: Array< ModelAudionotesFilterInput | null > | null,
@@ -458,6 +463,7 @@ export type ModelSubscriptionAudionotesFilterInput = {
   title?: ModelSubscriptionStringInput | null,
   content?: ModelSubscriptionStringInput | null,
   audioID?: ModelSubscriptionStringInput | null,
+  align?: ModelSubscriptionStringInput | null,
   userID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionAudionotesFilterInput | null > | null,
   or?: Array< ModelSubscriptionAudionotesFilterInput | null > | null,
@@ -868,6 +874,7 @@ export type CreateAudionotesMutation = {
     title?: string | null,
     content?: string | null,
     audioID?: string | null,
+    align?: string | null,
     userID: string,
     User?:  {
       __typename: "User",
@@ -895,6 +902,7 @@ export type UpdateAudionotesMutation = {
     title?: string | null,
     content?: string | null,
     audioID?: string | null,
+    align?: string | null,
     userID: string,
     User?:  {
       __typename: "User",
@@ -922,6 +930,7 @@ export type DeleteAudionotesMutation = {
     title?: string | null,
     content?: string | null,
     audioID?: string | null,
+    align?: string | null,
     userID: string,
     User?:  {
       __typename: "User",
@@ -1316,6 +1325,7 @@ export type GetAudionotesQuery = {
     title?: string | null,
     content?: string | null,
     audioID?: string | null,
+    align?: string | null,
     userID: string,
     User?:  {
       __typename: "User",
@@ -1346,6 +1356,7 @@ export type ListAudionotesQuery = {
       title?: string | null,
       content?: string | null,
       audioID?: string | null,
+      align?: string | null,
       userID: string,
       createdAt: string,
       updatedAt: string,
@@ -1371,6 +1382,7 @@ export type AudionotesByUserIDQuery = {
       title?: string | null,
       content?: string | null,
       audioID?: string | null,
+      align?: string | null,
       userID: string,
       createdAt: string,
       updatedAt: string,
@@ -1784,6 +1796,7 @@ export type OnCreateAudionotesSubscription = {
     title?: string | null,
     content?: string | null,
     audioID?: string | null,
+    align?: string | null,
     userID: string,
     User?:  {
       __typename: "User",
@@ -1811,6 +1824,7 @@ export type OnUpdateAudionotesSubscription = {
     title?: string | null,
     content?: string | null,
     audioID?: string | null,
+    align?: string | null,
     userID: string,
     User?:  {
       __typename: "User",
@@ -1838,6 +1852,7 @@ export type OnDeleteAudionotesSubscription = {
     title?: string | null,
     content?: string | null,
     audioID?: string | null,
+    align?: string | null,
     userID: string,
     User?:  {
       __typename: "User",

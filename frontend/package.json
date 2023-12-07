@@ -18,6 +18,7 @@
         "@emotion/react": "^11.11.1",
         "@types/react-router": "^5.1.20",
         "aws-amplify": "^6.0.5",
+        "axios": "^1.6.2",
         "framer-motion": "^10.16.4",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

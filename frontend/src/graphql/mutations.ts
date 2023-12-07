@@ -422,6 +422,7 @@ export const createAudionotes = /* GraphQL */ `mutation CreateAudionotes(
     title
     content
     audioID
+    align
     userID
     User {
       id
@@ -450,6 +451,7 @@ export const updateAudionotes = /* GraphQL */ `mutation UpdateAudionotes(
     title
     content
     audioID
+    align
     userID
     User {
       id
@@ -478,6 +480,7 @@ export const deleteAudionotes = /* GraphQL */ `mutation DeleteAudionotes(
     title
     content
     audioID
+    align
     userID
     User {
       id

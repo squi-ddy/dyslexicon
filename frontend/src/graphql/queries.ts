@@ -409,6 +409,7 @@ export const getAudionotes = /* GraphQL */ `query GetAudionotes($id: ID!) {
     title
     content
     audioID
+    align
     userID
     User {
       id
@@ -439,6 +440,7 @@ export const listAudionotes = /* GraphQL */ `query ListAudionotes(
       title
       content
       audioID
+      align
       userID
       createdAt
       updatedAt
@@ -471,6 +473,7 @@ export const audionotesByUserID = /* GraphQL */ `query AudionotesByUserID(
       title
       content
       audioID
+      align
       userID
       createdAt
       updatedAt
