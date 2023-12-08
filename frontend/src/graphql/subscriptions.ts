@@ -10,9 +10,9 @@ type GeneratedSubscription<InputType, OutputType> = string & {
 
 export const onCreateComments = /* GraphQL */ `subscription OnCreateComments(
   $filter: ModelSubscriptionCommentsFilterInput
-  $id: String
+  $owner: String
 ) {
-  onCreateComments(filter: $filter, id: $id) {
+  onCreateComments(filter: $filter, owner: $owner) {
     id
     content
     postedAt
@@ -28,6 +28,7 @@ export const onCreateComments = /* GraphQL */ `subscription OnCreateComments(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     User {
@@ -37,10 +38,12 @@ export const onCreateComments = /* GraphQL */ `subscription OnCreateComments(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -50,9 +53,9 @@ export const onCreateComments = /* GraphQL */ `subscription OnCreateComments(
 >;
 export const onUpdateComments = /* GraphQL */ `subscription OnUpdateComments(
   $filter: ModelSubscriptionCommentsFilterInput
-  $id: String
+  $owner: String
 ) {
-  onUpdateComments(filter: $filter, id: $id) {
+  onUpdateComments(filter: $filter, owner: $owner) {
     id
     content
     postedAt
@@ -68,6 +71,7 @@ export const onUpdateComments = /* GraphQL */ `subscription OnUpdateComments(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     User {
@@ -77,10 +81,12 @@ export const onUpdateComments = /* GraphQL */ `subscription OnUpdateComments(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -90,9 +96,9 @@ export const onUpdateComments = /* GraphQL */ `subscription OnUpdateComments(
 >;
 export const onDeleteComments = /* GraphQL */ `subscription OnDeleteComments(
   $filter: ModelSubscriptionCommentsFilterInput
-  $id: String
+  $owner: String
 ) {
-  onDeleteComments(filter: $filter, id: $id) {
+  onDeleteComments(filter: $filter, owner: $owner) {
     id
     content
     postedAt
@@ -108,6 +114,7 @@ export const onDeleteComments = /* GraphQL */ `subscription OnDeleteComments(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     User {
@@ -117,10 +124,12 @@ export const onDeleteComments = /* GraphQL */ `subscription OnDeleteComments(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -130,9 +139,9 @@ export const onDeleteComments = /* GraphQL */ `subscription OnDeleteComments(
 >;
 export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
   $filter: ModelSubscriptionUserFilterInput
-  $id: String
+  $owner: String
 ) {
-  onCreateUser(filter: $filter, id: $id) {
+  onCreateUser(filter: $filter, owner: $owner) {
     id
     Posts {
       nextToken
@@ -155,6 +164,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -164,9 +174,9 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser(
 >;
 export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
   $filter: ModelSubscriptionUserFilterInput
-  $id: String
+  $owner: String
 ) {
-  onUpdateUser(filter: $filter, id: $id) {
+  onUpdateUser(filter: $filter, owner: $owner) {
     id
     Posts {
       nextToken
@@ -189,6 +199,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -198,9 +209,9 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser(
 >;
 export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
   $filter: ModelSubscriptionUserFilterInput
-  $id: String
+  $owner: String
 ) {
-  onDeleteUser(filter: $filter, id: $id) {
+  onDeleteUser(filter: $filter, owner: $owner) {
     id
     Posts {
       nextToken
@@ -223,6 +234,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -232,9 +244,9 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser(
 >;
 export const onCreatePosts = /* GraphQL */ `subscription OnCreatePosts(
   $filter: ModelSubscriptionPostsFilterInput
-  $id: String
+  $owner: String
 ) {
-  onCreatePosts(filter: $filter, id: $id) {
+  onCreatePosts(filter: $filter, owner: $owner) {
     id
     title
     content
@@ -248,6 +260,7 @@ export const onCreatePosts = /* GraphQL */ `subscription OnCreatePosts(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     userID
@@ -257,6 +270,7 @@ export const onCreatePosts = /* GraphQL */ `subscription OnCreatePosts(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -266,9 +280,9 @@ export const onCreatePosts = /* GraphQL */ `subscription OnCreatePosts(
 >;
 export const onUpdatePosts = /* GraphQL */ `subscription OnUpdatePosts(
   $filter: ModelSubscriptionPostsFilterInput
-  $id: String
+  $owner: String
 ) {
-  onUpdatePosts(filter: $filter, id: $id) {
+  onUpdatePosts(filter: $filter, owner: $owner) {
     id
     title
     content
@@ -282,6 +296,7 @@ export const onUpdatePosts = /* GraphQL */ `subscription OnUpdatePosts(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     userID
@@ -291,6 +306,7 @@ export const onUpdatePosts = /* GraphQL */ `subscription OnUpdatePosts(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -300,9 +316,9 @@ export const onUpdatePosts = /* GraphQL */ `subscription OnUpdatePosts(
 >;
 export const onDeletePosts = /* GraphQL */ `subscription OnDeletePosts(
   $filter: ModelSubscriptionPostsFilterInput
-  $id: String
+  $owner: String
 ) {
-  onDeletePosts(filter: $filter, id: $id) {
+  onDeletePosts(filter: $filter, owner: $owner) {
     id
     title
     content
@@ -316,6 +332,7 @@ export const onDeletePosts = /* GraphQL */ `subscription OnDeletePosts(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     userID
@@ -325,6 +342,7 @@ export const onDeletePosts = /* GraphQL */ `subscription OnDeletePosts(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -334,9 +352,9 @@ export const onDeletePosts = /* GraphQL */ `subscription OnDeletePosts(
 >;
 export const onCreateRevisionCard = /* GraphQL */ `subscription OnCreateRevisionCard(
   $filter: ModelSubscriptionRevisionCardFilterInput
-  $id: String
+  $owner: String
 ) {
-  onCreateRevisionCard(filter: $filter, id: $id) {
+  onCreateRevisionCard(filter: $filter, owner: $owner) {
     id
     front
     back
@@ -348,10 +366,12 @@ export const onCreateRevisionCard = /* GraphQL */ `subscription OnCreateRevision
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -361,9 +381,9 @@ export const onCreateRevisionCard = /* GraphQL */ `subscription OnCreateRevision
 >;
 export const onUpdateRevisionCard = /* GraphQL */ `subscription OnUpdateRevisionCard(
   $filter: ModelSubscriptionRevisionCardFilterInput
-  $id: String
+  $owner: String
 ) {
-  onUpdateRevisionCard(filter: $filter, id: $id) {
+  onUpdateRevisionCard(filter: $filter, owner: $owner) {
     id
     front
     back
@@ -375,10 +395,12 @@ export const onUpdateRevisionCard = /* GraphQL */ `subscription OnUpdateRevision
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -388,9 +410,9 @@ export const onUpdateRevisionCard = /* GraphQL */ `subscription OnUpdateRevision
 >;
 export const onDeleteRevisionCard = /* GraphQL */ `subscription OnDeleteRevisionCard(
   $filter: ModelSubscriptionRevisionCardFilterInput
-  $id: String
+  $owner: String
 ) {
-  onDeleteRevisionCard(filter: $filter, id: $id) {
+  onDeleteRevisionCard(filter: $filter, owner: $owner) {
     id
     front
     back
@@ -402,10 +424,12 @@ export const onDeleteRevisionCard = /* GraphQL */ `subscription OnDeleteRevision
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -415,9 +439,9 @@ export const onDeleteRevisionCard = /* GraphQL */ `subscription OnDeleteRevision
 >;
 export const onCreateAudionotes = /* GraphQL */ `subscription OnCreateAudionotes(
   $filter: ModelSubscriptionAudionotesFilterInput
-  $id: String
+  $owner: String
 ) {
-  onCreateAudionotes(filter: $filter, id: $id) {
+  onCreateAudionotes(filter: $filter, owner: $owner) {
     id
     title
     content
@@ -431,10 +455,12 @@ export const onCreateAudionotes = /* GraphQL */ `subscription OnCreateAudionotes
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -444,9 +470,9 @@ export const onCreateAudionotes = /* GraphQL */ `subscription OnCreateAudionotes
 >;
 export const onUpdateAudionotes = /* GraphQL */ `subscription OnUpdateAudionotes(
   $filter: ModelSubscriptionAudionotesFilterInput
-  $id: String
+  $owner: String
 ) {
-  onUpdateAudionotes(filter: $filter, id: $id) {
+  onUpdateAudionotes(filter: $filter, owner: $owner) {
     id
     title
     content
@@ -460,10 +486,12 @@ export const onUpdateAudionotes = /* GraphQL */ `subscription OnUpdateAudionotes
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -473,9 +501,9 @@ export const onUpdateAudionotes = /* GraphQL */ `subscription OnUpdateAudionotes
 >;
 export const onDeleteAudionotes = /* GraphQL */ `subscription OnDeleteAudionotes(
   $filter: ModelSubscriptionAudionotesFilterInput
-  $id: String
+  $owner: String
 ) {
-  onDeleteAudionotes(filter: $filter, id: $id) {
+  onDeleteAudionotes(filter: $filter, owner: $owner) {
     id
     title
     content
@@ -489,10 +517,12 @@ export const onDeleteAudionotes = /* GraphQL */ `subscription OnDeleteAudionotes
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }

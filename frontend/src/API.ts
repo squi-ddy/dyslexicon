@@ -87,6 +87,7 @@ export type Comments = {
   User?: User | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type Posts = {
@@ -102,6 +103,7 @@ export type Posts = {
   Comments?: ModelCommentsConnection | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type User = {
@@ -116,6 +118,7 @@ export type User = {
   Comments?: ModelCommentsConnection | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type ModelPostsConnection = {
@@ -139,6 +142,7 @@ export type RevisionCard = {
   User?: User | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type ModelAudionotesConnection = {
@@ -158,6 +162,7 @@ export type Audionotes = {
   User?: User | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type ModelCommentsConnection = {
@@ -382,27 +387,13 @@ export type ModelAudionotesFilterInput = {
 };
 
 export type ModelSubscriptionCommentsFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
   content?: ModelSubscriptionStringInput | null,
   postedAt?: ModelSubscriptionStringInput | null,
   userID?: ModelSubscriptionIDInput | null,
   postsID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionCommentsFilterInput | null > | null,
   or?: Array< ModelSubscriptionCommentsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  in?: Array< string | null > | null,
-  notIn?: Array< string | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -420,7 +411,23 @@ export type ModelSubscriptionIDInput = {
   notIn?: Array< string | null > | null,
 };
 
+export type ModelSubscriptionStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  in?: Array< string | null > | null,
+  notIn?: Array< string | null > | null,
+};
+
 export type ModelSubscriptionUserFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
   email?: ModelSubscriptionStringInput | null,
   username?: ModelSubscriptionStringInput | null,
   imageID?: ModelSubscriptionStringInput | null,
@@ -429,6 +436,7 @@ export type ModelSubscriptionUserFilterInput = {
 };
 
 export type ModelSubscriptionPostsFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
   content?: ModelSubscriptionStringInput | null,
   postedAt?: ModelSubscriptionStringInput | null,
@@ -452,6 +460,7 @@ export type ModelSubscriptionIntInput = {
 };
 
 export type ModelSubscriptionRevisionCardFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
   front?: ModelSubscriptionStringInput | null,
   back?: ModelSubscriptionStringInput | null,
   userID?: ModelSubscriptionIDInput | null,
@@ -460,6 +469,7 @@ export type ModelSubscriptionRevisionCardFilterInput = {
 };
 
 export type ModelSubscriptionAudionotesFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
   content?: ModelSubscriptionStringInput | null,
   audioID?: ModelSubscriptionStringInput | null,
@@ -493,6 +503,7 @@ export type CreateCommentsMutation = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     User?:  {
       __typename: "User",
@@ -502,9 +513,11 @@ export type CreateCommentsMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -532,6 +545,7 @@ export type UpdateCommentsMutation = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     User?:  {
       __typename: "User",
@@ -541,9 +555,11 @@ export type UpdateCommentsMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -571,6 +587,7 @@ export type DeleteCommentsMutation = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     User?:  {
       __typename: "User",
@@ -580,9 +597,11 @@ export type DeleteCommentsMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -616,6 +635,7 @@ export type CreateUserMutation = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -649,6 +669,7 @@ export type UpdateUserMutation = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -682,6 +703,7 @@ export type DeleteUserMutation = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -707,6 +729,7 @@ export type CreatePostsMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     userID: string,
     Comments?:  {
@@ -715,6 +738,7 @@ export type CreatePostsMutation = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -740,6 +764,7 @@ export type UpdatePostsMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     userID: string,
     Comments?:  {
@@ -748,6 +773,7 @@ export type UpdatePostsMutation = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -773,6 +799,7 @@ export type DeletePostsMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     userID: string,
     Comments?:  {
@@ -781,6 +808,7 @@ export type DeletePostsMutation = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -804,9 +832,11 @@ export type CreateRevisionCardMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -830,9 +860,11 @@ export type UpdateRevisionCardMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -856,9 +888,11 @@ export type DeleteRevisionCardMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -884,9 +918,11 @@ export type CreateAudionotesMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -912,9 +948,11 @@ export type UpdateAudionotesMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -940,9 +978,11 @@ export type DeleteAudionotesMutation = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -969,6 +1009,7 @@ export type GetCommentsQuery = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     User?:  {
       __typename: "User",
@@ -978,9 +1019,11 @@ export type GetCommentsQuery = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1002,6 +1045,7 @@ export type ListCommentsQuery = {
       postsID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1027,6 +1071,7 @@ export type CommentsByUserIDQuery = {
       postsID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1052,6 +1097,7 @@ export type CommentsByPostsIDQuery = {
       postsID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1086,6 +1132,7 @@ export type GetUserQuery = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1106,6 +1153,7 @@ export type ListUsersQuery = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1130,6 +1178,7 @@ export type FindEmailQuery = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1154,6 +1203,7 @@ export type FindUsernameQuery = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1180,6 +1230,7 @@ export type GetPostsQuery = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     userID: string,
     Comments?:  {
@@ -1188,6 +1239,7 @@ export type GetPostsQuery = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1211,6 +1263,7 @@ export type ListPostsQuery = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1238,6 +1291,7 @@ export type PostsByUserIDQuery = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1262,9 +1316,11 @@ export type GetRevisionCardQuery = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1285,6 +1341,7 @@ export type ListRevisionCardsQuery = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1309,6 +1366,7 @@ export type RevisionCardsByUserIDQuery = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1335,9 +1393,11 @@ export type GetAudionotesQuery = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1360,6 +1420,7 @@ export type ListAudionotesQuery = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1386,6 +1447,7 @@ export type AudionotesByUserIDQuery = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1393,7 +1455,7 @@ export type AudionotesByUserIDQuery = {
 
 export type OnCreateCommentsSubscriptionVariables = {
   filter?: ModelSubscriptionCommentsFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnCreateCommentsSubscription = {
@@ -1415,6 +1477,7 @@ export type OnCreateCommentsSubscription = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     User?:  {
       __typename: "User",
@@ -1424,15 +1487,17 @@ export type OnCreateCommentsSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateCommentsSubscriptionVariables = {
   filter?: ModelSubscriptionCommentsFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnUpdateCommentsSubscription = {
@@ -1454,6 +1519,7 @@ export type OnUpdateCommentsSubscription = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     User?:  {
       __typename: "User",
@@ -1463,15 +1529,17 @@ export type OnUpdateCommentsSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteCommentsSubscriptionVariables = {
   filter?: ModelSubscriptionCommentsFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnDeleteCommentsSubscription = {
@@ -1493,6 +1561,7 @@ export type OnDeleteCommentsSubscription = {
       userID: string,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     User?:  {
       __typename: "User",
@@ -1502,15 +1571,17 @@ export type OnDeleteCommentsSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnCreateUserSubscription = {
@@ -1538,12 +1609,13 @@ export type OnCreateUserSubscription = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnUpdateUserSubscription = {
@@ -1571,12 +1643,13 @@ export type OnUpdateUserSubscription = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnDeleteUserSubscription = {
@@ -1604,12 +1677,13 @@ export type OnDeleteUserSubscription = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreatePostsSubscriptionVariables = {
   filter?: ModelSubscriptionPostsFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnCreatePostsSubscription = {
@@ -1629,6 +1703,7 @@ export type OnCreatePostsSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     userID: string,
     Comments?:  {
@@ -1637,12 +1712,13 @@ export type OnCreatePostsSubscription = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdatePostsSubscriptionVariables = {
   filter?: ModelSubscriptionPostsFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnUpdatePostsSubscription = {
@@ -1662,6 +1738,7 @@ export type OnUpdatePostsSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     userID: string,
     Comments?:  {
@@ -1670,12 +1747,13 @@ export type OnUpdatePostsSubscription = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeletePostsSubscriptionVariables = {
   filter?: ModelSubscriptionPostsFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnDeletePostsSubscription = {
@@ -1695,6 +1773,7 @@ export type OnDeletePostsSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     userID: string,
     Comments?:  {
@@ -1703,12 +1782,13 @@ export type OnDeletePostsSubscription = {
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateRevisionCardSubscriptionVariables = {
   filter?: ModelSubscriptionRevisionCardFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnCreateRevisionCardSubscription = {
@@ -1726,15 +1806,17 @@ export type OnCreateRevisionCardSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateRevisionCardSubscriptionVariables = {
   filter?: ModelSubscriptionRevisionCardFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnUpdateRevisionCardSubscription = {
@@ -1752,15 +1834,17 @@ export type OnUpdateRevisionCardSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteRevisionCardSubscriptionVariables = {
   filter?: ModelSubscriptionRevisionCardFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnDeleteRevisionCardSubscription = {
@@ -1778,15 +1862,17 @@ export type OnDeleteRevisionCardSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateAudionotesSubscriptionVariables = {
   filter?: ModelSubscriptionAudionotesFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnCreateAudionotesSubscription = {
@@ -1806,15 +1892,17 @@ export type OnCreateAudionotesSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateAudionotesSubscriptionVariables = {
   filter?: ModelSubscriptionAudionotesFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnUpdateAudionotesSubscription = {
@@ -1834,15 +1922,17 @@ export type OnUpdateAudionotesSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteAudionotesSubscriptionVariables = {
   filter?: ModelSubscriptionAudionotesFilterInput | null,
-  id?: string | null,
+  owner?: string | null,
 };
 
 export type OnDeleteAudionotesSubscription = {
@@ -1862,8 +1952,10 @@ export type OnDeleteAudionotesSubscription = {
       imageID?: string | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };

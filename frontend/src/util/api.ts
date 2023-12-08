@@ -1,14 +1,14 @@
 import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
-import { generateClient } from 'aws-amplify/api';
+import { generateClient, get } from 'aws-amplify/api';
 import { uploadData } from 'aws-amplify/storage';
 import { Predictions } from '@aws-amplify/predictions';
 import { v4 as uuidv4 } from 'uuid';
+import { getUser, audionotesByUserID, getAudionotes } from '../graphql/queries';
 import { createAudionotes, updateAudionotes, deleteAudionotes, createUser, updateUser, deleteUser } from '../graphql/mutations';
-import {getUser} from '../graphql/queries';
 import axios from 'axios';
-import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser, fetchUserAttributes  } from 'aws-amplify/auth';
+import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser  } from 'aws-amplify/auth';
 // TODO: use firestore
 
 const client = generateClient();
@@ -63,7 +63,8 @@ const forumContent: { [id: string]: ForumContentData } = {
 }
 
 export let loggedInUser = ""
-
+export let user_name = ""
+let input : any;
 const reviseWords: { [username: string]: string[] } = {
     johndoe: ["hello", "world", "goodbye", "goodnight", "pronunciation"],
 }
@@ -80,12 +81,28 @@ export function getForumContent() {
     return forumContent
 }
 
-export function getUserContent() {
-    return userContent[getLoggedInUser()]
+export async function getUserContent() {
+
+    const result = await client.graphql({
+        query: audionotesByUserID,
+        variables: {
+            userID: loggedInUser,
+        },
+        authMode: 'userPool'
+    })
+
+    return result.data.audionotesByUserID.items
 }
 
-export function getUserContentById(id: string) {
-    return userContent[getLoggedInUser()][id]
+export async function getUserContentById(id: string) {
+    const result = await client.graphql({
+        query: getAudionotes,
+        variables: {
+            id: id
+        },
+        authMode: 'userPool'
+    })
+    return result.data.getAudionotes
 }
 
 export function getForumContentById(id: string) {
@@ -100,20 +117,21 @@ export function addForumPost(content: ForumContentData) {
     forumContent[crypto.randomUUID()] = content
 }
 
-export async function addUserContent(content: UserContentData) {
+export async function addUserContent(content: UserContentData): Promise<boolean> {
     // userContent[getLoggedInUser()][crypto.randomUUID()] = content
-    const user = await handleFetchUserAttributes();
+    const user = await currentAuthenticatedUser();
     Predictions.convert({
     textToSpeech: {
         source: {
         text: content.body
-        }
+        },
+        voiceId: "Amy"
     }
     })
     .then(async (audio) => {
         try {
             const result = await uploadData({
-                key: `${user!.email}/audio/audionotes/${uuidv4()}.wav`,
+                key: `${user!.id}/audio/audionotes/${uuidv4()}.wav`,
                 data: audio.audioStream,
                 options: {
                     accessLevel: 'private',
@@ -128,8 +146,9 @@ export async function addUserContent(content: UserContentData) {
                 }
                 return btoa(binary);
             };
-            axios.post("http://13.251.105.180/align", 
+            axios.post("http://18.136.208.218:8080/align", 
             {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
+                console.log(res);
                 const audionote = await client.graphql({
                     query: createAudionotes,
                     variables: {
@@ -140,17 +159,23 @@ export async function addUserContent(content: UserContentData) {
                         audioID: result.key,
                         align: res.data.predictions[0],
                       }  
-                    }  
+                    },
+                    authMode: 'userPool' 
                   });
+                  
              })
              .catch((err) => {
                 console.log(err.message);
+                return false;
              });
+            
         } catch (error) {
             console.log('Error : ', error);
+            return false;
         }
     })
-    .catch(err => console.log({ err }));
+    .catch(err => {console.log(err); return false;});
+    return true;
 }
 
 export function getLoggedInUser() {
@@ -238,9 +263,17 @@ export async function handleSignUp({
       password: password,
       options: {
             userAttributes: {email: email, preferred_username: username},
-            validationData: {Name: "username", Value: username}
+            validationData: {Name: "username", Value: username},
+            autoSignIn: true
     }})
-    loggedInUser = username;
+    loggedInUser = userId!;
+    user_name = password;
+    input = {
+        id: loggedInUser!,
+        email: email,
+        username: username,
+    }
+
     if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
         return true
     } else if (nextStep.signUpStep === "DONE") {
@@ -261,7 +294,10 @@ export async function handleSignIn({ username, password }: SignInInput) {
   try {
 
     const { isSignedIn, nextStep } = await signIn({ username, password });
-    loggedInUser = "1";
+    const user = await currentAuthenticatedUser();
+    loggedInUser = user!.id;
+    let details = await getUserDetails();
+    user_name = details!.username;
     return isSignedIn;
   } catch (error) {
 
@@ -276,14 +312,27 @@ export async function handleSignUpConfirmation({
     confirmationCode
   }: ConfirmSignUpInput) {
     try {
-      await confirmSignUp({
+        await confirmSignUp({
         username,
         confirmationCode
-      });
+      }).then(async () => {
+        await signIn({username: loggedInUser, password: user_name}).then(async () => {
+            user_name = input.username;
+            await client.graphql({
+                query: createUser,
+                variables: {
+                    input: input
+                },
+                authMode: 'userPool'
+            });})
+        });
+      
     } catch (error) {
-      console.log('error confirming sign up', error);
+      console.log(error);
     }
   }
+
+
   
 
 export async function handleSignOut() {
@@ -304,12 +353,18 @@ export async function currentAuthenticatedUser() {
   }
 }
 
-export async function handleFetchUserAttributes() { 
+export async function getUserDetails() { 
   try {
-    const userAttributes = await fetchUserAttributes();
-    return userAttributes;
+    const result = await client.graphql({
+        query: getUser,
+        variables: {
+            id: loggedInUser
+        },
+        authMode: 'userPool'
+    })
+    return result.data.getUser;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 

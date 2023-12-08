@@ -16,10 +16,18 @@ import { Link } from "react-router-dom"
 import { getUserContent } from "./util/api"
 import { CustomTooltip } from "./CustomTooltip"
 import { AddIcon } from "@chakra-ui/icons"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 
 export function HomeRead() {
-    const userContent = getUserContent()
+    const [user, setUser] = useState<any[]>([]);
+    useEffect(() => {
+        async function setUserContent(): Promise<void> {
+            const userContent = await getUserContent();
+            setUser(userContent);
+        }
+        setUserContent();
+    });
+    
     const cardIdealWidth = 250
     const cardAspectRatio = 1
     const VStackRef = useRef(null)
@@ -54,18 +62,18 @@ export function HomeRead() {
                 mt={4}
                 overflowY={"scroll"}
             >
-                {Object.entries(userContent).map(([id, content]) => (
+                {Object.entries(user).map(([index,audionote]) => (
                     <Card
-                        key={id}
+                        key={audionote.id}
                         as={Link}
-                        to={id}
+                        to={audionote.id}
                         width={cardWidth + "px"}
                         height={cardWidth * cardAspectRatio + "px"}
                         variant="clickable-card"
                     >
                         <CardHeader>
                             <Heading size={"md"} noOfLines={1}>
-                                {content.title}
+                                {audionote.title}
                             </Heading>
                         </CardHeader>
                         <CardBody minH={0}>
@@ -82,7 +90,7 @@ export function HomeRead() {
                                     overflow={"hidden"}
                                     maxH={"full"}
                                 >
-                                    {content.body}
+                                    {audionote.content}
                                 </Text>
                             </Box>
                         </CardBody>

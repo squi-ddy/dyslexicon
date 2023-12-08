@@ -25,6 +25,7 @@ export const getComments = /* GraphQL */ `query GetComments($id: ID!) {
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     User {
@@ -34,10 +35,12 @@ export const getComments = /* GraphQL */ `query GetComments($id: ID!) {
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -59,6 +62,7 @@ export const listComments = /* GraphQL */ `query ListComments(
       postsID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -91,6 +95,7 @@ export const commentsByUserID = /* GraphQL */ `query CommentsByUserID(
       postsID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -123,6 +128,7 @@ export const commentsByPostsID = /* GraphQL */ `query CommentsByPostsID(
       postsID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -157,6 +163,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -174,6 +181,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -202,6 +210,7 @@ export const findEmail = /* GraphQL */ `query FindEmail(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -230,6 +239,7 @@ export const findUsername = /* GraphQL */ `query FindUsername(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -255,6 +265,7 @@ export const getPosts = /* GraphQL */ `query GetPosts($id: ID!) {
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     userID
@@ -264,6 +275,7 @@ export const getPosts = /* GraphQL */ `query GetPosts($id: ID!) {
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -284,6 +296,7 @@ export const listPosts = /* GraphQL */ `query ListPosts(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -315,6 +328,7 @@ export const postsByUserID = /* GraphQL */ `query PostsByUserID(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -338,10 +352,12 @@ export const getRevisionCard = /* GraphQL */ `query GetRevisionCard($id: ID!) {
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -362,6 +378,7 @@ export const listRevisionCards = /* GraphQL */ `query ListRevisionCards(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -393,6 +410,7 @@ export const revisionCardsByUserID = /* GraphQL */ `query RevisionCardsByUserID(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -418,10 +436,12 @@ export const getAudionotes = /* GraphQL */ `query GetAudionotes($id: ID!) {
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -444,6 +464,7 @@ export const listAudionotes = /* GraphQL */ `query ListAudionotes(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken
@@ -477,6 +498,7 @@ export const audionotesByUserID = /* GraphQL */ `query AudionotesByUserID(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     nextToken

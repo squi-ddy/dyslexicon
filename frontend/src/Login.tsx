@@ -13,15 +13,31 @@ import {
     Checkbox,
     useToast
 } from "@chakra-ui/react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { handleSignIn } from "./util/api"
+import { handleSignIn, isLoggedIn, handleSignOut } from "./util/api"
+
 
 export function Login() {
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+         
+        if (isLoggedIn()) {
+            navigate("/")   
+        }
+        try{
+            handleSignOut();
+        }catch(err){
+            console.log(err)
+        }   
+    }, [navigate])
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [invalid, setInvalid] = useState(false)
-    const navigate = useNavigate()
+   
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)  
     const toast = useToast()
@@ -106,6 +122,7 @@ export function Login() {
                                     navigate("/")
                                     
                                 } catch (error : any) {
+                                    console.log(error)
                                     toast({
                                         title: 'Error',
                                         description: error.message,

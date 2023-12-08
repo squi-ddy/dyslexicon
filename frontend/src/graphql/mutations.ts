@@ -28,6 +28,7 @@ export const createComments = /* GraphQL */ `mutation CreateComments(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     User {
@@ -37,10 +38,12 @@ export const createComments = /* GraphQL */ `mutation CreateComments(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -68,6 +71,7 @@ export const updateComments = /* GraphQL */ `mutation UpdateComments(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     User {
@@ -77,10 +81,12 @@ export const updateComments = /* GraphQL */ `mutation UpdateComments(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -108,6 +114,7 @@ export const deleteComments = /* GraphQL */ `mutation DeleteComments(
       userID
       createdAt
       updatedAt
+      owner
       __typename
     }
     User {
@@ -117,10 +124,12 @@ export const deleteComments = /* GraphQL */ `mutation DeleteComments(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -155,6 +164,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -189,6 +199,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -223,6 +234,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -248,6 +260,7 @@ export const createPosts = /* GraphQL */ `mutation CreatePosts(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     userID
@@ -257,6 +270,7 @@ export const createPosts = /* GraphQL */ `mutation CreatePosts(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -282,6 +296,7 @@ export const updatePosts = /* GraphQL */ `mutation UpdatePosts(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     userID
@@ -291,6 +306,7 @@ export const updatePosts = /* GraphQL */ `mutation UpdatePosts(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -316,6 +332,7 @@ export const deletePosts = /* GraphQL */ `mutation DeletePosts(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     userID
@@ -325,6 +342,7 @@ export const deletePosts = /* GraphQL */ `mutation DeletePosts(
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -348,10 +366,12 @@ export const createRevisionCard = /* GraphQL */ `mutation CreateRevisionCard(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -375,10 +395,12 @@ export const updateRevisionCard = /* GraphQL */ `mutation UpdateRevisionCard(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -402,10 +424,12 @@ export const deleteRevisionCard = /* GraphQL */ `mutation DeleteRevisionCard(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -431,10 +455,12 @@ export const createAudionotes = /* GraphQL */ `mutation CreateAudionotes(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -460,10 +486,12 @@ export const updateAudionotes = /* GraphQL */ `mutation UpdateAudionotes(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }
@@ -489,10 +517,12 @@ export const deleteAudionotes = /* GraphQL */ `mutation DeleteAudionotes(
       imageID
       createdAt
       updatedAt
+      owner
       __typename
     }
     createdAt
     updatedAt
+    owner
     __typename
   }
 }

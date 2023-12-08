@@ -70,6 +70,7 @@ export function ConfirmSignUp() {
                                     return
                                 }
                                 await handleSignUpConfirmation({username: loggedInUser, confirmationCode: code})
+                                navigate("/")
                             }}
                         >
                             Confirm

@@ -31,12 +31,13 @@ import { ReadContentWord } from "./ReadContentWord"
 import { GiOpenBook } from "react-icons/gi"
 
 export function ReadContent() {
-    const { contentId, content } = useLoaderData() as UserContentLoaderReturn
+    const { contentId, content } = useLoaderData() as UserContentLoaderReturn // Works
+
     const navigate = useNavigate()
     const [playing, setPlaying] = useBoolean(false)
     const [editing, setEditing] = useBoolean(false)
     const [title, setTitle] = useState(content.title)
-    const [body, setBody] = useState(content.body)
+    const [body, setBody] = useState(content.content)
     const [newTitle, setNewTitle] = useState("")
     const [newBody, setNewBody] = useState("")
     const [processedBody, setProcessedBody] = useState([""])
@@ -71,15 +72,15 @@ export function ReadContent() {
             }
         }
         setProcessedBody(processed)
-        console.log(processed)
+
     }, [body])
 
-    useEffect(() => {
-        editUserContent(contentId, {
-            title,
-            body,
-        })
-    }, [title, body, contentId])
+    // useEffect(() => {
+    //     editUserContent(contentId, {
+    //         title,
+    //         body,
+    //     })
+    // }, [title, body, contentId])
 
     useEffect(() => {
         if (playing) {

@@ -17,6 +17,7 @@ import {
     Text,
     Textarea,
     VStack,
+    useToast
 } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
 import { GoCheck } from "react-icons/go"
@@ -26,6 +27,7 @@ import { addUserContent } from "./util/api"
 import { Predictions } from '@aws-amplify/predictions';
 
 export function AddReadContent() {
+    const toast = useToast()
     const navigate = useNavigate()
     const [title, setTitle] = useState("New Content")
     const [contentType, setContentType] = useState("ai")
@@ -46,14 +48,11 @@ export function AddReadContent() {
     }, [contentType])
 
     async function addContent() {
+        
         setInvalid(title === "" || (contentType !== "text" && contentType !== "image"))
         if (title === "" || contentType !== "text") return
         if (contentType === "text") {
-            addUserContent({
-                title,
-                body,
-            })
-            navigate(-1)
+
         } else if (contentType === "image") {
             // TODO: other content types
             if (fileUploaded === null) return
@@ -62,14 +61,21 @@ export function AddReadContent() {
                   { source: { file: fileUploaded } }});
             
             const body = String(response.text.fullText);
-            addUserContent({
-                title,
-                body
-            })
-            navigate(-1)
+            
         } else if (contentType === "audio") {
             // TODO
         }
+        toast.promise(addUserContent({
+            title,
+            body
+        }).then(() => {
+            navigate(-1)
+        }), {
+            success: { title: 'Success', description: 'AudioNotes Created' },
+            error: { title: 'Failure', description: 'Something went wrong' },
+            loading: { title: 'Loading', description: 'Making AudioNotes' },
+          });
+        
     }
 
     return (

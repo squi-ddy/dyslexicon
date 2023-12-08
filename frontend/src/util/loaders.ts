@@ -6,7 +6,8 @@ export async function userContentLoader(data: {
     params: Params<string>
 }): Promise<UserContentLoaderReturn> {
     const contentId = data.params.contentId!
-    return { contentId, content: getUserContentById(contentId) }
+    const content = await getUserContentById(contentId)!
+    return { contentId, content }
 }
 
 export async function forumContentLoader(data: {

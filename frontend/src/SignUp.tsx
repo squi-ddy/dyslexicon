@@ -15,17 +15,24 @@ import {
     Checkbox,
     useToast 
 } from "@chakra-ui/react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { handleSignUp } from "./util/api"
+import { handleSignUp, isLoggedIn } from "./util/api"
 
 export function SignUp() {
+    const navigate = useNavigate()
+    useEffect(() => {
+         
+        if (isLoggedIn()) {
+            navigate("/")   
+        }
+    }, [navigate])
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [confirm, setConfirm] = useState("")
     const [invalid, setInvalid] = useState(false)
-    const navigate = useNavigate()
+    
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)  
     const toast = useToast()
@@ -149,7 +156,7 @@ export function SignUp() {
                                             isClosable: true,
                                           })
                                     } catch (error : any) {
-                                        
+                                        console.log(error)
                                         toast({
                                             title: 'Error',
                                             description: error.message,

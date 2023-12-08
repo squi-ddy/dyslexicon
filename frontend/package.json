@@ -17,7 +17,7 @@
         "@chakra-ui/react": "^2.8.0",
         "@emotion/react": "^11.11.1",
         "@types/react-router": "^5.1.20",
-        "aws-amplify": "^6.0.5",
+        "aws-amplify": "^6.0.2",
         "axios": "^1.6.2",
         "framer-motion": "^10.16.4",
         "react": "^18.2.0",
