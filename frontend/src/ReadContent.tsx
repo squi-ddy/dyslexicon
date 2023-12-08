@@ -32,7 +32,8 @@ import { GiOpenBook } from "react-icons/gi"
 
 export function ReadContent() {
     const { contentId, content } = useLoaderData() as UserContentLoaderReturn // Works
-
+    // content.align contains the alignment of the text
+    console.log(content)
     const navigate = useNavigate()
     const [playing, setPlaying] = useBoolean(false)
     const [editing, setEditing] = useBoolean(false)

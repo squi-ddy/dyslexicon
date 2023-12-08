@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import { useSize } from "@chakra-ui/react-use-size"
 import { Link } from "react-router-dom"
-import { getUserContent } from "./util/api"
+import { getUserContent, loggedInUser } from "./util/api"
 import { CustomTooltip } from "./CustomTooltip"
 import { AddIcon } from "@chakra-ui/icons"
 import { useRef, useState, useEffect } from "react"
@@ -25,7 +25,9 @@ export function HomeRead() {
             const userContent = await getUserContent();
             setUser(userContent);
         }
-        setUserContent();
+        if (loggedInUser !== ""){
+            setUserContent();
+        }
     });
     
     const cardIdealWidth = 250

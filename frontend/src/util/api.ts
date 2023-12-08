@@ -148,8 +148,8 @@ export async function addUserContent(content: UserContentData): Promise<boolean>
             };
             axios.post("http://18.136.208.218:8080/align", 
             {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
-                console.log(res);
                 const audionote = await client.graphql({
+                    
                     query: createAudionotes,
                     variables: {
                       input: {
@@ -157,7 +157,7 @@ export async function addUserContent(content: UserContentData): Promise<boolean>
                         title: content.title,
                         userID: user!.id!,
                         audioID: result.key,
-                        align: res.data.predictions[0],
+                        align: JSON.stringify(res.data.predictions.fragments),
                       }  
                     },
                     authMode: 'userPool' 
@@ -165,7 +165,7 @@ export async function addUserContent(content: UserContentData): Promise<boolean>
                   
              })
              .catch((err) => {
-                console.log(err.message);
+                console.log(err);
                 return false;
              });
             
