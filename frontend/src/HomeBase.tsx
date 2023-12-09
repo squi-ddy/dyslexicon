@@ -16,20 +16,21 @@ import { isLoggedIn, handleSignOut, user_name, doAutoSignIn } from "./util/api"
 import { homeNav } from "./util/routes"
 
 export function HomeBase() {
-    
     const navigate = useNavigate()
 
-    useEffect(() => {(async () => {
-        if (!await doAutoSignIn()) {
-            navigate("/login")
-            return
-        }
-        if (!isLoggedIn()) {
-            navigate("/login")
-            return
-        }
-        navigate("/")
-    })()}, [navigate])
+    useEffect(() => {
+        ;(async () => {
+            if (!(await doAutoSignIn())) {
+                navigate("/login")
+                return
+            }
+            if (!isLoggedIn()) {
+                navigate("/login")
+                return
+            }
+            navigate("/")
+        })()
+    }, [navigate])
 
     return (
         <Flex direction="column" h="full">

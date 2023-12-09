@@ -1,12 +1,8 @@
 {
-  "resourceName": "s3dyslexiconstorage",
-  "bucketName": "dyslexicon-storage",
-  "policyUUID": "42886808",
-  "storageAccess": "auth",
-  "guestAccess": [],
-  "authAccess": [
-    "CREATE_AND_UPDATE",
-    "READ",
-    "DELETE"
-  ]
+    "resourceName": "s3dyslexiconstorage",
+    "bucketName": "dyslexicon-storage",
+    "policyUUID": "42886808",
+    "storageAccess": "auth",
+    "guestAccess": [],
+    "authAccess": ["CREATE_AND_UPDATE", "READ", "DELETE"]
 }

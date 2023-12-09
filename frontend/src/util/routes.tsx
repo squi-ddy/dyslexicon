@@ -103,7 +103,7 @@ const globalRoutes: RouteObject[] = [
                 path: "confirm",
                 element: <ConfirmSignUp />,
             },
-        ]
+        ],
     },
 ]
 

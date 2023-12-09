@@ -1,19 +1,19 @@
 projects:
-  Dyslexicon:
-    schemaPath: amplify/backend/api/Dyslexicon/build/schema.graphql
-    includes:
-      - src/graphql/**/*.ts
-    excludes:
-      - ./amplify/**
-      - src/API.ts
-    extensions:
-      amplify:
-        codeGenTarget: typescript
-        generatedFileName: src/API.ts
-        docsFilePath: src/graphql
-        region: ap-southeast-1
-        apiId: null
-        maxDepth: 2
+    Dyslexicon:
+        schemaPath: amplify/backend/api/Dyslexicon/build/schema.graphql
+        includes:
+            - src/graphql/**/*.ts
+        excludes:
+            - ./amplify/**
+            - src/API.ts
+        extensions:
+            amplify:
+                codeGenTarget: typescript
+                generatedFileName: src/API.ts
+                docsFilePath: src/graphql
+                region: ap-southeast-1
+                apiId: null
+                maxDepth: 2
 extensions:
-  amplify:
-    version: 3
+    amplify:
+        version: 3

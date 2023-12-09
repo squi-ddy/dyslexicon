@@ -19,17 +19,17 @@ import { AddIcon } from "@chakra-ui/icons"
 import { useRef, useState, useEffect } from "react"
 
 export function HomeRead() {
-    const [user, setUser] = useState<any[]>([]);
+    const [user, setUser] = useState<any[]>([])
     useEffect(() => {
         async function setUserContent(): Promise<void> {
-            const userContent = await getUserContent();
-            setUser(userContent);
+            const userContent = await getUserContent()
+            setUser(userContent)
         }
-        if (getLoggedInUser() !== ""){
-            setUserContent();
+        if (getLoggedInUser() !== "") {
+            setUserContent()
         }
-    });
-    
+    })
+
     const cardIdealWidth = 250
     const cardAspectRatio = 1
     const VStackRef = useRef(null)
@@ -64,7 +64,7 @@ export function HomeRead() {
                 mt={4}
                 overflowY={"scroll"}
             >
-                {Object.entries(user).map(([index,audionote]) => (
+                {Object.entries(user).map(([index, audionote]) => (
                     <Card
                         key={audionote.id}
                         as={Link}

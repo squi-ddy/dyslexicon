@@ -1,5 +1,24 @@
-import { Flex, Heading, VStack, Divider, FormControl, FormLabel, Input, FormErrorMessage, HStack, Checkbox, Button, Text, useToast } from "@chakra-ui/react"
-import { handleSignUpConfirmation, getLoggedInUser, isInSignUp, getSignUpUser } from "./util/api"
+import {
+    Flex,
+    Heading,
+    VStack,
+    Divider,
+    FormControl,
+    FormLabel,
+    Input,
+    FormErrorMessage,
+    HStack,
+    Checkbox,
+    Button,
+    Text,
+    useToast,
+} from "@chakra-ui/react"
+import {
+    handleSignUpConfirmation,
+    getLoggedInUser,
+    isInSignUp,
+    getSignUpUser,
+} from "./util/api"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -41,16 +60,12 @@ export function ConfirmSignUp() {
                 >
                     <Heading textAlign={"center"}>Confirm Sign Up</Heading>
                     <Divider />
-                    <VStack
-                        overflowY={"scroll"}
-                    >
+                    <VStack overflowY={"scroll"}>
                         <Text fontSize={"md"}>
-                            A confirmation code has been sent to your email. Please enter it below.
+                            A confirmation code has been sent to your email.
+                            Please enter it below.
                         </Text>
-                        <FormControl
-                            isInvalid={invalid}
-                            isRequired
-                        >
+                        <FormControl isInvalid={invalid} isRequired>
                             <Input
                                 type={"text"}
                                 textAlign={"center"}
@@ -61,34 +76,36 @@ export function ConfirmSignUp() {
                             </FormErrorMessage>
                         </FormControl>
 
-                        <Button w={"full"} flexShrink={0}
+                        <Button
+                            w={"full"}
+                            flexShrink={0}
                             onClick={async () => {
                                 const code = inputEle.current!.value
-                                setInvalid(
-                                    code === ""
-                                )
+                                setInvalid(code === "")
                                 if (code === "") {
                                     return
                                 }
-                                    if (await handleSignUpConfirmation({username: getSignUpUser(), confirmationCode: code})) {
-                                        toast({
-                                            title: 'Success',
-                                            description: "Account Created!",
-                                            status: 'success',
-                                            duration: 9000,
-                                            isClosable: true,
-                                          })
-                                        navigate("/")
-                                    } else {
-                                        setInvalid(true)
-                                    }
-
-                                
+                                if (
+                                    await handleSignUpConfirmation({
+                                        username: getSignUpUser(),
+                                        confirmationCode: code,
+                                    })
+                                ) {
+                                    toast({
+                                        title: "Success",
+                                        description: "Account Created!",
+                                        status: "success",
+                                        duration: 9000,
+                                        isClosable: true,
+                                    })
+                                    navigate("/")
+                                } else {
+                                    setInvalid(true)
+                                }
                             }}
                         >
                             Confirm
                         </Button>
-                    
                     </VStack>
                 </VStack>
             </Flex>
