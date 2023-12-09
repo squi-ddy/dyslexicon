@@ -1,14 +1,31 @@
 import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
-import { generateClient, get } from 'aws-amplify/api';
-import { uploadData, downloadData, remove  } from 'aws-amplify/storage';
-import { Predictions } from '@aws-amplify/predictions';
-import { v4 as uuidv4 } from 'uuid';
-import { getUser, audionotesByUserID, getAudionotes, listPosts, getPosts, commentsByPostsID } from '../graphql/queries';
-import { createAudionotes, updateAudionotes, deleteAudionotes, createUser, updateUser, deleteUser } from '../graphql/mutations';
-import axios from 'axios';
-import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser  } from 'aws-amplify/auth';
+import { generateClient, get } from "aws-amplify/api"
+import { uploadData, downloadData, remove  } from "aws-amplify/storage"
+import { Predictions } from "@aws-amplify/predictions"
+import { v4 as uuidv4 } from "uuid"
+import { getUser, audionotesByUserID, getAudionotes, listPosts, getPosts, commentsByPostsID } from "../graphql/queries"
+import {
+    createAudionotes,
+    updateAudionotes,
+    deleteAudionotes,
+    createUser,
+    updateUser,
+    deleteUser,
+} from "../graphql/mutations"
+import axios from "axios"
+import {
+    signUp,
+    confirmSignUp,
+    type ConfirmSignUpInput,
+    signIn,
+    type SignInInput,
+    signOut,
+    getCurrentUser,
+    fetchUserAttributes,
+    autoSignIn,
+} from "aws-amplify/auth"
 // TODO: use firestore
 
 const client = generateClient();
@@ -44,9 +61,10 @@ const forumContent: { [id: string]: ForumContentData } = {
     },
 }
 
-export let loggedInUser = ""
+let loggedInUser: string = ""
 export let user_name = ""
-let input : any;
+let signUpPass: string = ""
+let signUpUser: string = ""
 const reviseWords: { [username: string]: string[] } = {
     "4a64f2f7-704c-4f0d-a47a-89b57d8a4962": ["hello", "world", "goodbye", "goodnight", "pronunciation"],
 }
@@ -120,7 +138,7 @@ export async function getUserContent() {
         variables: {
             userID: loggedInUser,
         },
-        authMode: 'userPool'
+        authMode: "userPool",
     })
 
     return result.data.audionotesByUserID.items
@@ -132,7 +150,7 @@ export async function getUserContentById(id: string) {
         variables: {
             id: id
         },
-        authMode: 'userPool'
+        authMode: "userPool",
     })
     
     return result.data.getAudionotes
@@ -177,8 +195,46 @@ export function addComment(contentId: string, comment: ForumCommentData) {
     forumContent[contentId].comments.push(comment)
 }
 
-export function addForumPost(content: ForumContentData) {
-    forumContent[crypto.randomUUID()] = content
+export async function addForumPost(content: ForumContentData) {
+    const user = await currentAuthenticatedUser();
+    const result = await uploadData({
+        key: `${user!.id}/audio/posts/${uuidv4()}.wav`,
+        data: audio.audioStream,
+        options: {
+            accessLevel: 'private',
+        }
+    }).result;
+    let bufferToBase64 = function (buffer : any) {
+        let bytes = new Uint8Array(buffer);
+        let len = buffer.byteLength;
+        let binary = "";
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+    };
+    axios.post("http://18.136.208.218:8080/align", 
+    {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
+        const audionote = await client.graphql({
+            
+            query: createAudionotes,
+            variables: {
+              input: {
+                content: content.body,
+                title: content.title,
+                userID: user!.id!,
+                audioID: result.key,
+                align: JSON.stringify(res.data.predictions.fragments),
+              }  
+            },
+            authMode: 'userPool' 
+          });
+          
+     })
+     .catch((err) => {
+        console.log(err);
+        return false;
+     });
 }
 export async function deleteUserContent(id: string, filename: string) {
     await remove({key: filename});
@@ -381,6 +437,10 @@ export function isLoggedIn() {
     return loggedInUser !== ""
 }
 
+export function isInSignUp() {
+    return signUpUser !== ""
+}
+
 export function logIn(username: string, password: string): boolean {
     if (users[username] === password) {
         loggedInUser = username
@@ -404,64 +464,65 @@ export function logIn(username: string, password: string): boolean {
 
 
 export type SignUpParameters = {
-  username: string;
-  password: string;
-  email: string;
-};
+    username: string
+    password: string
+    email: string
+}
 
 export async function handleSignUp({
-  username,
-  password,
-  email,
+    username,
+    password,
+    email,
 }: SignUpParameters) {
-  try {
-    const { isSignUpComplete, userId, nextStep } = await signUp({
-      username: email,
-      password: password,
-      options: {
-            userAttributes: {email: email, preferred_username: username},
-            validationData: {Name: "username", Value: username},
-            autoSignIn: true
-    }})
-    loggedInUser = userId!;
-    user_name = password;
-    input = {
-        id: loggedInUser!,
-        email: email,
-        username: username,
-    }
+    try {
+        const { isSignUpComplete, userId, nextStep } = await signUp({
+            username: email,
+            password: password,
+            options: {
+                userAttributes: { email: email, preferred_username: username },
+                validationData: { Name: "username", Value: username },
+                autoSignIn: true,
+            },
+        })
 
-    if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-        return true
-    } else if (nextStep.signUpStep === "DONE") {
-        return false
-    } else {
-        // auto sign in stuff
+        signUpPass = password
+        signUpUser = userId!
+
+        if (nextStep.signUpStep === "CONFIRM_SIGN_UP") {
+            return true
+        } else if (nextStep.signUpStep === "DONE") {
+            return false
+        } else {
+            // auto sign in stuff
+        }
+    } catch (error: any) {
+        console.log(error)
+        if (
+            error.code === "UserLambdaValidationException" &&
+            error.message ==
+                "PreSignUp failed with error: Username already exists!."
+        ) {
+            error.message = "Username already exists"
+        }
+        throw error
     }
-  } catch (error : any) {
-    console.log(error)
-    if (error.code === "UserLambdaValidationException" && error.message == "PreSignUp failed with error Username already exists!.") {    
-        error.message = "Username already exists";  
-    }    
-    throw error;  
-  }
 }
 
 export async function handleSignIn({ username, password }: SignInInput) {
-  try {
-
-    const { isSignedIn, nextStep } = await signIn({ username, password });
-    const user = await currentAuthenticatedUser();
-    loggedInUser = user!.id;
-    let details = await getUserDetails();
-    user_name = details!.username;
-    return isSignedIn;
-  } catch (error) {
-
-        throw error;
-
-  }
-
+    try {
+        const { isSignedIn, nextStep } = await signIn({ username, password })
+        console.log(nextStep)
+        if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
+            signUpPass = password!
+            signUpUser = username
+            return false
+        }
+        let details = await getUserDetails()
+        user_name = details!.username
+        return isSignedIn
+    } catch (error) {
+        throw error
+    }
 }
 
 export async function handleSignUpConfirmation({
@@ -469,28 +530,38 @@ export async function handleSignUpConfirmation({
     confirmationCode
   }: ConfirmSignUpInput) {
     try {
-        await confirmSignUp({
-        username,
-        confirmationCode
-      }).then(async () => {
-        await signIn({username: loggedInUser, password: user_name}).then(async () => {
-            user_name = input.username;
-            await client.graphql({
-                query: createUser,
-                variables: {
-                    input: input
-                },
-                authMode: 'userPool'
-            });})
-        });
-      
-    } catch (error) {
-      console.log(error);
+        const { isSignUpComplete, nextStep } = await confirmSignUp({
+            username,
+            confirmationCode,
+        })
+        if (!isSignUpComplete) {
+            return false
+        }
+        await signIn({ username: username, password: signUpPass })
+        const user = await currentAuthenticatedUser()
+        const signupInput = user!
+        console.log(user)
+        await client.graphql({
+            query: createUser,
+            variables: {
+                input: signupInput!,
+            },
+            authMode: "userPool",
+        })
+        loggedInUser = user!.id!
+        user_name = user!.username
+        signUpUser = ""
+        signUpPass = ""
+        return true
+    } catch (error: any) {
+        console.log(error)
+        return false
     }
-  }
+}
 
-
-  
+export function getSignUpUser() {
+    return signUpUser
+}
 
 export async function handleSignOut() {
     try {
@@ -502,26 +573,43 @@ export async function handleSignOut() {
   }
 
 export async function currentAuthenticatedUser() {
-  try {
-    const { username, userId, signInDetails } = await getCurrentUser();
-    return { username: username, id: userId};
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        const { username, userId, signInDetails } = await getCurrentUser()
+        const attributes = await fetchUserAttributes()
+        return {
+            email: attributes.email!,
+            username: attributes.preferred_username!,
+            id: userId,
+        }
+    } catch (err) {
+        console.log(err)
+    }
 }
 
-export async function getUserDetails() { 
-  try {
-    const result = await client.graphql({
-        query: getUser,
-        variables: {
-            id: loggedInUser
-        },
-        authMode: 'userPool'
-    })
-    return result.data.getUser;
-  } catch (error) {
-    throw error;
-  }
+export async function getUserDetails() {
+    try {
+        const result = await client.graphql({
+            query: getUser,
+            variables: {
+                id: loggedInUser,
+            },
+            authMode: "userPool",
+        })
+        return result.data.getUser
+    } catch (error) {
+        throw error
+    }
 }
 
+export async function doAutoSignIn() {
+    try {
+        const user = await currentAuthenticatedUser()
+        if (!user) return false
+        console.log(user)
+        loggedInUser = user.id!
+        user_name = user.username
+        return true
+    } catch (error) {
+        return false
+    }
+}

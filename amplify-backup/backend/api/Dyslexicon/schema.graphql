@@ -1,0 +1,49 @@
+type Comments @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
+  id: ID!
+  content: String
+  postedAt: AWSDateTime
+  userID: ID! @index(name: "byUser")
+  postsID: ID! @index(name: "byPosts")
+  Posts: Posts @belongsTo(fields: ["postsID"])
+  User: User @belongsTo(fields: ["userID"])
+}
+
+type User @model @aws_cognito_user_pools @auth (rules: [{ allow: public, operations: [read] }, {allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
+  id: ID!
+  Posts: [Posts] @hasMany(indexName: "byUser", fields: ["id"])
+  RevisionCards: [RevisionCard] @hasMany(indexName: "byUser", fields: ["id"])
+  Audionotes: [Audionotes] @hasMany(indexName: "byUser", fields: ["id"])
+  email: AWSEmail! @index(name: "findEmail", queryField: "findEmail")
+  username: String! @index(name: "findUsername", queryField: "findUsername")
+  imageID: String
+  Comments: [Comments] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+type Posts @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
+  id: ID!
+  title: String
+  content: String
+  postedAt: AWSDateTime
+  likes: Int
+  audioID: String
+  User: User @belongsTo(fields: ["userID"])
+  userID: ID! @index(name: "byUser")
+  Comments: [Comments] @hasMany(indexName: "byPosts", fields: ["id"])
+}
+
+type RevisionCard @model @auth(rules: [{allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
+  id: ID!
+  front: String
+  back: String
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+}
+
+type Audionotes @model @auth(rules: [{allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
+  id: ID!
+  title: String
+  content: String
+  audioID: String
+  userID: ID! @index(name: "byUser")
+  User: User @belongsTo(fields: ["userID"])
+}

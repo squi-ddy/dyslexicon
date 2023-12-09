@@ -33,7 +33,6 @@ import { ReadContentWord } from "./ReadContentWord"
 import { GiOpenBook } from "react-icons/gi"
 
 export function ReadContent() {
-    const context = new AudioContext(); 
     const toast = useToast();
     const { contentId, content } = useLoaderData() as UserContentLoaderReturn // Works
     // content.align contains the alignment of the text
@@ -95,7 +94,6 @@ export function ReadContent() {
             }
         }
         setProcessedBody(processed)
-
     }, [body])
 
     useEffect(() => {

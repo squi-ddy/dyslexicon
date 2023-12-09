@@ -17,14 +17,14 @@ import {
     Text,
     Textarea,
     VStack,
-    useToast
+    useToast,
 } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
 import { GoCheck } from "react-icons/go"
 import { useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { addUserContent } from "./util/api"
-import { Predictions } from '@aws-amplify/predictions';
+import { Predictions } from "@aws-amplify/predictions"
 
 export function AddReadContent() {
     const toast = useToast()
@@ -48,34 +48,41 @@ export function AddReadContent() {
     }, [contentType])
 
     async function addContent() {
-        
-        setInvalid(title === "" || (contentType !== "text" && contentType !== "image"))
+        setInvalid(
+            title === "" || (contentType !== "text" && contentType !== "image")
+        )
         if (title === "" || contentType !== "text") return
         if (contentType === "text") {
-
         } else if (contentType === "image") {
             // TODO: other content types
             if (fileUploaded === null) return
             const response = await Predictions.identify({
-                text: 
-                  { source: { file: fileUploaded } }});
-            
-            const body = String(response.text.fullText);
-            
+                text: { source: { file: fileUploaded } },
+            })
+
+            const body = String(response.text.fullText)
         } else if (contentType === "audio") {
             // TODO
         }
-        toast.promise(addUserContent({
-            title,
-            body
-        }).then(() => {
-            navigate(-1)
-        }), {
-            success: { title: 'Success', description: 'AudioNotes Created' },
-            error: { title: 'Failure', description: 'Something went wrong' },
-            loading: { title: 'Loading', description: 'Making AudioNotes' },
-          });
-        
+        toast.promise(
+            addUserContent({
+                title,
+                body,
+            }).then(() => {
+                navigate(-1)
+            }),
+            {
+                success: {
+                    title: "Success",
+                    description: "AudioNotes Created",
+                },
+                error: {
+                    title: "Failure",
+                    description: "Something went wrong",
+                },
+                loading: { title: "Loading", description: "Making AudioNotes" },
+            }
+        )
     }
 
     return (
@@ -108,7 +115,11 @@ export function AddReadContent() {
                 />
                 <FormErrorMessage>A title is required.</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={invalid && (contentType !== "text" && contentType !== "image")}>
+            <FormControl
+                isInvalid={
+                    invalid && contentType !== "text" && contentType !== "image"
+                }
+            >
                 <FormLabel>Content Type</FormLabel>
                 <Select
                     value={contentType}

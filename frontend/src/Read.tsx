@@ -13,25 +13,23 @@ import {
 } from "@chakra-ui/react"
 import { useSize } from "@chakra-ui/react-use-size"
 import { Link } from "react-router-dom"
-import { getUserContent, loggedInUser } from "./util/api"
+import { getLoggedInUser, getUserContent } from "./util/api"
 import { CustomTooltip } from "./CustomTooltip"
 import { AddIcon } from "@chakra-ui/icons"
 import { useRef, useState, useEffect } from "react"
 
 export function HomeRead() {
-    const [user, setUser] = useState<any[]>([]);
-    let done = false;
+    const [user, setUser] = useState<any[]>([])
     useEffect(() => {
         async function setUserContent(): Promise<void> {
-            const userContent = await getUserContent();
-            setUser(userContent);
+            const userContent = await getUserContent()
+            setUser(userContent)
         }
-        if (loggedInUser !== "" && !done){
-            setUserContent();
-            done = true;
+        if (getLoggedInUser() !== "") {
+            setUserContent()
         }
-    }, [user]);
-    
+    })
+
     const cardIdealWidth = 250
     const cardAspectRatio = 1
     const VStackRef = useRef(null)
@@ -66,7 +64,7 @@ export function HomeRead() {
                 mt={4}
                 overflowY={"scroll"}
             >
-                {Object.entries(user).map(([index,audionote]) => (
+                {Object.entries(user).map(([index, audionote]) => (
                     <Card
                         key={audionote.id}
                         as={Link}

@@ -12,18 +12,24 @@ import { HiOutlineLogout } from "react-icons/hi"
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { NavBox } from "./NavBox"
-import { isLoggedIn, handleSignOut, user_name } from "./util/api"
+import { isLoggedIn, handleSignOut, user_name, doAutoSignIn } from "./util/api"
 import { homeNav } from "./util/routes"
 
 export function HomeBase() {
-    
     const navigate = useNavigate()
+
     useEffect(() => {
-         
-        if (!isLoggedIn()) {
-            navigate("/login")     
-            handleSignOut();
-        }
+        ;(async () => {
+            if (!(await doAutoSignIn())) {
+                navigate("/login")
+                return
+            }
+            if (!isLoggedIn()) {
+                navigate("/login")
+                return
+            }
+            navigate("/")
+        })()
     }, [navigate])
 
     return (

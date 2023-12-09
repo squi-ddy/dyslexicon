@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { globalRoutes } from "./util/routes.tsx"
-import { Amplify } from 'aws-amplify';
-import config from './amplifyconfiguration.json';
+import { Amplify } from "aws-amplify"
+import config from "./amplifyconfiguration.json"
 
-Amplify.configure(config);
+Amplify.configure(config)
 
 const router = createBrowserRouter(globalRoutes, { basename: "/dyslexicon" })
 
