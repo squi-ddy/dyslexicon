@@ -12,6 +12,7 @@ export const getComments = /* GraphQL */ `query GetComments($id: ID!) {
   getComments(id: $id) {
     id
     content
+    audioID
     postedAt
     userID
     postsID
@@ -57,6 +58,7 @@ export const listComments = /* GraphQL */ `query ListComments(
     items {
       id
       content
+      audioID
       postedAt
       userID
       postsID
@@ -90,6 +92,7 @@ export const commentsByUserID = /* GraphQL */ `query CommentsByUserID(
     items {
       id
       content
+      audioID
       postedAt
       userID
       postsID
@@ -123,6 +126,7 @@ export const commentsByPostsID = /* GraphQL */ `query CommentsByPostsID(
     items {
       id
       content
+      audioID
       postedAt
       userID
       postsID
@@ -343,7 +347,8 @@ export const getRevisionCard = /* GraphQL */ `query GetRevisionCard($id: ID!) {
   getRevisionCard(id: $id) {
     id
     front
-    back
+    meaning
+    audioID
     userID
     User {
       id
@@ -374,7 +379,8 @@ export const listRevisionCards = /* GraphQL */ `query ListRevisionCards(
     items {
       id
       front
-      back
+      meaning
+      audioID
       userID
       createdAt
       updatedAt
@@ -406,7 +412,8 @@ export const revisionCardsByUserID = /* GraphQL */ `query RevisionCardsByUserID(
     items {
       id
       front
-      back
+      meaning
+      audioID
       userID
       createdAt
       updatedAt

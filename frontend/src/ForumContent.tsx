@@ -12,8 +12,9 @@ export function ForumContent() {
     const [currentContent, setCurrentContent] = useState(content)
     const navigate = useNavigate()
 
-    function triggerReload() {
-        setCurrentContent(Object.assign({}, getForumContentById(contentId)))
+    async function triggerReload() {
+        const update = await getForumContentById(contentId)
+        setCurrentContent(Object.assign({}, update))
     }
 
     return (

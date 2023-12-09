@@ -20,15 +20,17 @@ import { useRef, useState, useEffect } from "react"
 
 export function HomeRead() {
     const [user, setUser] = useState<any[]>([]);
+    let done = false;
     useEffect(() => {
         async function setUserContent(): Promise<void> {
             const userContent = await getUserContent();
             setUser(userContent);
         }
-        if (loggedInUser !== ""){
+        if (loggedInUser !== "" && !done){
             setUserContent();
+            done = true;
         }
-    });
+    }, [user]);
     
     const cardIdealWidth = 250
     const cardAspectRatio = 1

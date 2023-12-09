@@ -15,6 +15,7 @@ export const createComments = /* GraphQL */ `mutation CreateComments(
   createComments(input: $input, condition: $condition) {
     id
     content
+    audioID
     postedAt
     userID
     postsID
@@ -58,6 +59,7 @@ export const updateComments = /* GraphQL */ `mutation UpdateComments(
   updateComments(input: $input, condition: $condition) {
     id
     content
+    audioID
     postedAt
     userID
     postsID
@@ -101,6 +103,7 @@ export const deleteComments = /* GraphQL */ `mutation DeleteComments(
   deleteComments(input: $input, condition: $condition) {
     id
     content
+    audioID
     postedAt
     userID
     postsID
@@ -357,7 +360,8 @@ export const createRevisionCard = /* GraphQL */ `mutation CreateRevisionCard(
   createRevisionCard(input: $input, condition: $condition) {
     id
     front
-    back
+    meaning
+    audioID
     userID
     User {
       id
@@ -386,7 +390,8 @@ export const updateRevisionCard = /* GraphQL */ `mutation UpdateRevisionCard(
   updateRevisionCard(input: $input, condition: $condition) {
     id
     front
-    back
+    meaning
+    audioID
     userID
     User {
       id
@@ -415,7 +420,8 @@ export const deleteRevisionCard = /* GraphQL */ `mutation DeleteRevisionCard(
   deleteRevisionCard(input: $input, condition: $condition) {
     id
     front
-    back
+    meaning
+    audioID
     userID
     User {
       id

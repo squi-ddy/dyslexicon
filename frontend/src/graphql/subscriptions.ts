@@ -15,6 +15,7 @@ export const onCreateComments = /* GraphQL */ `subscription OnCreateComments(
   onCreateComments(filter: $filter, owner: $owner) {
     id
     content
+    audioID
     postedAt
     userID
     postsID
@@ -58,6 +59,7 @@ export const onUpdateComments = /* GraphQL */ `subscription OnUpdateComments(
   onUpdateComments(filter: $filter, owner: $owner) {
     id
     content
+    audioID
     postedAt
     userID
     postsID
@@ -101,6 +103,7 @@ export const onDeleteComments = /* GraphQL */ `subscription OnDeleteComments(
   onDeleteComments(filter: $filter, owner: $owner) {
     id
     content
+    audioID
     postedAt
     userID
     postsID
@@ -357,7 +360,8 @@ export const onCreateRevisionCard = /* GraphQL */ `subscription OnCreateRevision
   onCreateRevisionCard(filter: $filter, owner: $owner) {
     id
     front
-    back
+    meaning
+    audioID
     userID
     User {
       id
@@ -386,7 +390,8 @@ export const onUpdateRevisionCard = /* GraphQL */ `subscription OnUpdateRevision
   onUpdateRevisionCard(filter: $filter, owner: $owner) {
     id
     front
-    back
+    meaning
+    audioID
     userID
     User {
       id
@@ -415,7 +420,8 @@ export const onDeleteRevisionCard = /* GraphQL */ `subscription OnDeleteRevision
   onDeleteRevisionCard(filter: $filter, owner: $owner) {
     id
     front
-    back
+    meaning
+    audioID
     userID
     User {
       id

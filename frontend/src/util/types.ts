@@ -16,7 +16,7 @@ export type UserContentLoaderReturn = {
 
 export type ForumContentLoaderReturn = {
     contentId: string
-    content: ForumContentData
+    content: any
 }
 
 export type ForumContentData = {

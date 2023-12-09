@@ -14,5 +14,6 @@ export async function forumContentLoader(data: {
     params: Params<string>
 }): Promise<ForumContentLoaderReturn> {
     const contentId = data.params.contentId!
-    return { contentId, content: getForumContentById(contentId) }
+    const content = await getForumContentById(contentId)!
+    return { contentId, content }
 }

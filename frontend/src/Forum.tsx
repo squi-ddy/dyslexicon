@@ -8,14 +8,15 @@ import {
     VStack,
 } from "@chakra-ui/react"
 import { useSize } from "@chakra-ui/react-use-size"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { ForumCard } from "./ForumCard"
 import { getForumContent } from "./util/api"
+import { get } from "aws-amplify/api"
 
 export function Forum() {
-    const [forumContent, setForumContent] = useState(getForumContent())
+    const [forumContent, setForumContent] = useState<any[]>()
     const cardIdealWidth = 500
     const VStackRef = useRef(null)
     const dims = useSize(VStackRef)
@@ -23,8 +24,19 @@ export function Forum() {
         ? Math.min(cardIdealWidth, dims.width)
         : cardIdealWidth
 
-    function triggerReload() {
-        setForumContent(Object.assign({}, getForumContent()))
+    useEffect(() => {
+        async function setUserContent(): Promise<void> {
+            const f = await getForumContent();
+            setForumContent(f);
+        }
+
+        setUserContent();
+
+    }, [forumContent]);
+
+    async function triggerReload() {
+        const forum = await getForumContent();
+        setForumContent(Object.assign({}, forum))
     }
 
     // TODO: pagination
@@ -50,9 +62,9 @@ export function Forum() {
                 mt={4}
                 overflowY={"scroll"}
             >
-                {Object.entries(forumContent).map(([id, content]) => (
+                {Object.entries(forumContent!).map(([id, content]) => (
                     <ForumCard
-                        id={id}
+                        id={content.id}
                         content={content}
                         cardWidth={cardWidth}
                         limitHeight

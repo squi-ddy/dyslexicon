@@ -24,7 +24,7 @@ export function ForumCard(props: {
     styleProps?: BoxProps
     id: string
     hasLink?: true
-    content: ForumContentData
+    content: any
     cardWidth: "full" | number
     limitHeight?: true
     triggerReload: () => void
@@ -54,7 +54,7 @@ export function ForumCard(props: {
                 <Heading size={"md"} noOfLines={1}>
                     {props.content.title}
                 </Heading>
-                <Text fontSize="sm">Posted by {props.content.by}</Text>
+                <Text fontSize="sm">Posted by {props.content.username}</Text>
             </CardHeader>
             <CardBody minH={0} display={"flex"} flexDir={"column"}>
                 <VStack
@@ -69,11 +69,11 @@ export function ForumCard(props: {
                         overflow={"hidden"}
                         w={"full"}
                     >
-                        {props.content.body}
+                        {props.content.content}
                     </Text>
                     {props.content.audio && (
                         <Box as={"audio"} controls>
-                            <source src={props.content.audio} />
+                            <source src={URL.createObjectURL(new Blob([props.content.audio]))} />
                         </Box>
                     )}
                     <Divider borderWidth={2} />
@@ -85,7 +85,7 @@ export function ForumCard(props: {
                             overflowY={"scroll"}
                             flexShrink={1}
                         >
-                            {props.content.comments.map((comment) => (
+                            {props.content.comments.map((comment: any) => (
                                 <Text
                                     as={Box}
                                     borderWidth={2}
@@ -105,7 +105,7 @@ export function ForumCard(props: {
                                             controls
                                             maxW={"full"}
                                         >
-                                            <source src={comment.audio} />
+                                            <source src={URL.createObjectURL(new Blob([comment.audio]))} />
                                         </Box>
                                     ) : (
                                         <>&nbsp;</>
@@ -147,7 +147,7 @@ export function ForumCard(props: {
                                 label={"Post comment"}
                                 placement={"left"}
                             >
-                                <IconButton
+                                {/* <IconButton
                                     onClick={(e) => {
                                         addComment(props.id, {
                                             body: commentText,
@@ -160,7 +160,7 @@ export function ForumCard(props: {
                                     float={"right"}
                                     aria-label={"Post comment"}
                                     icon={<ArrowForwardIcon boxSize={5} />}
-                                ></IconButton>
+                                ></IconButton> */}
                             </CustomTooltip>
                         )}
                     </HStack>

@@ -2,34 +2,16 @@ import { ForumCommentData, ForumContentData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
 import { generateClient, get } from 'aws-amplify/api';
-import { uploadData } from 'aws-amplify/storage';
+import { uploadData, downloadData, remove  } from 'aws-amplify/storage';
 import { Predictions } from '@aws-amplify/predictions';
 import { v4 as uuidv4 } from 'uuid';
-import { getUser, audionotesByUserID, getAudionotes } from '../graphql/queries';
+import { getUser, audionotesByUserID, getAudionotes, listPosts, getPosts, commentsByPostsID } from '../graphql/queries';
 import { createAudionotes, updateAudionotes, deleteAudionotes, createUser, updateUser, deleteUser } from '../graphql/mutations';
 import axios from 'axios';
 import { signUp, confirmSignUp, type ConfirmSignUpInput, signIn, type SignInInput, signOut, getCurrentUser  } from 'aws-amplify/auth';
 // TODO: use firestore
 
 const client = generateClient();
-
-
-const userContent: { [username: string]: { [id: string]: UserContentData } } = {
-    johndoe: {
-        "1": {
-            title: "Lorem Ipsum",
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-        "1293": {
-            title: "Test1",
-            body: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz\nhi",
-        },
-        "2977": {
-            title: "Test",
-            body: "The\nquick\nbrown\nfox\njumps\nover\nthe\nlazy\ndog",
-        },
-    },
-}
 
 const forumContent: { [id: string]: ForumContentData } = {
     "1": {
@@ -66,8 +48,10 @@ export let loggedInUser = ""
 export let user_name = ""
 let input : any;
 const reviseWords: { [username: string]: string[] } = {
-    johndoe: ["hello", "world", "goodbye", "goodnight", "pronunciation"],
+    "4a64f2f7-704c-4f0d-a47a-89b57d8a4962": ["hello", "world", "goodbye", "goodnight", "pronunciation"],
 }
+
+const audioContext = new AudioContext();
 
 const users: { [username: string]: string } = {
     user1: "user1",
@@ -77,8 +61,56 @@ const users: { [username: string]: string } = {
     johndoe: "password123",
 }
 
-export function getForumContent() {
-    return forumContent
+export async function getForumContent() {
+    const result = await client.graphql({
+        query: listPosts
+    })
+    
+    const lists = result.data.listPosts.items
+    lists.forEach(async (element: any) => {
+        const user = await client.graphql({ 
+            query: getUser,
+            variables: {
+                id: element.userID
+            },
+            authMode: 'userPool'
+        })
+        const comments = await client.graphql({
+            query: commentsByPostsID,
+            variables: {
+                postsID: element.id
+            }
+        })
+        element.username = user.data.getUser!.username
+        if (element.audioID) {
+            const downloadResult = await downloadData({ 
+                key: element.audioID, options: {
+                accessLevel: 'private',
+            } }).result;
+            const text = await downloadResult.body.blob();
+            element.audio = text;
+        }
+        element.comments = comments.data.commentsByPostsID.items
+        element.comments.forEach(async (comment: any) => {
+            const user = await client.graphql({ 
+                query: getUser,
+                variables: {
+                    id: comment.userID
+                },
+                authMode: 'userPool'
+            })
+            comment.by = user.data.getUser!.username
+            if (comment.audioID) {
+                const downloadResult = await downloadData({ 
+                    key: element.audioID, options: {
+                    accessLevel: 'private',
+                } }).result;
+                const text = await downloadResult.body.blob();
+                comment.audio = text;
+            }
+        })
+    })
+    return lists
 }
 
 export async function getUserContent() {
@@ -102,11 +134,43 @@ export async function getUserContentById(id: string) {
         },
         authMode: 'userPool'
     })
+    
     return result.data.getAudionotes
 }
 
-export function getForumContentById(id: string) {
-    return forumContent[id]
+export async function getForumContentById(id: string) {
+    const result = await client.graphql({
+        query: getPosts,
+        variables: {
+            id: id
+        },
+        authMode: 'userPool'
+    })
+    const result2: any = result.data.getPosts;
+    const user = await client.graphql({ 
+        query: getUser,
+        variables: {
+            id: result2.userID
+        },
+        authMode: 'userPool'
+    })
+    const comments = await client.graphql({
+        query: commentsByPostsID,
+        variables: {
+            postsID: result2.id
+        }
+    })
+    result2.username = user.data.getUser!.username
+    if (result2.audioID) {
+        const downloadResult = await downloadData({ 
+            key: result2.audioID, options: {
+            accessLevel: 'private',
+        } }).result;
+        const text = await downloadResult.body.blob();
+        result2.audio = text;
+    }
+    result2.comments = comments.data.commentsByPostsID.items
+    return result2!
 }
 
 export function addComment(contentId: string, comment: ForumCommentData) {
@@ -116,7 +180,19 @@ export function addComment(contentId: string, comment: ForumCommentData) {
 export function addForumPost(content: ForumContentData) {
     forumContent[crypto.randomUUID()] = content
 }
-
+export async function deleteUserContent(id: string, filename: string) {
+    await remove({key: filename});
+    const result = await client.graphql({
+        query: deleteAudionotes,
+        variables: {
+            input: {
+                id: id
+            }
+        },
+        authMode: 'userPool'
+    })
+    return result.data.deleteAudionotes
+}
 export async function addUserContent(content: UserContentData): Promise<boolean> {
     // userContent[getLoggedInUser()][crypto.randomUUID()] = content
     const user = await currentAuthenticatedUser();
@@ -186,8 +262,89 @@ export function getNextReviseWord() {
     return reviseWords[getLoggedInUser()][0]
 }
 
-export function editUserContent(id: string, content: UserContentData) {
-    userContent[getLoggedInUser()][id] = content
+export async function downloadAudio(audioID: string) {
+    const downloadResult = await downloadData({ 
+        key: audioID, options: {
+        accessLevel: 'private',
+    } }).result;
+    const text = await downloadResult.body.blob();
+    const arrayBuffer = await text.arrayBuffer();
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+    return audioBuffer;
+}
+
+export async function editUserContent(id: string, content: UserContentData, audio: boolean, filename: string) {
+    if (audio) {
+        const user = await currentAuthenticatedUser();
+        await remove({key: filename});
+        Predictions.convert({
+        textToSpeech: {
+            source: {
+            text: content.body
+            },
+            voiceId: "Amy"
+        }
+        })
+        .then(async (audio) => {
+            try {
+                const result = await uploadData({
+                    key: `${user!.id}/audio/audionotes/${uuidv4()}.wav`,
+                    data: audio.audioStream,
+                    options: {
+                        accessLevel: 'private',
+                    }
+                }).result;
+                let bufferToBase64 = function (buffer : any) {
+                    let bytes = new Uint8Array(buffer);
+                    let len = buffer.byteLength;
+                    let binary = "";
+                    for (let i = 0; i < len; i++) {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+                    return btoa(binary);
+                };
+                axios.post("http://18.136.208.218:8080/align", 
+                {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
+                    const audionote = await client.graphql({
+                        
+                        query: updateAudionotes,
+                        variables: {
+                            input: {
+                                id: id,
+                                content: content.body,
+                                title: content.title,
+                                audioID: result.key,
+                                align: JSON.stringify(res.data.predictions.fragments),
+                            }  
+                        },
+                        authMode: 'userPool' 
+                    });
+                    
+                })
+                .catch((err) => {
+                    console.log(err);
+                    return false;
+                });
+                
+            } catch (error) {
+                console.log('Error : ', error);
+                return false;
+            }
+        })
+        .catch(err => {console.log(err); return false;});}
+    else {
+        const result = await client.graphql({
+        query: updateAudionotes,
+        variables: {
+            input: {
+                id: id,
+                title: content.title,
+                content: content.body
+            }
+        },
+        authMode: 'userPool'
+    })}
 }
 
 export function reviseFailure() {
