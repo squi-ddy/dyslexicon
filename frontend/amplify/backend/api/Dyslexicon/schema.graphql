@@ -1,6 +1,7 @@
 type Comments @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, operations: [create, read, update, delete]}]) {
   id: ID!
   content: String
+  audioID: String
   postedAt: AWSDateTime
   userID: ID! @index(name: "byUser")
   postsID: ID! @index(name: "byPosts")
@@ -34,7 +35,8 @@ type Posts @model @auth(rules: [{ allow: public, operations: [read] }, {allow: o
 type RevisionCard @model @auth(rules: [{allow: owner, operations: [create, read, update, delete]}]) {
   id: ID!
   front: String
-  back: String
+  meaning: String
+  audioID: String
   userID: ID! @index(name: "byUser")
   User: User @belongsTo(fields: ["userID"])
 }

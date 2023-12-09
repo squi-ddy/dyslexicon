@@ -17,15 +17,18 @@ import {
 } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { handleSignUp, isLoggedIn } from "./util/api"
+import { doAutoSignIn, handleSignUp, isLoggedIn } from "./util/api"
 
 export function SignUp() {
     const navigate = useNavigate()
     useEffect(() => {
-         
+        (async () => {
         if (isLoggedIn()) {
-            navigate("/")   
+            navigate("/")
         }
+        if (await doAutoSignIn()) {
+            navigate("/")
+        }})()
     }, [navigate])
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
@@ -146,15 +149,14 @@ export function SignUp() {
                                             navigate("/sign-up/confirm")
                                         } else {
                                             navigate("/")
+                                            toast({
+                                                title: 'Success',
+                                                description: "Account Created!",
+                                                status: 'success',
+                                                duration: 9000,
+                                                isClosable: true,
+                                              })
                                         }
-                                        // 
-                                        toast({
-                                            title: 'Success',
-                                            description: "Account Created!",
-                                            status: 'success',
-                                            duration: 9000,
-                                            isClosable: true,
-                                          })
                                     } catch (error : any) {
                                         console.log(error)
                                         toast({

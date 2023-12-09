@@ -1,5 +1,5 @@
-import { Flex, Heading, VStack, Divider, FormControl, FormLabel, Input, FormErrorMessage, HStack, Checkbox, Button, Text } from "@chakra-ui/react"
-import { loggedInUser, handleSignUpConfirmation } from "./util/api"
+import { Flex, Heading, VStack, Divider, FormControl, FormLabel, Input, FormErrorMessage, HStack, Checkbox, Button, Text, useToast } from "@chakra-ui/react"
+import { handleSignUpConfirmation, getLoggedInUser, isInSignUp, getSignUpUser } from "./util/api"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -7,9 +7,10 @@ export function ConfirmSignUp() {
     const [invalid, setInvalid] = useState(false)
     const inputEle = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
+    const toast = useToast()
 
     useEffect(() => {
-        if (loggedInUser === "") {
+        if (!isInSignUp()) {
             navigate("/sign-up")
         }
     }, [])
@@ -69,8 +70,20 @@ export function ConfirmSignUp() {
                                 if (code === "") {
                                     return
                                 }
-                                await handleSignUpConfirmation({username: loggedInUser, confirmationCode: code})
-                                navigate("/")
+                                    if (await handleSignUpConfirmation({username: getSignUpUser(), confirmationCode: code})) {
+                                        toast({
+                                            title: 'Success',
+                                            description: "Account Created!",
+                                            status: 'success',
+                                            duration: 9000,
+                                            isClosable: true,
+                                          })
+                                        navigate("/")
+                                    } else {
+                                        setInvalid(true)
+                                    }
+
+                                
                             }}
                         >
                             Confirm

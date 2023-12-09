@@ -1,7 +1,6 @@
-type Comments @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, operations: [create, read, update, delete]}]) {
+type Comments @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
   id: ID!
   content: String
-  audioID: String
   postedAt: AWSDateTime
   userID: ID! @index(name: "byUser")
   postsID: ID! @index(name: "byPosts")
@@ -9,7 +8,7 @@ type Comments @model @auth(rules: [{ allow: public, operations: [read] }, {allow
   User: User @belongsTo(fields: ["userID"])
 }
 
-type User @model @aws_cognito_user_pools @auth (rules: [{ allow: public, operations: [read] }, {allow: owner, operations: [create, read, update, delete]}]) {
+type User @model @aws_cognito_user_pools @auth (rules: [{ allow: public, operations: [read] }, {allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
   id: ID!
   Posts: [Posts] @hasMany(indexName: "byUser", fields: ["id"])
   RevisionCards: [RevisionCard] @hasMany(indexName: "byUser", fields: ["id"])
@@ -20,7 +19,7 @@ type User @model @aws_cognito_user_pools @auth (rules: [{ allow: public, operati
   Comments: [Comments] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
-type Posts @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, operations: [create, read, update, delete]}]) {
+type Posts @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
   id: ID!
   title: String
   content: String
@@ -32,21 +31,19 @@ type Posts @model @auth(rules: [{ allow: public, operations: [read] }, {allow: o
   Comments: [Comments] @hasMany(indexName: "byPosts", fields: ["id"])
 }
 
-type RevisionCard @model @auth(rules: [{allow: owner, operations: [create, read, update, delete]}]) {
+type RevisionCard @model @auth(rules: [{allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
   id: ID!
   front: String
-  meaning: String
-  audioID: String
+  back: String
   userID: ID! @index(name: "byUser")
   User: User @belongsTo(fields: ["userID"])
 }
 
-type Audionotes @model @auth(rules: [{allow: owner, operations: [create, read, update, delete]}]) {
+type Audionotes @model @auth(rules: [{allow: owner, ownerField: "id", operations: [create, read, update, delete]}]) {
   id: ID!
   title: String
   content: String
   audioID: String
-  align: AWSJSON
   userID: ID! @index(name: "byUser")
   User: User @belongsTo(fields: ["userID"])
 }

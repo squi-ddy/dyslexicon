@@ -9,6 +9,6 @@
     },
     "convertType": "speechGenerator",
     "language": "en-US",
-    "voice": "Amy",
+    "voice": "Stephen",
     "access": "auth"
 }

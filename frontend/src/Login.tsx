@@ -11,11 +11,11 @@ import {
     VStack,
     HStack,
     Checkbox,
-    useToast
+    useToast,
 } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { handleSignIn, isLoggedIn, handleSignOut } from "./util/api"
+import { handleSignIn, isLoggedIn, handleSignOut, doAutoSignIn } from "./util/api"
 
 
 export function Login() {
@@ -23,15 +23,13 @@ export function Login() {
     const navigate = useNavigate()
 
     useEffect(() => {
-         
+        (async () => {
         if (isLoggedIn()) {
-            navigate("/")   
+            navigate("/")
         }
-        try{
-            handleSignOut();
-        }catch(err){
-            console.log(err)
-        }   
+        if (await doAutoSignIn()) {
+            navigate("/")
+        }})()
     }, [navigate])
 
     const [email, setEmail] = useState("")
@@ -118,8 +116,11 @@ export function Login() {
                                 if (email === "" || password === "")
                                     return
                                 try {
-                                    await handleSignIn({username:email, password:password})
-                                    navigate("/")
+                                    if (await handleSignIn({username:email, password:password})) {
+                                        navigate("/")
+                                    } else {
+                                        navigate("/sign-up/confirm")
+                                    }
                                     
                                 } catch (error : any) {
                                     console.log(error)
