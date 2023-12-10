@@ -13,6 +13,8 @@ import {
     createUser,
     updateUser,
     deleteUser,
+    createPosts,
+    createComments,
 } from "../graphql/mutations"
 import axios from "axios"
 import {
@@ -99,8 +101,9 @@ export async function getForumContent() {
                 postsID: element.id
             }
         })
+        
         element.username = user.data.getUser!.username
-        if (element.audioID) {
+        if (element.audioID !== "") {
             const downloadResult = await downloadData({ 
                 key: element.audioID, options: {
                 accessLevel: 'private',
@@ -109,6 +112,7 @@ export async function getForumContent() {
             element.audio = text;
         }
         element.comments = comments.data.commentsByPostsID.items
+        if (element.comments === undefined) element.comments = []
         element.comments.forEach(async (comment: any) => {
             const user = await client.graphql({ 
                 query: getUser,
@@ -118,9 +122,9 @@ export async function getForumContent() {
                 authMode: 'userPool'
             })
             comment.by = user.data.getUser!.username
-            if (comment.audioID) {
+            if (comment.audioID !== "") {
                 const downloadResult = await downloadData({ 
-                    key: element.audioID, options: {
+                    key: comment.audioID, options: {
                     accessLevel: 'private',
                 } }).result;
                 const text = await downloadResult.body.blob();
@@ -179,7 +183,7 @@ export async function getForumContentById(id: string) {
         }
     })
     result2.username = user.data.getUser!.username
-    if (result2.audioID) {
+    if (result2.audioID !== "") {
         const downloadResult = await downloadData({ 
             key: result2.audioID, options: {
             accessLevel: 'private',
@@ -188,53 +192,82 @@ export async function getForumContentById(id: string) {
         result2.audio = text;
     }
     result2.comments = comments.data.commentsByPostsID.items
+    if (result2.comments === undefined) result2.comments = []
+    result2.comments.forEach(async (comment: any) => {
+        const user = await client.graphql({ 
+            query: getUser,
+            variables: {
+                id: comment.userID
+            },
+            authMode: 'userPool'
+        })
+        comment.by = user.data.getUser!.username
+        if (comment.audioID !== "") {
+            const downloadResult = await downloadData({ 
+                key: comment.audioID, options: {
+                accessLevel: 'private',
+            } }).result;
+            const text = await downloadResult.body.blob();
+            comment.audio = text;
+        }
+    })
     return result2!
 }
 
-export function addComment(contentId: string, comment: ForumCommentData) {
-    forumContent[contentId].comments.push(comment)
+export async function addComment(contentId: string, comment: any) {
+    const user = await currentAuthenticatedUser();
+    await client.graphql({
+        query: createComments,
+        variables: {
+        input: {
+            content: comment.body,
+            userID: user!.id!,
+            audioID: "",
+            postsID: contentId
+        }  
+        },
+        authMode: 'userPool' 
+    });
 }
 
-export async function addForumPost(content: ForumContentData) {
+export async function addForumPost(content: any, audio: any) {
     const user = await currentAuthenticatedUser();
-    const result = await uploadData({
-        key: `${user!.id}/audio/posts/${uuidv4()}.wav`,
-        data: audio.audioStream,
-        options: {
-            accessLevel: 'private',
-        }
-    }).result;
-    let bufferToBase64 = function (buffer : any) {
-        let bytes = new Uint8Array(buffer);
-        let len = buffer.byteLength;
-        let binary = "";
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        return btoa(binary);
-    };
-    axios.post("http://18.136.208.218:8080/align", 
-    {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
-        const audionote = await client.graphql({
-            
-            query: createAudionotes,
+    if (audio) {    
+        
+        const result = await uploadData({
+            key: `${user!.id}/audio/posts/${uuidv4()}.wav`,
+            data: audio,
+            options: {
+                accessLevel: 'private',
+            }
+        }).result;
+
+    await client.graphql({
+                query: createPosts,
+                variables: {
+                input: {
+                    content: content.body,
+                    title: content.title,
+                    userID: user!.id!,
+                    audioID: result.key,
+                }  
+                },
+                authMode: 'userPool' 
+            });
+    } else {
+        await client.graphql({
+            query: createPosts,
             variables: {
-              input: {
+            input: {
                 content: content.body,
                 title: content.title,
                 userID: user!.id!,
-                audioID: result.key,
-                align: JSON.stringify(res.data.predictions.fragments),
-              }  
+                audioID: "",
+            }  
             },
             authMode: 'userPool' 
-          });
-          
-     })
-     .catch((err) => {
-        console.log(err);
-        return false;
-     });
+        });
+    }
 }
 export async function deleteUserContent(id: string, filename: string) {
     await remove({key: filename});
@@ -510,15 +543,20 @@ export async function handleSignUp({
 
 export async function handleSignIn({ username, password }: SignInInput) {
     try {
-        const { isSignedIn, nextStep } = await signIn({ username, password })
-        console.log(nextStep)
-        if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
-            signUpPass = password!
-            signUpUser = username
-            return false
-        }
-        let details = await getUserDetails()
-        user_name = details!.username
+        let isSignedIn = false
+        await signIn({ username, password }).then(async (res) => { 
+            
+            if (res.nextStep.signInStep === "CONFIRM_SIGN_UP") {
+                signUpPass = password!
+                signUpUser = username
+                return false
+            }
+            isSignedIn = true
+            let details = await getUserDetails()
+            user_name = details!.username
+        })
+       
+        
         return isSignedIn
     } catch (error) {
         throw error
@@ -540,7 +578,7 @@ export async function handleSignUpConfirmation({
         await signIn({ username: username, password: signUpPass })
         const user = await currentAuthenticatedUser()
         const signupInput = user!
-        console.log(user)
+        
         await client.graphql({
             query: createUser,
             variables: {
@@ -605,7 +643,6 @@ export async function doAutoSignIn() {
     try {
         const user = await currentAuthenticatedUser()
         if (!user) return false
-        console.log(user)
         loggedInUser = user.id!
         user_name = user.username
         return true

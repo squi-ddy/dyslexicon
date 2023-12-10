@@ -29,15 +29,25 @@ export function AddForumContent() {
     const [fileUploaded, setFileUploaded] = useState<File | null>(null)
     const [invalid, setInvalid] = useState(false)
 
-    function addContent() {
+    async function addContent() {
         setInvalid(title === "" || body === "")
         if (title === "" || body === "") return
-        addForumPost({
-            title,
-            body,
-            by: getLoggedInUser(),
-            comments: [],
-        })
+        if (fileUploaded !== null) {
+            console.log(fileUploaded)
+            await fileUploaded.arrayBuffer().then(async (b) => {
+                    console.log(b)
+                    addForumPost({
+                        title,
+                        body
+                    }, b)
+                });
+
+        } else {
+            addForumPost({
+                title,
+                body
+            }, null)
+        }
         navigate(-1)
     }
 
@@ -56,7 +66,7 @@ export function AddForumContent() {
                 </Heading>
                 <CustomTooltip label={"Submit"} placement={"left"}>
                     <IconButton
-                        onClick={addContent}
+                        onClick={async () => {await addContent()}}
                         aria-label="Submit"
                         icon={<Icon as={GoCheck} boxSize={7} />}
                     ></IconButton>
