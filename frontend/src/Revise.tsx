@@ -14,10 +14,26 @@ import {
     HiOutlineSpeakerWave,
 } from "react-icons/hi2"
 import { CustomTooltip } from "./CustomTooltip"
-import { getNextReviseWord, reviseFailure, reviseSuccess } from "./util/api"
+import { getNextReviseWord, reviseFailure, reviseSuccess, wordToAudio } from "./util/api"
 
 export function Revise() {
     const [flashcard, setFlashcard] = useState(getNextReviseWord())
+
+    const playAudio = async () => {
+        try {
+          const base64Audio = await wordToAudio();
+          if (base64Audio) {
+            const audio = new Audio();
+            audio.src = `data:audio/wav;base64,${base64Audio}`;
+            console.log(audio.src)
+            audio.play();
+          } else {
+            console.error('Error fetching audio');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
 
     return (
         <VStack w={"full"} h={"full"} spacing={2}>
@@ -59,6 +75,7 @@ export function Revise() {
                             placement={"bottom"}
                         >
                             <IconButton
+                                onClick={playAudio}
                                 aria-label="Play audio"
                                 icon={
                                     <Icon

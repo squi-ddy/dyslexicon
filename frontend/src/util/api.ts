@@ -66,7 +66,7 @@ export let user_name = ""
 let signUpPass: string = ""
 let signUpUser: string = ""
 const reviseWords: { [username: string]: string[] } = {
-    "4a64f2f7-704c-4f0d-a47a-89b57d8a4962": ["hello", "world", "goodbye", "goodnight", "pronunciation"],
+    "25601808-4ccd-4b97-b2c9-9ff39276a270": ["hello", "world", "goodbye", "goodnight", "pronunciation"],
 }
 
 const audioContext = new AudioContext();
@@ -315,7 +315,7 @@ export function getLoggedInUser() {
 }
 
 export function getNextReviseWord() {
-    return reviseWords[getLoggedInUser()][0]
+    return reviseWords["25601808-4ccd-4b97-b2c9-9ff39276a270"][0]
 }
 
 export async function downloadAudio(audioID: string) {
@@ -613,3 +613,27 @@ export async function doAutoSignIn() {
         return false
     }
 }
+
+export async function wordToAudio(): Promise<string | null> {
+    try {
+        //const user = await currentAuthenticatedUser();
+        const audio = await Predictions.convert({
+            textToSpeech: {
+                source: {
+                    text: getNextReviseWord()
+                },
+                voiceId: "Amy"
+            }
+        });
+
+        return arrayBufferToBase64(audio.audioStream); // Assuming that audioStream is the property you want to return
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+}
+
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+    const binary = new Uint8Array(buffer);
+    return btoa(String.fromCharCode.apply(null, binary));
+  }
