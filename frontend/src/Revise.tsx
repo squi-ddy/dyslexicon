@@ -7,21 +7,34 @@ import {
     Text,
     VStack,
 } from "@chakra-ui/react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { BsCheck2 } from "react-icons/bs"
 import {
     HiOutlineQuestionMarkCircle,
     HiOutlineSpeakerWave,
 } from "react-icons/hi2"
 import { CustomTooltip } from "./CustomTooltip"
-import { getNextReviseWord, reviseFailure, reviseSuccess, wordToAudio } from "./util/api"
+import { getNextReviseWord, reviseFailure, reviseSuccess, currentWordAudio, getRevisionCardsByUserId, SyncRevisionCards } from "./util/api"
 
 export function Revise() {
     const [flashcard, setFlashcard] = useState(getNextReviseWord())
 
+    useEffect(() => {
+        console.log("SYNCED")
+        async function sync() {
+            try {
+                await SyncRevisionCards();
+                setFlashcard(getNextReviseWord());
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        sync();
+    }, []);
+    
     const playAudio = async () => {
         try {
-          const base64Audio = await wordToAudio();
+          const base64Audio = await currentWordAudio();
           if (base64Audio) {
             const audio = new Audio();
             audio.src = `data:audio/wav;base64,${base64Audio}`;
@@ -90,6 +103,9 @@ export function Revise() {
                             placement={"bottom"}
                         >
                             <IconButton
+                                onClick={() => {
+                                    alert("not implemented")
+                                }}
                                 aria-label="Show meaning"
                                 icon={
                                     <Icon
@@ -97,6 +113,7 @@ export function Revise() {
                                         boxSize={5}
                                     />
                                 }
+                                isDisabled={true}
                             ></IconButton>
                         </CustomTooltip>
                         <CustomTooltip

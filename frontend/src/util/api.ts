@@ -1,11 +1,11 @@
-import { ForumCommentData, ForumContentData, UserContentData } from "./types"
+import { ForumCommentData, ForumContentData, RevisionCardData, UserContentData } from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
 import { generateClient, get } from "aws-amplify/api"
 import { uploadData, downloadData, remove  } from "aws-amplify/storage"
 import { Predictions } from "@aws-amplify/predictions"
 import { v4 as uuidv4 } from "uuid"
-import { getUser, audionotesByUserID, getAudionotes, listPosts, getPosts, commentsByPostsID } from "../graphql/queries"
+import { getUser, audionotesByUserID, getAudionotes, listPosts, getPosts, commentsByPostsID, getRevisionCard, revisionCardsByUserID } from "../graphql/queries"
 import {
     createAudionotes,
     updateAudionotes,
@@ -13,6 +13,8 @@ import {
     createUser,
     updateUser,
     deleteUser,
+    createRevisionCard,
+    deleteRevisionCard
 } from "../graphql/mutations"
 import axios from "axios"
 import {
@@ -27,6 +29,8 @@ import {
     autoSignIn,
 } from "aws-amplify/auth"
 // TODO: use firestore
+
+import { RevisionCard } from "../API"
 
 const client = generateClient();
 
@@ -65,9 +69,7 @@ let loggedInUser: string = ""
 export let user_name = ""
 let signUpPass: string = ""
 let signUpUser: string = ""
-const reviseWords: { [username: string]: string[] } = {
-    "25601808-4ccd-4b97-b2c9-9ff39276a270": ["hello", "world", "goodbye", "goodnight", "pronunciation"],
-}
+const reviseWords: { [username: string]: RevisionCard[] } = {}
 
 const audioContext = new AudioContext();
 
@@ -315,7 +317,14 @@ export function getLoggedInUser() {
 }
 
 export function getNextReviseWord() {
-    return reviseWords["25601808-4ccd-4b97-b2c9-9ff39276a270"][0]
+    if (!(getLoggedInUser() in reviseWords)) {
+        //reviseWords[getLoggedInUser()] = []
+        return ""
+    }
+    if (reviseWords[getLoggedInUser()].length==0) {
+        return ""
+    }
+    return reviseWords[getLoggedInUser()][0].front!!
 }
 
 export async function downloadAudio(audioID: string) {
@@ -416,17 +425,25 @@ export function reviseFailure() {
     reviseWords[getLoggedInUser()].shift()
 }
 
-export function reviseSuccess() {
-    const word = reviseWords[getLoggedInUser()].shift()
+export async function reviseSuccess() {
+    const word = reviseWords[getLoggedInUser()].shift()!!
     if (Math.random() < 0.3) {
         // 30% chance of reinsertion
         reviseWords[getLoggedInUser()].push(word!)
     }
-}
-
-export function addToRevision(word: string) {
-    // push word to front of revision list
-    reviseWords[getLoggedInUser()].unshift(word)
+    else {
+        // gg delete
+        await client.graphql({
+                        
+            query: deleteRevisionCard,
+            variables: {
+                input: {
+                    id: word.id
+                }  
+            },
+            authMode: 'userPool' 
+        });
+    }
 }
 
 export function logOut() {
@@ -614,13 +631,17 @@ export async function doAutoSignIn() {
     }
 }
 
-export async function wordToAudio(): Promise<string | null> {
+export async function currentWordAudio(): Promise<string | null> {
+    return wordToAudio(getNextReviseWord());
+}
+
+async function wordToAudio(word: string): Promise<string | null> {
     try {
         //const user = await currentAuthenticatedUser();
         const audio = await Predictions.convert({
             textToSpeech: {
                 source: {
-                    text: getNextReviseWord()
+                    text: word
                 },
                 voiceId: "Amy"
             }
@@ -637,3 +658,51 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
     const binary = new Uint8Array(buffer);
     return btoa(String.fromCharCode.apply(null, binary));
   }
+
+
+export async function addToRevision(word: string) {
+    // push word to front of revision list
+    reviseWords[getLoggedInUser()].unshift(word)
+    const audio = await wordToAudio(word)
+    await uploadAudio({front: word, audio:audio||undefined, meaning:"meaning"})
+}
+
+async function uploadAudio(content: RevisionCardData) {
+    const user = await currentAuthenticatedUser();
+    const result = await uploadData({
+        key: `${user!.id}/audio/revise/${content.front}.wav`,
+        data: content.audio,
+        options: {
+            accessLevel: 'private',
+        }
+    }).result;
+    await client.graphql({
+        
+        query: createRevisionCard,
+        variables: {
+            input: {
+                front: content.front,
+                meaning: content.meaning,
+                audioID: result.key,
+                userID: user!.id!
+            }  
+        },
+        authMode: 'userPool' 
+        });
+}
+
+export async function SyncRevisionCards() {
+    console.log("starting sync")
+    await client.graphql({
+        query: revisionCardsByUserID,
+        variables: {
+            userID: loggedInUser
+        },
+        authMode: "userPool",
+    }).then((result) => {
+        console.log("ending sync")
+        console.log(result.data.revisionCardsByUserID.items)
+        reviseWords[loggedInUser] = result.data.revisionCardsByUserID.items
+        getNextReviseWord()
+    })
+}

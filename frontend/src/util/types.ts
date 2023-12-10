@@ -32,3 +32,9 @@ export type ForumCommentData = {
     body: string
     audio?: string
 }
+
+export type RevisionCardData = {
+    front: string
+    audio?: string
+    meaning: string
+}
