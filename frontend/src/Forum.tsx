@@ -16,7 +16,7 @@ import { getForumContent } from "./util/api"
 import { get } from "aws-amplify/api"
 
 export function Forum() {
-    const [forumContent, setForumContent] = useState<any[]>()
+    const [forumContent, setForumContent] = useState<any[]>([])
     const cardIdealWidth = 500
     const VStackRef = useRef(null)
     const dims = useSize(VStackRef)

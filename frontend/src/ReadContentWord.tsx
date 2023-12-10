@@ -16,6 +16,7 @@ import {
 } from "react-icons/hi2"
 import { CustomTooltip } from "./CustomTooltip"
 import { addToRevision } from "./util/api"
+import { Predictions } from '@aws-amplify/predictions';
 
 export function ReadContentWord(props: {
     word: string
@@ -67,6 +68,26 @@ export function ReadContentWord(props: {
                             placement={"bottom"}
                         >
                             <IconButton
+                                onClick={async () => {
+                                    Predictions.convert({
+                                        textToSpeech: {                                     
+                                          source: {                                      
+                                            text: props.word                                     
+                                          },
+                                          voiceId: "Amy" 
+                                        }
+                                      })
+                                      .then(result => {
+                                        const aud = new AudioContext();
+                                        const source = aud.createBufferSource();
+                                        aud.decodeAudioData(result.audioStream, (buffer) => {
+                                            source.buffer = buffer;
+                                            source.connect(aud.destination);
+                                            source.start(0);
+                                            
+                                        })
+                                      })
+                                }}
                                 aria-label="Play audio"
                                 icon={
                                     <Icon
@@ -76,7 +97,7 @@ export function ReadContentWord(props: {
                                 }
                             ></IconButton>
                         </CustomTooltip>
-                        <CustomTooltip
+                        {/* <CustomTooltip
                             label={"Show meaning"}
                             placement={"bottom"}
                         >
@@ -89,7 +110,7 @@ export function ReadContentWord(props: {
                                     />
                                 }
                             ></IconButton>
-                        </CustomTooltip>
+                        </CustomTooltip> */}
                         <CustomTooltip
                             label={"Add to revision"}
                             placement={"bottom"}

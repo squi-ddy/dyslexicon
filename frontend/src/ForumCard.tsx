@@ -31,7 +31,7 @@ export function ForumCard(props: {
 }) {
     const [commentText, setCommentText] = useState("")
     const navigate = useNavigate()
-
+    if (props.content.comments === undefined) props.content.comments = []
     return (
         <Card
             {...props.styleProps}
@@ -86,6 +86,7 @@ export function ForumCard(props: {
                             flexShrink={1}
                         >
                             {props.content.comments.map((comment: any) => (
+                                
                                 <Text
                                     as={Box}
                                     borderWidth={2}
@@ -98,7 +99,7 @@ export function ForumCard(props: {
                                     display={"inline-block"}
                                     mb={0}
                                 >
-                                    {comment.body}
+                                    {comment.content}
                                     {comment.audio ? (
                                         <Box
                                             as={"audio"}
@@ -132,7 +133,7 @@ export function ForumCard(props: {
                             }}
                             placeholder="Add a comment..."
                         />
-                        <CustomTooltip label={"Add audio"} placement={"left"}>
+                        {/* <CustomTooltip label={"Add audio"} placement={"left"}>
                             <IconButton
                                 float={"right"}
                                 aria-label={"Add audio"}
@@ -141,26 +142,25 @@ export function ForumCard(props: {
                                 }}
                                 icon={<BsMic boxSize={5} />}
                             ></IconButton>
-                        </CustomTooltip>
+                        </CustomTooltip> */}
                         {commentText.length > 0 && (
                             <CustomTooltip
                                 label={"Post comment"}
                                 placement={"left"}
                             >
-                                {/* <IconButton
-                                    onClick={(e) => {
-                                        addComment(props.id, {
-                                            body: commentText,
-                                            by: getLoggedInUser(),
+                                <IconButton
+                                    onClick={async (e) => {
+                                        await addComment(props.id, {
+                                            body: commentText
                                         })
                                         setCommentText("")
-                                        props.triggerReload()
+                                        await props.triggerReload()
                                         e.stopPropagation()
                                     }}
                                     float={"right"}
                                     aria-label={"Post comment"}
                                     icon={<ArrowForwardIcon boxSize={5} />}
-                                ></IconButton> */}
+                                ></IconButton>
                             </CustomTooltip>
                         )}
                     </HStack>
