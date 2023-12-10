@@ -14,7 +14,7 @@ import {
     updateUser,
     deleteUser,
     createRevisionCard,
-    deleteRevisionCard
+    deleteRevisionCard,
     createPosts,
     createComments,
 } from "../graphql/mutations"
