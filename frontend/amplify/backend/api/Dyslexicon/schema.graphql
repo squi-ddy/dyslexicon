@@ -1,52 +1,82 @@
-type Comments @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, operations: [create, read, update, delete]}]) {
-  id: ID!
-  content: String
-  audioID: String
-  postedAt: AWSDateTime
-  userID: ID! @index(name: "byUser")
-  postsID: ID! @index(name: "byPosts")
-  Posts: Posts @belongsTo(fields: ["postsID"])
-  User: User @belongsTo(fields: ["userID"])
+type Comments
+    @model
+    @auth(
+        rules: [
+            { allow: public, operations: [read] }
+            { allow: owner, operations: [create, read, update, delete] }
+        ]
+    ) {
+    id: ID!
+    content: String
+    audioID: String
+    postedAt: AWSDateTime
+    userID: ID! @index(name: "byUser")
+    postsID: ID! @index(name: "byPosts")
+    Posts: Posts @belongsTo(fields: ["postsID"])
+    User: User @belongsTo(fields: ["userID"])
 }
 
-type User @model @aws_cognito_user_pools @auth (rules: [{ allow: public, operations: [read] }, {allow: owner, operations: [create, read, update, delete]}]) {
-  id: ID!
-  Posts: [Posts] @hasMany(indexName: "byUser", fields: ["id"])
-  RevisionCards: [RevisionCard] @hasMany(indexName: "byUser", fields: ["id"])
-  Audionotes: [Audionotes] @hasMany(indexName: "byUser", fields: ["id"])
-  email: AWSEmail! @index(name: "findEmail", queryField: "findEmail")
-  username: String! @index(name: "findUsername", queryField: "findUsername")
-  imageID: String
-  Comments: [Comments] @hasMany(indexName: "byUser", fields: ["id"])
+type User
+    @model
+    @aws_cognito_user_pools
+    @auth(
+        rules: [
+            { allow: public, operations: [read] }
+            { allow: owner, operations: [create, read, update, delete] }
+        ]
+    ) {
+    id: ID!
+    Posts: [Posts] @hasMany(indexName: "byUser", fields: ["id"])
+    RevisionCards: [RevisionCard] @hasMany(indexName: "byUser", fields: ["id"])
+    Audionotes: [Audionotes] @hasMany(indexName: "byUser", fields: ["id"])
+    email: AWSEmail! @index(name: "findEmail", queryField: "findEmail")
+    username: String! @index(name: "findUsername", queryField: "findUsername")
+    imageID: String
+    Comments: [Comments] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
-type Posts @model @auth(rules: [{ allow: public, operations: [read] }, {allow: owner, operations: [create, read, update, delete]}]) {
-  id: ID!
-  title: String
-  content: String
-  postedAt: AWSDateTime
-  likes: Int
-  audioID: String
-  User: User @belongsTo(fields: ["userID"])
-  userID: ID! @index(name: "byUser")
-  Comments: [Comments] @hasMany(indexName: "byPosts", fields: ["id"])
+type Posts
+    @model
+    @auth(
+        rules: [
+            { allow: public, operations: [read] }
+            { allow: owner, operations: [create, read, update, delete] }
+        ]
+    ) {
+    id: ID!
+    title: String
+    content: String
+    postedAt: AWSDateTime
+    likes: Int
+    audioID: String
+    User: User @belongsTo(fields: ["userID"])
+    userID: ID! @index(name: "byUser")
+    Comments: [Comments] @hasMany(indexName: "byPosts", fields: ["id"])
 }
 
-type RevisionCard @model @auth(rules: [{allow: owner, operations: [create, read, update, delete]}]) {
-  id: ID!
-  front: String
-  meaning: String
-  audioID: String
-  userID: ID! @index(name: "byUser")
-  User: User @belongsTo(fields: ["userID"])
+type RevisionCard
+    @model
+    @auth(
+        rules: [{ allow: owner, operations: [create, read, update, delete] }]
+    ) {
+    id: ID!
+    front: String
+    meaning: String
+    audioID: String
+    userID: ID! @index(name: "byUser")
+    User: User @belongsTo(fields: ["userID"])
 }
 
-type Audionotes @model @auth(rules: [{allow: owner, operations: [create, read, update, delete]}]) {
-  id: ID!
-  title: String
-  content: String
-  audioID: String
-  align: AWSJSON
-  userID: ID! @index(name: "byUser")
-  User: User @belongsTo(fields: ["userID"])
+type Audionotes
+    @model
+    @auth(
+        rules: [{ allow: owner, operations: [create, read, update, delete] }]
+    ) {
+    id: ID!
+    title: String
+    content: String
+    audioID: String
+    align: AWSJSON
+    userID: ID! @index(name: "byUser")
+    User: User @belongsTo(fields: ["userID"])
 }

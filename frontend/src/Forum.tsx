@@ -26,16 +26,15 @@ export function Forum() {
 
     useEffect(() => {
         async function setUserContent(): Promise<void> {
-            const f = await getForumContent();
-            setForumContent(f);
+            const f = await getForumContent()
+            setForumContent(f)
         }
 
-        setUserContent();
-
-    }, [forumContent]);
+        setUserContent()
+    }, [forumContent])
 
     async function triggerReload() {
-        const forum = await getForumContent();
+        const forum = await getForumContent()
         setForumContent(Object.assign({}, forum))
     }
 

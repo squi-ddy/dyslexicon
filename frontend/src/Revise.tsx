@@ -14,7 +14,14 @@ import {
     HiOutlineSpeakerWave,
 } from "react-icons/hi2"
 import { CustomTooltip } from "./CustomTooltip"
-import { getNextReviseWord, reviseFailure, reviseSuccess, currentWordAudio, getRevisionCardsByUserId, SyncRevisionCards } from "./util/api"
+import {
+    getNextReviseWord,
+    reviseFailure,
+    reviseSuccess,
+    currentWordAudio,
+    getRevisionCardsByUserId,
+    SyncRevisionCards,
+} from "./util/api"
 
 export function Revise() {
     const [flashcard, setFlashcard] = useState(getNextReviseWord())
@@ -23,30 +30,30 @@ export function Revise() {
         console.log("SYNCED")
         async function sync() {
             try {
-                await SyncRevisionCards();
-                setFlashcard(getNextReviseWord());
+                await SyncRevisionCards()
+                setFlashcard(getNextReviseWord())
             } catch (error) {
-                console.log(error);
+                console.log(error)
             }
         }
-        sync();
-    }, []);
-    
+        sync()
+    }, [])
+
     const playAudio = async () => {
         try {
-          const base64Audio = await currentWordAudio();
-          if (base64Audio) {
-            const audio = new Audio();
-            audio.src = `data:audio/wav;base64,${base64Audio}`;
-            console.log(audio.src)
-            audio.play();
-          } else {
-            console.error('Error fetching audio');
-          }
+            const base64Audio = await currentWordAudio()
+            if (base64Audio) {
+                const audio = new Audio()
+                audio.src = `data:audio/wav;base64,${base64Audio}`
+                console.log(audio.src)
+                audio.play()
+            } else {
+                console.error("Error fetching audio")
+            }
         } catch (error) {
-          console.error('Error:', error);
+            console.error("Error:", error)
         }
-      };
+    }
 
     return (
         <VStack w={"full"} h={"full"} spacing={2}>

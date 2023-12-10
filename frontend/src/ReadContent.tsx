@@ -12,7 +12,7 @@ import {
     Textarea,
     VStack,
     useBoolean,
-    useToast
+    useToast,
 } from "@chakra-ui/react"
 import { useEffect, useState, useRef } from "react"
 import { BsPause, BsPlay } from "react-icons/bs"
@@ -33,12 +33,12 @@ import { ReadContentWord } from "./ReadContentWord"
 import { GiOpenBook } from "react-icons/gi"
 
 export function ReadContent() {
-    const toast = useToast();
+    const toast = useToast()
     const { contentId, content } = useLoaderData() as UserContentLoaderReturn // Works
     // content.align contains the alignment of the text
     const [time, setTime] = useState(0.0)
-    let audioContext = new AudioContext();
-    let audioBufferSourceNode = audioContext.createBufferSource();
+    let audioContext = new AudioContext()
+    let audioBufferSourceNode = audioContext.createBufferSource()
     const align = JSON.parse(content.align)
     const navigate = useNavigate()
     const [playing, setPlaying] = useBoolean(false)
@@ -55,22 +55,24 @@ export function ReadContent() {
     const [playingTimeout, setPlayingTimeout] = useState<number | undefined>(
         undefined
     )
-    const [audio, setAudio] = useState<any>(null);
+    const [audio, setAudio] = useState<any>(null)
 
-    let isMountRef = true;
-
+    let isMountRef = true
 
     useEffect(() => {
         async function setAudioContent(id: string): Promise<void> {
-            const a = await downloadAudio(id);
-            setAudio(a);
+            const a = await downloadAudio(id)
+            setAudio(a)
             console.log(a)
         }
-        
-        setAudioContent(content.audioID)   
-    }, []);
 
-    useEffect (() => {console.log("Buffer");console.log(audioBufferSourceNode.buffer) }, [audioBufferSourceNode.buffer]);
+        setAudioContent(content.audioID)
+    }, [])
+
+    useEffect(() => {
+        console.log("Buffer")
+        console.log(audioBufferSourceNode.buffer)
+    }, [audioBufferSourceNode.buffer])
     useEffect(() => {
         const wordsOnly = body.split(/[^a-zA-Z0-9-]+/)
         while (wordsOnly[wordsOnly.length - 1] === "") {
@@ -98,56 +100,61 @@ export function ReadContent() {
 
     useEffect(() => {
         if (body !== content.content) {
-            editUserContent(contentId, {
-                title,
-                body,
-            }, true,
-            content.audioID)
+            editUserContent(
+                contentId,
+                {
+                    title,
+                    body,
+                },
+                true,
+                content.audioID
+            )
         } else if (title !== content.title) {
-            editUserContent(contentId, {
-                title,
-                body,
-            }, false, "")
+            editUserContent(
+                contentId,
+                {
+                    title,
+                    body,
+                },
+                false,
+                ""
+            )
         }
     }, [setTitle, setBody, contentId])
 
     useEffect(() => {
         if (playing) {
-            isMountRef = false;
-            audioBufferSourceNode.buffer = audio;
-            audioBufferSourceNode.connect(audioContext.destination);
-            audioBufferSourceNode.start(time);
+            isMountRef = false
+            audioBufferSourceNode.buffer = audio
+            audioBufferSourceNode.connect(audioContext.destination)
+            audioBufferSourceNode.start(time)
         } else {
             if (isMountRef) {
             } else {
-                isMountRef = true;
+                isMountRef = true
                 // time = context.currentTime;
-                audioBufferSourceNode.stop();
+                audioBufferSourceNode.stop()
             }
         }
-    
-    }, [playing]);
-
-
+    }, [playing])
 
     useEffect(() => {
         if (playing) {
-            let temp = (currentWord - 1)/2
-            let timeT = parseFloat(align[temp].end) - parseFloat(align[temp].begin)
+            let temp = (currentWord - 1) / 2
+            let timeT =
+                parseFloat(align[temp].end) - parseFloat(align[temp].begin)
             setCurrentWordClicked(false)
             setPlayingTimeout(
                 setTimeout(() => {
                     const nextIdx = currentWord + 2
                     if (nextIdx <= lastWordIdx) {
                         setCurrentWord(nextIdx)
-                        isMountRef = true;
-                    }
-                    else setPlaying.off()
+                        isMountRef = true
+                    } else setPlaying.off()
                 }, timeT * 1000)
             )
-            
         } else {
-            setTime(parseFloat(align[(currentWord - 1)/2].begin));
+            setTime(parseFloat(align[(currentWord - 1) / 2].begin))
             clearTimeout(playingTimeout)
         }
     }, [playing, currentWord, lastWordIdx, playingTimeout, setPlaying])
@@ -221,7 +228,12 @@ export function ReadContent() {
                         >
                             <IconButton
                                 onClick={async () => {
-                                    await deleteUserContent(contentId, content.audioID).then(() =>{navigate(-1)})
+                                    await deleteUserContent(
+                                        contentId,
+                                        content.audioID
+                                    ).then(() => {
+                                        navigate(-1)
+                                    })
                                 }}
                                 aria-label="Delete text"
                                 icon={<DeleteIcon boxSize={5} />}
