@@ -637,7 +637,8 @@ export async function currentAuthenticatedUser() {
             id: userId,
         }
     } catch (err) {
-        console.log(err)
+        return undefined
+        // console.log(err)
     }
 }
 
