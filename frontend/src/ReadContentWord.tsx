@@ -97,7 +97,7 @@ export function ReadContentWord(props: {
                                 }
                             ></IconButton>
                         </CustomTooltip>
-                        <CustomTooltip
+                        {/* <CustomTooltip
                             label={"Show meaning"}
                             placement={"bottom"}
                         >
@@ -110,7 +110,7 @@ export function ReadContentWord(props: {
                                     />
                                 }
                             ></IconButton>
-                        </CustomTooltip>
+                        </CustomTooltip> */}
                         <CustomTooltip
                             label={"Add to revision"}
                             placement={"bottom"}
