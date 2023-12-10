@@ -128,10 +128,7 @@
           "Statement": [
             {
               "Effect": "Allow",
-              "Action": [
-                "rekognition:DetectText",
-                "rekognition:DetectLabel"
-              ],
+              "Action": ["rekognition:DetectText", "rekognition:DetectLabel"],
               "Resource": "*"
             }
           ]

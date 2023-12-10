@@ -3,9 +3,6 @@
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
-    "Fn::GetAtt": [
-      "authDyslexicon",
-      "Outputs.UserPoolId"
-    ]
+    "Fn::GetAtt": ["authDyslexicon", "Outputs.UserPoolId"]
   }
 }

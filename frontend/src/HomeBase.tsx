@@ -7,9 +7,9 @@ import {
     Spacer,
     Text,
 } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { HiOutlineLogout } from "react-icons/hi"
-import { NavLink, Outlet, useNavigate } from "react-router-dom"
+import { NavLink, Outlet, useLoaderData, useNavigate } from "react-router-dom"
 import { CustomTooltip } from "./CustomTooltip"
 import { NavBox } from "./NavBox"
 import { isLoggedIn, handleSignOut, user_name, doAutoSignIn } from "./util/api"
@@ -17,20 +17,10 @@ import { homeNav } from "./util/routes"
 
 export function HomeBase() {
     const navigate = useNavigate()
-
-    useEffect(() => {
-        ;(async () => {
-            if (!(await doAutoSignIn())) {
-                navigate("/login")
-                return
-            }
-            if (!isLoggedIn()) {
-                navigate("/login")
-                return
-            }
-            navigate("/")
-        })()
-    }, [navigate])
+    const loggedIn = useLoaderData() as boolean
+    if (!loggedIn) {
+        navigate("/login")
+    }
 
     return (
         <Flex direction="column" h="full">

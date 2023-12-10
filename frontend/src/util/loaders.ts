@@ -1,5 +1,10 @@
 import { Params } from "react-router-dom"
-import { getForumContentById, getUserContentById } from "./api"
+import {
+    doAutoSignIn,
+    getForumContentById,
+    getUserContentById,
+    isLoggedIn,
+} from "./api"
 import { ForumContentLoaderReturn, UserContentLoaderReturn } from "./types"
 
 export async function userContentLoader(data: {
@@ -16,4 +21,14 @@ export async function forumContentLoader(data: {
     const contentId = data.params.contentId!
     const content = await getForumContentById(contentId)!
     return { contentId, content }
+}
+
+export async function homeContentLoader(): Promise<boolean> {
+    if (!(await doAutoSignIn())) {
+        return false
+    }
+    if (!isLoggedIn()) {
+        return false
+    }
+    return true
 }

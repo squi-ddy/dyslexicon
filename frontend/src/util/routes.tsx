@@ -5,7 +5,11 @@ import { HomeBase } from "../HomeBase"
 import { HomeRead } from "../Read"
 import { HomeNav } from "./types"
 import { ReadContent } from "../ReadContent"
-import { forumContentLoader, userContentLoader } from "./loaders"
+import {
+    forumContentLoader,
+    homeContentLoader,
+    userContentLoader,
+} from "./loaders"
 import { AddReadContent } from "../AddReadContent"
 import { Forum } from "../Forum"
 import { ForumContent } from "../ForumContent"
@@ -85,6 +89,7 @@ const globalRoutes: RouteObject[] = [
     {
         path: "/",
         element: <HomeBase />,
+        loader: homeContentLoader,
         children: homeRoutes,
     },
     {
