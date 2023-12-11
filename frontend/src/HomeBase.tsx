@@ -41,9 +41,8 @@ export function HomeBase() {
                 <CustomTooltip label={"Log out"} placement={"left"}>
                     <IconButton
                         margin={"auto"}
-                        onClick={() => {
-                            handleSignOut()
-                            navigate("/login")
+                        onClick={async () => {
+                            await handleSignOut().then(() => navigate("/login"));
                         }}
                         float={"right"}
                         aria-label={"Log out"}

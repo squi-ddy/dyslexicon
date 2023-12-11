@@ -28,7 +28,7 @@ export function ReadContentWord(props: {
     clicked: boolean
 }) {
     const highlightColor = useToken("colors", "themeColors.accent1") + "55"
-
+    console.log(props.word)
     return (
         <Popover
             isOpen={props.selected === props.idx && props.clicked}

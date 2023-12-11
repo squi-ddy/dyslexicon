@@ -76,18 +76,18 @@ export function ReadContent() {
         async function setAudioContent(id: string): Promise<void> {
             const a = await downloadAudio(id)
             setAudio(a)
-            console.log(a)
         }
 
         setAudioContent(content.audioID)
     }, [])
 
     useEffect(() => {
-        const wordsOnly = body.split(/[^a-zA-Z0-9-']+/)
+        
+        const wordsOnly = body.split(/[^a-zA-Z0-9-.'?!"]+/)
         while (wordsOnly[wordsOnly.length - 1] === "") {
             wordsOnly.pop()
         }
-        const whitespaceOnly = body.split(/[a-zA-Z0-9-']+/)
+        const whitespaceOnly = body.split(/[a-zA-Z0-9-.?!']+/)
         const processed = []
         for (
             let i = 0;
@@ -301,7 +301,7 @@ export function ReadContent() {
                             idx % 2 === 1 ? (
                                 <ReadContentWord
                                     word={text}
-                                    key={text}
+                                    key={idx}
                                     idx={idx}
                                     highlighted={currentHighlightWord}
                                     selected={currentWord}
@@ -338,7 +338,7 @@ export function ReadContent() {
                             setCurrentWordClicked(false)
                             const prevIdx = Math.max(1, currentWord - 2)
                             setCurrentWord(prevIdx)
-                            playWord(prevIdx)
+                            // playWord(prevIdx)
                         }}
                         aria-label="Back"
                         icon={<Icon as={GoChevronLeft} boxSize={7} />}
@@ -365,7 +365,7 @@ export function ReadContent() {
                                 currentWord + 2
                             )
                             setCurrentWord(nextIdx)
-                            playWord(nextIdx)
+                            // playWord(nextIdx)
                         }}
                         aria-label="Next"
                         icon={<Icon as={GoChevronRight} boxSize={7} />}
