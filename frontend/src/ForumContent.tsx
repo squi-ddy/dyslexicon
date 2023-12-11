@@ -13,8 +13,8 @@ export function ForumContent() {
     const navigate = useNavigate()
 
     async function triggerReload() {
-        const update = await getForumContentById(contentId)
-        setCurrentContent(Object.assign({}, update))
+        await getForumContentById(contentId).then((update) => {
+            setCurrentContent(Object.assign({}, update))})
     }
 
     return (
@@ -35,6 +35,7 @@ export function ForumContent() {
                 cardWidth={"full"}
                 content={currentContent}
                 id={contentId}
+                frontPage={false}
                 triggerReload={triggerReload}
             ></ForumCard>
         </VStack>

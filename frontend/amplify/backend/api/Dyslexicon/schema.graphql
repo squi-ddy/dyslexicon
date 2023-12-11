@@ -10,6 +10,7 @@ type Comments
     content: String
     audioID: String
     postedAt: AWSDateTime
+    username: String
     userID: ID! @index(name: "byUser")
     postsID: ID! @index(name: "byPosts")
     Posts: Posts @belongsTo(fields: ["postsID"])
@@ -49,6 +50,7 @@ type Posts
     postedAt: AWSDateTime
     likes: Int
     audioID: String
+    username: String
     User: User @belongsTo(fields: ["userID"])
     userID: ID! @index(name: "byUser")
     Comments: [Comments] @hasMany(indexName: "byPosts", fields: ["id"])

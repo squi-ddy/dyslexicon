@@ -27,6 +27,7 @@ export function ForumCard(props: {
     content: any
     cardWidth: "full" | number
     limitHeight?: true
+    frontPage?: boolean 
     triggerReload: () => void
 }) {
     const [commentText, setCommentText] = useState("")
@@ -57,13 +58,13 @@ export function ForumCard(props: {
                 <Text fontSize="sm">Posted by {props.content.username}</Text>
             </CardHeader>
             <CardBody minH={0} display={"flex"} flexDir={"column"}>
-                <VStack
+                <VStack overflow="hidden"
                     w={"full"}
                     spacing={2}
                     align={"left"}
                     overflowX={"hidden"}
                 >
-                    <Text
+                    <Text {!props.frontPage && {isTruncated: true}}
                         fontSize="sm"
                         whiteSpace={"pre-wrap"}
                         overflow={"hidden"}
@@ -80,8 +81,8 @@ export function ForumCard(props: {
                             />
                         </Box>
                     )}
-                    <Divider borderWidth={2} />
-                    {props.content.comments.length > 0 && (
+                    {!props.frontPage && (<Divider borderWidth={2} />)}
+                    {props.content.comments.length > 0 && !props.frontPage && (
                         <VStack
                             w={"full"}
                             spacing={2}
@@ -122,55 +123,55 @@ export function ForumCard(props: {
                                         fontSize="xs"
                                         display={"inline-block"}
                                     >
-                                        ~{comment.by}
+                                        ~{comment.username}
                                     </Text>
                                 </Text>
                             ))}
                         </VStack>
                     )}
-                    <HStack w={"full"}>
-                        <Input
-                            value={commentText}
-                            onClick={(e) => {
-                                e.preventDefault()
-                                e.stopPropagation()
-                            }}
-                            onChange={(e) => {
-                                setCommentText(e.target.value)
-                            }}
-                            placeholder="Add a comment..."
-                        />
-                        {/* <CustomTooltip label={"Add audio"} placement={"left"}>
-                            <IconButton
-                                float={"right"}
-                                aria-label={"Add audio"}
+                    {!props.frontPage && (<HStack w={"full"}>
+                            <Input
+                                value={commentText}
                                 onClick={(e) => {
+                                    e.preventDefault()
                                     e.stopPropagation()
                                 }}
-                                icon={<BsMic boxSize={5} />}
-                            ></IconButton>
-                        </CustomTooltip> */}
-                        {commentText.length > 0 && (
-                            <CustomTooltip
-                                label={"Post comment"}
-                                placement={"left"}
-                            >
+                                onChange={(e) => {
+                                    setCommentText(e.target.value)
+                                }}
+                                placeholder="Add a comment..."
+                            />
+                            {/* <CustomTooltip label={"Add audio"} placement={"left"}>
                                 <IconButton
-                                    onClick={async (e) => {
-                                        await addComment(props.id, {
-                                            body: commentText,
-                                        })
-                                        setCommentText("")
-                                        await props.triggerReload()
+                                    float={"right"}
+                                    aria-label={"Add audio"}
+                                    onClick={(e) => {
                                         e.stopPropagation()
                                     }}
-                                    float={"right"}
-                                    aria-label={"Post comment"}
-                                    icon={<ArrowForwardIcon boxSize={5} />}
+                                    icon={<BsMic boxSize={5} />}
                                 ></IconButton>
-                            </CustomTooltip>
-                        )}
-                    </HStack>
+                            </CustomTooltip> */}
+                            {commentText.length > 0 && (
+                                <CustomTooltip
+                                    label={"Post comment"}
+                                    placement={"left"}
+                                >
+                                    <IconButton
+                                        onClick={async (e) => {
+                                            await addComment(props.id, {
+                                                body: commentText,
+                                            })
+                                            setCommentText("")
+                                            await props.triggerReload()
+                                            e.stopPropagation()
+                                        }}
+                                        float={"right"}
+                                        aria-label={"Post comment"}
+                                        icon={<ArrowForwardIcon boxSize={5} />}
+                                    ></IconButton>
+                                </CustomTooltip>
+                            )}
+                        </HStack>)}
                 </VStack>
             </CardBody>
         </Card>

@@ -2,11 +2,11 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-import * as APITypes from "../API"
+import * as APITypes from "../API";
 type GeneratedMutation<InputType, OutputType> = string & {
-    __generatedMutationInput: InputType
-    __generatedMutationOutput: OutputType
-}
+  __generatedMutationInput: InputType;
+  __generatedMutationOutput: OutputType;
+};
 
 export const createComments = /* GraphQL */ `mutation CreateComments(
   $input: CreateCommentsInput!
@@ -17,6 +17,7 @@ export const createComments = /* GraphQL */ `mutation CreateComments(
     content
     audioID
     postedAt
+    username
     userID
     postsID
     Posts {
@@ -26,6 +27,7 @@ export const createComments = /* GraphQL */ `mutation CreateComments(
       postedAt
       likes
       audioID
+      username
       userID
       createdAt
       updatedAt
@@ -49,9 +51,9 @@ export const createComments = /* GraphQL */ `mutation CreateComments(
   }
 }
 ` as GeneratedMutation<
-    APITypes.CreateCommentsMutationVariables,
-    APITypes.CreateCommentsMutation
->
+  APITypes.CreateCommentsMutationVariables,
+  APITypes.CreateCommentsMutation
+>;
 export const updateComments = /* GraphQL */ `mutation UpdateComments(
   $input: UpdateCommentsInput!
   $condition: ModelCommentsConditionInput
@@ -61,6 +63,7 @@ export const updateComments = /* GraphQL */ `mutation UpdateComments(
     content
     audioID
     postedAt
+    username
     userID
     postsID
     Posts {
@@ -70,6 +73,7 @@ export const updateComments = /* GraphQL */ `mutation UpdateComments(
       postedAt
       likes
       audioID
+      username
       userID
       createdAt
       updatedAt
@@ -93,9 +97,9 @@ export const updateComments = /* GraphQL */ `mutation UpdateComments(
   }
 }
 ` as GeneratedMutation<
-    APITypes.UpdateCommentsMutationVariables,
-    APITypes.UpdateCommentsMutation
->
+  APITypes.UpdateCommentsMutationVariables,
+  APITypes.UpdateCommentsMutation
+>;
 export const deleteComments = /* GraphQL */ `mutation DeleteComments(
   $input: DeleteCommentsInput!
   $condition: ModelCommentsConditionInput
@@ -105,6 +109,7 @@ export const deleteComments = /* GraphQL */ `mutation DeleteComments(
     content
     audioID
     postedAt
+    username
     userID
     postsID
     Posts {
@@ -114,6 +119,7 @@ export const deleteComments = /* GraphQL */ `mutation DeleteComments(
       postedAt
       likes
       audioID
+      username
       userID
       createdAt
       updatedAt
@@ -137,9 +143,9 @@ export const deleteComments = /* GraphQL */ `mutation DeleteComments(
   }
 }
 ` as GeneratedMutation<
-    APITypes.DeleteCommentsMutationVariables,
-    APITypes.DeleteCommentsMutation
->
+  APITypes.DeleteCommentsMutationVariables,
+  APITypes.DeleteCommentsMutation
+>;
 export const createUser = /* GraphQL */ `mutation CreateUser(
   $input: CreateUserInput!
   $condition: ModelUserConditionInput
@@ -172,9 +178,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
   }
 }
 ` as GeneratedMutation<
-    APITypes.CreateUserMutationVariables,
-    APITypes.CreateUserMutation
->
+  APITypes.CreateUserMutationVariables,
+  APITypes.CreateUserMutation
+>;
 export const updateUser = /* GraphQL */ `mutation UpdateUser(
   $input: UpdateUserInput!
   $condition: ModelUserConditionInput
@@ -207,9 +213,9 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
   }
 }
 ` as GeneratedMutation<
-    APITypes.UpdateUserMutationVariables,
-    APITypes.UpdateUserMutation
->
+  APITypes.UpdateUserMutationVariables,
+  APITypes.UpdateUserMutation
+>;
 export const deleteUser = /* GraphQL */ `mutation DeleteUser(
   $input: DeleteUserInput!
   $condition: ModelUserConditionInput
@@ -242,9 +248,9 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
   }
 }
 ` as GeneratedMutation<
-    APITypes.DeleteUserMutationVariables,
-    APITypes.DeleteUserMutation
->
+  APITypes.DeleteUserMutationVariables,
+  APITypes.DeleteUserMutation
+>;
 export const createPosts = /* GraphQL */ `mutation CreatePosts(
   $input: CreatePostsInput!
   $condition: ModelPostsConditionInput
@@ -256,6 +262,7 @@ export const createPosts = /* GraphQL */ `mutation CreatePosts(
     postedAt
     likes
     audioID
+    username
     User {
       id
       email
@@ -278,9 +285,9 @@ export const createPosts = /* GraphQL */ `mutation CreatePosts(
   }
 }
 ` as GeneratedMutation<
-    APITypes.CreatePostsMutationVariables,
-    APITypes.CreatePostsMutation
->
+  APITypes.CreatePostsMutationVariables,
+  APITypes.CreatePostsMutation
+>;
 export const updatePosts = /* GraphQL */ `mutation UpdatePosts(
   $input: UpdatePostsInput!
   $condition: ModelPostsConditionInput
@@ -292,6 +299,7 @@ export const updatePosts = /* GraphQL */ `mutation UpdatePosts(
     postedAt
     likes
     audioID
+    username
     User {
       id
       email
@@ -314,9 +322,9 @@ export const updatePosts = /* GraphQL */ `mutation UpdatePosts(
   }
 }
 ` as GeneratedMutation<
-    APITypes.UpdatePostsMutationVariables,
-    APITypes.UpdatePostsMutation
->
+  APITypes.UpdatePostsMutationVariables,
+  APITypes.UpdatePostsMutation
+>;
 export const deletePosts = /* GraphQL */ `mutation DeletePosts(
   $input: DeletePostsInput!
   $condition: ModelPostsConditionInput
@@ -328,6 +336,7 @@ export const deletePosts = /* GraphQL */ `mutation DeletePosts(
     postedAt
     likes
     audioID
+    username
     User {
       id
       email
@@ -350,9 +359,9 @@ export const deletePosts = /* GraphQL */ `mutation DeletePosts(
   }
 }
 ` as GeneratedMutation<
-    APITypes.DeletePostsMutationVariables,
-    APITypes.DeletePostsMutation
->
+  APITypes.DeletePostsMutationVariables,
+  APITypes.DeletePostsMutation
+>;
 export const createRevisionCard = /* GraphQL */ `mutation CreateRevisionCard(
   $input: CreateRevisionCardInput!
   $condition: ModelRevisionCardConditionInput
@@ -380,9 +389,9 @@ export const createRevisionCard = /* GraphQL */ `mutation CreateRevisionCard(
   }
 }
 ` as GeneratedMutation<
-    APITypes.CreateRevisionCardMutationVariables,
-    APITypes.CreateRevisionCardMutation
->
+  APITypes.CreateRevisionCardMutationVariables,
+  APITypes.CreateRevisionCardMutation
+>;
 export const updateRevisionCard = /* GraphQL */ `mutation UpdateRevisionCard(
   $input: UpdateRevisionCardInput!
   $condition: ModelRevisionCardConditionInput
@@ -410,9 +419,9 @@ export const updateRevisionCard = /* GraphQL */ `mutation UpdateRevisionCard(
   }
 }
 ` as GeneratedMutation<
-    APITypes.UpdateRevisionCardMutationVariables,
-    APITypes.UpdateRevisionCardMutation
->
+  APITypes.UpdateRevisionCardMutationVariables,
+  APITypes.UpdateRevisionCardMutation
+>;
 export const deleteRevisionCard = /* GraphQL */ `mutation DeleteRevisionCard(
   $input: DeleteRevisionCardInput!
   $condition: ModelRevisionCardConditionInput
@@ -440,9 +449,9 @@ export const deleteRevisionCard = /* GraphQL */ `mutation DeleteRevisionCard(
   }
 }
 ` as GeneratedMutation<
-    APITypes.DeleteRevisionCardMutationVariables,
-    APITypes.DeleteRevisionCardMutation
->
+  APITypes.DeleteRevisionCardMutationVariables,
+  APITypes.DeleteRevisionCardMutation
+>;
 export const createAudionotes = /* GraphQL */ `mutation CreateAudionotes(
   $input: CreateAudionotesInput!
   $condition: ModelAudionotesConditionInput
@@ -471,9 +480,9 @@ export const createAudionotes = /* GraphQL */ `mutation CreateAudionotes(
   }
 }
 ` as GeneratedMutation<
-    APITypes.CreateAudionotesMutationVariables,
-    APITypes.CreateAudionotesMutation
->
+  APITypes.CreateAudionotesMutationVariables,
+  APITypes.CreateAudionotesMutation
+>;
 export const updateAudionotes = /* GraphQL */ `mutation UpdateAudionotes(
   $input: UpdateAudionotesInput!
   $condition: ModelAudionotesConditionInput
@@ -502,9 +511,9 @@ export const updateAudionotes = /* GraphQL */ `mutation UpdateAudionotes(
   }
 }
 ` as GeneratedMutation<
-    APITypes.UpdateAudionotesMutationVariables,
-    APITypes.UpdateAudionotesMutation
->
+  APITypes.UpdateAudionotesMutationVariables,
+  APITypes.UpdateAudionotesMutation
+>;
 export const deleteAudionotes = /* GraphQL */ `mutation DeleteAudionotes(
   $input: DeleteAudionotesInput!
   $condition: ModelAudionotesConditionInput
@@ -533,6 +542,6 @@ export const deleteAudionotes = /* GraphQL */ `mutation DeleteAudionotes(
   }
 }
 ` as GeneratedMutation<
-    APITypes.DeleteAudionotesMutationVariables,
-    APITypes.DeleteAudionotesMutation
->
+  APITypes.DeleteAudionotesMutationVariables,
+  APITypes.DeleteAudionotesMutation
+>;

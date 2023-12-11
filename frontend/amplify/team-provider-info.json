@@ -1,30 +1,30 @@
 {
-    "staging": {
-        "awscloudformation": {
-            "AuthRoleName": "amplify-amplify13b685eec8944-staging-63653-authRole",
-            "UnauthRoleArn": "arn:aws:iam::388753440176:role/amplify-amplify13b685eec8944-staging-63653-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::388753440176:role/amplify-amplify13b685eec8944-staging-63653-authRole",
-            "Region": "ap-southeast-1",
-            "DeploymentBucketName": "amplify-amplify13b685eec8944-staging-63653-deployment",
-            "UnauthRoleName": "amplify-amplify13b685eec8944-staging-63653-unauthRole",
-            "StackName": "amplify-amplify13b685eec8944-staging-63653",
-            "StackId": "arn:aws:cloudformation:ap-southeast-1:388753440176:stack/amplify-amplify13b685eec8944-staging-63653/af5c4810-8e81-11ee-af96-02a271469606",
-            "AmplifyAppId": "d3fxpe2lpdnzgl"
-        },
-        "categories": {
-            "auth": {
-                "Dyslexicon": {}
-            },
-            "storage": {
-                "s3dyslexiconstorage": {}
-            },
-            "api": {
-                "Dyslexicon": {}
-            },
-            "predictions": {
-                "ocrText": {},
-                "speechText": {}
-            }
-        }
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplify13b685eec8944-staging-63653-authRole",
+      "UnauthRoleArn": "arn:aws:iam::388753440176:role/amplify-amplify13b685eec8944-staging-63653-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::388753440176:role/amplify-amplify13b685eec8944-staging-63653-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-amplify13b685eec8944-staging-63653-deployment",
+      "UnauthRoleName": "amplify-amplify13b685eec8944-staging-63653-unauthRole",
+      "StackName": "amplify-amplify13b685eec8944-staging-63653",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:388753440176:stack/amplify-amplify13b685eec8944-staging-63653/af5c4810-8e81-11ee-af96-02a271469606",
+      "AmplifyAppId": "d3fxpe2lpdnzgl"
+    },
+    "categories": {
+      "auth": {
+        "Dyslexicon": {}
+      },
+      "storage": {
+        "s3dyslexiconstorage": {}
+      },
+      "api": {
+        "Dyslexicon": {}
+      },
+      "predictions": {
+        "ocrText": {},
+        "speechText": {}
+      }
     }
+  }
 }

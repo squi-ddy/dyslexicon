@@ -2,11 +2,11 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-import * as APITypes from "../API"
+import * as APITypes from "../API";
 type GeneratedQuery<InputType, OutputType> = string & {
-    __generatedQueryInput: InputType
-    __generatedQueryOutput: OutputType
-}
+  __generatedQueryInput: InputType;
+  __generatedQueryOutput: OutputType;
+};
 
 export const getComments = /* GraphQL */ `query GetComments($id: ID!) {
   getComments(id: $id) {
@@ -14,6 +14,7 @@ export const getComments = /* GraphQL */ `query GetComments($id: ID!) {
     content
     audioID
     postedAt
+    username
     userID
     postsID
     Posts {
@@ -23,6 +24,7 @@ export const getComments = /* GraphQL */ `query GetComments($id: ID!) {
       postedAt
       likes
       audioID
+      username
       userID
       createdAt
       updatedAt
@@ -46,9 +48,9 @@ export const getComments = /* GraphQL */ `query GetComments($id: ID!) {
   }
 }
 ` as GeneratedQuery<
-    APITypes.GetCommentsQueryVariables,
-    APITypes.GetCommentsQuery
->
+  APITypes.GetCommentsQueryVariables,
+  APITypes.GetCommentsQuery
+>;
 export const listComments = /* GraphQL */ `query ListComments(
   $filter: ModelCommentsFilterInput
   $limit: Int
@@ -60,6 +62,7 @@ export const listComments = /* GraphQL */ `query ListComments(
       content
       audioID
       postedAt
+      username
       userID
       postsID
       createdAt
@@ -72,9 +75,9 @@ export const listComments = /* GraphQL */ `query ListComments(
   }
 }
 ` as GeneratedQuery<
-    APITypes.ListCommentsQueryVariables,
-    APITypes.ListCommentsQuery
->
+  APITypes.ListCommentsQueryVariables,
+  APITypes.ListCommentsQuery
+>;
 export const commentsByUserID = /* GraphQL */ `query CommentsByUserID(
   $userID: ID!
   $sortDirection: ModelSortDirection
@@ -94,6 +97,7 @@ export const commentsByUserID = /* GraphQL */ `query CommentsByUserID(
       content
       audioID
       postedAt
+      username
       userID
       postsID
       createdAt
@@ -106,9 +110,9 @@ export const commentsByUserID = /* GraphQL */ `query CommentsByUserID(
   }
 }
 ` as GeneratedQuery<
-    APITypes.CommentsByUserIDQueryVariables,
-    APITypes.CommentsByUserIDQuery
->
+  APITypes.CommentsByUserIDQueryVariables,
+  APITypes.CommentsByUserIDQuery
+>;
 export const commentsByPostsID = /* GraphQL */ `query CommentsByPostsID(
   $postsID: ID!
   $sortDirection: ModelSortDirection
@@ -128,6 +132,7 @@ export const commentsByPostsID = /* GraphQL */ `query CommentsByPostsID(
       content
       audioID
       postedAt
+      username
       userID
       postsID
       createdAt
@@ -140,9 +145,9 @@ export const commentsByPostsID = /* GraphQL */ `query CommentsByPostsID(
   }
 }
 ` as GeneratedQuery<
-    APITypes.CommentsByPostsIDQueryVariables,
-    APITypes.CommentsByPostsIDQuery
->
+  APITypes.CommentsByPostsIDQueryVariables,
+  APITypes.CommentsByPostsIDQuery
+>;
 export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
   getUser(id: $id) {
     id
@@ -171,7 +176,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     __typename
   }
 }
-` as GeneratedQuery<APITypes.GetUserQueryVariables, APITypes.GetUserQuery>
+` as GeneratedQuery<APITypes.GetUserQueryVariables, APITypes.GetUserQuery>;
 export const listUsers = /* GraphQL */ `query ListUsers(
   $filter: ModelUserFilterInput
   $limit: Int
@@ -192,7 +197,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
     __typename
   }
 }
-` as GeneratedQuery<APITypes.ListUsersQueryVariables, APITypes.ListUsersQuery>
+` as GeneratedQuery<APITypes.ListUsersQueryVariables, APITypes.ListUsersQuery>;
 export const findEmail = /* GraphQL */ `query FindEmail(
   $email: AWSEmail!
   $sortDirection: ModelSortDirection
@@ -221,7 +226,7 @@ export const findEmail = /* GraphQL */ `query FindEmail(
     __typename
   }
 }
-` as GeneratedQuery<APITypes.FindEmailQueryVariables, APITypes.FindEmailQuery>
+` as GeneratedQuery<APITypes.FindEmailQueryVariables, APITypes.FindEmailQuery>;
 export const findUsername = /* GraphQL */ `query FindUsername(
   $username: String!
   $sortDirection: ModelSortDirection
@@ -251,9 +256,9 @@ export const findUsername = /* GraphQL */ `query FindUsername(
   }
 }
 ` as GeneratedQuery<
-    APITypes.FindUsernameQueryVariables,
-    APITypes.FindUsernameQuery
->
+  APITypes.FindUsernameQueryVariables,
+  APITypes.FindUsernameQuery
+>;
 export const getPosts = /* GraphQL */ `query GetPosts($id: ID!) {
   getPosts(id: $id) {
     id
@@ -262,6 +267,7 @@ export const getPosts = /* GraphQL */ `query GetPosts($id: ID!) {
     postedAt
     likes
     audioID
+    username
     User {
       id
       email
@@ -283,7 +289,7 @@ export const getPosts = /* GraphQL */ `query GetPosts($id: ID!) {
     __typename
   }
 }
-` as GeneratedQuery<APITypes.GetPostsQueryVariables, APITypes.GetPostsQuery>
+` as GeneratedQuery<APITypes.GetPostsQueryVariables, APITypes.GetPostsQuery>;
 export const listPosts = /* GraphQL */ `query ListPosts(
   $filter: ModelPostsFilterInput
   $limit: Int
@@ -297,6 +303,7 @@ export const listPosts = /* GraphQL */ `query ListPosts(
       postedAt
       likes
       audioID
+      username
       userID
       createdAt
       updatedAt
@@ -307,7 +314,7 @@ export const listPosts = /* GraphQL */ `query ListPosts(
     __typename
   }
 }
-` as GeneratedQuery<APITypes.ListPostsQueryVariables, APITypes.ListPostsQuery>
+` as GeneratedQuery<APITypes.ListPostsQueryVariables, APITypes.ListPostsQuery>;
 export const postsByUserID = /* GraphQL */ `query PostsByUserID(
   $userID: ID!
   $sortDirection: ModelSortDirection
@@ -329,6 +336,7 @@ export const postsByUserID = /* GraphQL */ `query PostsByUserID(
       postedAt
       likes
       audioID
+      username
       userID
       createdAt
       updatedAt
@@ -340,9 +348,9 @@ export const postsByUserID = /* GraphQL */ `query PostsByUserID(
   }
 }
 ` as GeneratedQuery<
-    APITypes.PostsByUserIDQueryVariables,
-    APITypes.PostsByUserIDQuery
->
+  APITypes.PostsByUserIDQueryVariables,
+  APITypes.PostsByUserIDQuery
+>;
 export const getRevisionCard = /* GraphQL */ `query GetRevisionCard($id: ID!) {
   getRevisionCard(id: $id) {
     id
@@ -367,9 +375,9 @@ export const getRevisionCard = /* GraphQL */ `query GetRevisionCard($id: ID!) {
   }
 }
 ` as GeneratedQuery<
-    APITypes.GetRevisionCardQueryVariables,
-    APITypes.GetRevisionCardQuery
->
+  APITypes.GetRevisionCardQueryVariables,
+  APITypes.GetRevisionCardQuery
+>;
 export const listRevisionCards = /* GraphQL */ `query ListRevisionCards(
   $filter: ModelRevisionCardFilterInput
   $limit: Int
@@ -392,9 +400,9 @@ export const listRevisionCards = /* GraphQL */ `query ListRevisionCards(
   }
 }
 ` as GeneratedQuery<
-    APITypes.ListRevisionCardsQueryVariables,
-    APITypes.ListRevisionCardsQuery
->
+  APITypes.ListRevisionCardsQueryVariables,
+  APITypes.ListRevisionCardsQuery
+>;
 export const revisionCardsByUserID = /* GraphQL */ `query RevisionCardsByUserID(
   $userID: ID!
   $sortDirection: ModelSortDirection
@@ -425,9 +433,9 @@ export const revisionCardsByUserID = /* GraphQL */ `query RevisionCardsByUserID(
   }
 }
 ` as GeneratedQuery<
-    APITypes.RevisionCardsByUserIDQueryVariables,
-    APITypes.RevisionCardsByUserIDQuery
->
+  APITypes.RevisionCardsByUserIDQueryVariables,
+  APITypes.RevisionCardsByUserIDQuery
+>;
 export const getAudionotes = /* GraphQL */ `query GetAudionotes($id: ID!) {
   getAudionotes(id: $id) {
     id
@@ -453,9 +461,9 @@ export const getAudionotes = /* GraphQL */ `query GetAudionotes($id: ID!) {
   }
 }
 ` as GeneratedQuery<
-    APITypes.GetAudionotesQueryVariables,
-    APITypes.GetAudionotesQuery
->
+  APITypes.GetAudionotesQueryVariables,
+  APITypes.GetAudionotesQuery
+>;
 export const listAudionotes = /* GraphQL */ `query ListAudionotes(
   $filter: ModelAudionotesFilterInput
   $limit: Int
@@ -479,9 +487,9 @@ export const listAudionotes = /* GraphQL */ `query ListAudionotes(
   }
 }
 ` as GeneratedQuery<
-    APITypes.ListAudionotesQueryVariables,
-    APITypes.ListAudionotesQuery
->
+  APITypes.ListAudionotesQueryVariables,
+  APITypes.ListAudionotesQuery
+>;
 export const audionotesByUserID = /* GraphQL */ `query AudionotesByUserID(
   $userID: ID!
   $sortDirection: ModelSortDirection
@@ -513,6 +521,6 @@ export const audionotesByUserID = /* GraphQL */ `query AudionotesByUserID(
   }
 }
 ` as GeneratedQuery<
-    APITypes.AudionotesByUserIDQueryVariables,
-    APITypes.AudionotesByUserIDQuery
->
+  APITypes.AudionotesByUserIDQueryVariables,
+  APITypes.AudionotesByUserIDQuery
+>;

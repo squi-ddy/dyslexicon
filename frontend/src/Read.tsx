@@ -28,7 +28,7 @@ export function HomeRead() {
         if (getLoggedInUser() !== "") {
             setUserContent()
         }
-    })
+    }, [user])
 
     const cardIdealWidth = 250
     const cardAspectRatio = 1

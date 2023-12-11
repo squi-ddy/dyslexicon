@@ -26,22 +26,21 @@ export function Forum() {
 
     useEffect(() => {
         async function setUserContent(): Promise<void> {
-            const f = await getForumContent()
-            setForumContent(f)
+            await getForumContent().then((f) => setForumContent(f));
+            
         }
-
         setUserContent()
     }, [forumContent])
 
     async function triggerReload() {
-        const forum = await getForumContent()
-        setForumContent(Object.assign({}, forum))
+        await getForumContent().then((forum) => setForumContent(Object.assign({}, forum)));
+        
     }
 
     // TODO: pagination
 
     return (
-        <VStack ref={VStackRef} spacing={2} maxH={"full"}>
+        <VStack ref={VStackRef} spacing={2} maxH={"full"}      >
             <Flex w={"full"} justify={"space-between"}>
                 <Heading textAlign={"center"}>Forum</Heading>
                 <CustomTooltip label={"Make post"} placement={"left"}>
@@ -55,22 +54,24 @@ export function Forum() {
                 </CustomTooltip>
             </Flex>
             <Divider />
-            <SimpleGrid
-                columns={dims?.width ? Math.floor(dims.width / cardWidth) : 100}
+            <SimpleGrid width={"full"}
+                columns={1}
                 spacing={2}
                 mt={4}
                 overflowY={"scroll"}
             >
-                {Object.entries(forumContent!).map(([id, content]) => (
-                    <ForumCard
+                {Object.entries(forumContent!).map(([id, content]) => {
+                    return <ForumCard
+                        key={content.id}
                         id={content.id}
                         content={content}
-                        cardWidth={cardWidth}
+                        cardWidth={"full"}
                         limitHeight
                         triggerReload={triggerReload}
+                        frontPage={true}
                         hasLink
                     />
-                ))}
+})}
             </SimpleGrid>
         </VStack>
     )

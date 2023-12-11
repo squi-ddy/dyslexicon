@@ -102,23 +102,14 @@ export async function getForumContent() {
         query: listPosts,
     })
 
-    const lists = result.data.listPosts.items
+    const lists: any[] = result.data.listPosts.items
     lists.forEach(async (element: any) => {
-        const user = await client.graphql({
-            query: getUser,
-            variables: {
-                id: element.userID,
-            },
-            authMode: "userPool",
-        })
         const comments = await client.graphql({
             query: commentsByPostsID,
             variables: {
                 postsID: element.id,
             },
         })
-
-        element.username = user.data.getUser!.username
         if (element.audioID !== "") {
             const downloadResult = await downloadData({
                 key: element.audioID,
@@ -131,27 +122,9 @@ export async function getForumContent() {
         }
         element.comments = comments.data.commentsByPostsID.items
         if (element.comments === undefined) element.comments = []
-        element.comments.forEach(async (comment: any) => {
-            const user = await client.graphql({
-                query: getUser,
-                variables: {
-                    id: comment.userID,
-                },
-                authMode: "userPool",
-            })
-            comment.by = user.data.getUser!.username
-            if (comment.audioID !== "") {
-                const downloadResult = await downloadData({
-                    key: comment.audioID,
-                    options: {
-                        accessLevel: "private",
-                    },
-                }).result
-                const text = await downloadResult.body.blob()
-                comment.audio = text
-            }
-        })
+        
     })
+    
     return lists
 }
 
@@ -188,20 +161,13 @@ export async function getForumContentById(id: string) {
         authMode: "userPool",
     })
     const result2: any = result.data.getPosts
-    const user = await client.graphql({
-        query: getUser,
-        variables: {
-            id: result2.userID,
-        },
-        authMode: "userPool",
-    })
+    
     const comments = await client.graphql({
         query: commentsByPostsID,
         variables: {
             postsID: result2.id,
         },
     })
-    result2.username = user.data.getUser!.username
     if (result2.audioID !== "") {
         const downloadResult = await downloadData({
             key: result2.audioID,
@@ -214,26 +180,19 @@ export async function getForumContentById(id: string) {
     }
     result2.comments = comments.data.commentsByPostsID.items
     if (result2.comments === undefined) result2.comments = []
-    result2.comments.forEach(async (comment: any) => {
-        const user = await client.graphql({
-            query: getUser,
-            variables: {
-                id: comment.userID,
-            },
-            authMode: "userPool",
-        })
-        comment.by = user.data.getUser!.username
-        if (comment.audioID !== "") {
-            const downloadResult = await downloadData({
-                key: comment.audioID,
-                options: {
-                    accessLevel: "private",
-                },
-            }).result
-            const text = await downloadResult.body.blob()
-            comment.audio = text
-        }
-    })
+    // result2.comments.forEach(async (comment: any) => {
+        
+    //     if (comment.audioID !== "") {
+    //         const downloadResult = await downloadData({
+    //             key: comment.audioID,
+    //             options: {
+    //                 accessLevel: "private",
+    //             },
+    //         }).result
+    //         const text = await downloadResult.body.blob()
+    //         comment.audio = text
+    //     }
+    // })
     return result2!
 }
 
@@ -247,6 +206,7 @@ export async function addComment(contentId: string, comment: any) {
                 userID: user!.id!,
                 audioID: "",
                 postsID: contentId,
+                username: user_name,
             },
         },
         authMode: "userPool",
@@ -255,6 +215,8 @@ export async function addComment(contentId: string, comment: any) {
 
 export async function addForumPost(content: any, audio: any) {
     const user = await currentAuthenticatedUser()
+    console.log(Object.keys(user))
+    console.log(user)
     if (audio) {
         const result = await uploadData({
             key: `${user!.id}/audio/posts/${uuidv4()}.wav`,
@@ -272,6 +234,7 @@ export async function addForumPost(content: any, audio: any) {
                     title: content.title,
                     userID: user!.id!,
                     audioID: result.key,
+                    username: user!.username,
                 },
             },
             authMode: "userPool",
@@ -285,6 +248,7 @@ export async function addForumPost(content: any, audio: any) {
                     title: content.title,
                     userID: user!.id!,
                     audioID: "",
+                    username: user!.username,
                 },
             },
             authMode: "userPool",
@@ -777,7 +741,6 @@ async function uploadAudio(content: RevisionCardData) {
 }
 
 export async function SyncRevisionCards() {
-    console.log("starting sync")
     await client
         .graphql({
             query: revisionCardsByUserID,
@@ -787,8 +750,6 @@ export async function SyncRevisionCards() {
             authMode: "userPool",
         })
         .then((result) => {
-            console.log("ending sync")
-            console.log(result.data.revisionCardsByUserID.items)
             reviseWords[loggedInUser] = result.data.revisionCardsByUserID.items
             getNextReviseWord()
         })
