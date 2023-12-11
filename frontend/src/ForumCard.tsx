@@ -64,11 +64,12 @@ export function ForumCard(props: {
                     align={"left"}
                     overflowX={"hidden"}
                 >
-                    <Text {!props.frontPage && {isTruncated: true}}
+                    <Text 
                         fontSize="sm"
                         whiteSpace={"pre-wrap"}
                         overflow={"hidden"}
                         w={"full"}
+                        isTruncated={props.limitHeight}
                     >
                         {props.content.content}
                     </Text>

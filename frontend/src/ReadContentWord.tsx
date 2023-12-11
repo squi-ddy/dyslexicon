@@ -28,7 +28,6 @@ export function ReadContentWord(props: {
     clicked: boolean
 }) {
     const highlightColor = useToken("colors", "themeColors.accent1") + "55"
-    console.log(props.word)
     return (
         <Popover
             isOpen={props.selected === props.idx && props.clicked}
@@ -119,7 +118,7 @@ export function ReadContentWord(props: {
                             <IconButton
                                 aria-label="Add to revision"
                                 onClick={() => {
-                                    addToRevision(props.word)
+                                    addToRevision(props.word.replace(/['?".,\/#!$%\^&\*;:{}=\-_`~()]/g,""))
                                 }}
                                 icon={<Icon as={AddIcon} boxSize={3} />}
                             ></IconButton>

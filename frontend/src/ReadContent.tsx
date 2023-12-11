@@ -83,11 +83,11 @@ export function ReadContent() {
 
     useEffect(() => {
         
-        const wordsOnly = body.split(/[^a-zA-Z0-9-.'?!"]+/)
+        const wordsOnly = body.split(/[^a-zA-Z0-9-.'?!".,\/#$%\^&\*;:{}=\-_`~()]+/)
         while (wordsOnly[wordsOnly.length - 1] === "") {
             wordsOnly.pop()
         }
-        const whitespaceOnly = body.split(/[a-zA-Z0-9-.?!']+/)
+        const whitespaceOnly = body.split(/[a-zA-Z0-9-.'?!".,\/#$%\^&\*;:{}=\-_`~()]+/)
         const processed = []
         for (
             let i = 0;
