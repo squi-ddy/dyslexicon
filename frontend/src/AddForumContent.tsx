@@ -35,18 +35,23 @@ export function AddForumContent() {
         if (fileUploaded !== null) {
             console.log(fileUploaded)
             await fileUploaded.arrayBuffer().then(async (b) => {
-                    console.log(b)
-                    addForumPost({
+                console.log(b)
+                addForumPost(
+                    {
                         title,
-                        body
-                    }, b)
-                });
-
+                        body,
+                    },
+                    b
+                )
+            })
         } else {
-            addForumPost({
-                title,
-                body
-            }, null)
+            addForumPost(
+                {
+                    title,
+                    body,
+                },
+                null
+            )
         }
         navigate(-1)
     }
@@ -66,7 +71,9 @@ export function AddForumContent() {
                 </Heading>
                 <CustomTooltip label={"Submit"} placement={"left"}>
                     <IconButton
-                        onClick={async () => {await addContent()}}
+                        onClick={async () => {
+                            await addContent()
+                        }}
                         aria-label="Submit"
                         icon={<Icon as={GoCheck} boxSize={7} />}
                     ></IconButton>

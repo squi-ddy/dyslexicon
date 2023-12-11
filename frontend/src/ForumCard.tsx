@@ -73,7 +73,11 @@ export function ForumCard(props: {
                     </Text>
                     {props.content.audio && (
                         <Box as={"audio"} controls>
-                            <source src={URL.createObjectURL(new Blob([props.content.audio]))} />
+                            <source
+                                src={URL.createObjectURL(
+                                    new Blob([props.content.audio])
+                                )}
+                            />
                         </Box>
                     )}
                     <Divider borderWidth={2} />
@@ -86,7 +90,6 @@ export function ForumCard(props: {
                             flexShrink={1}
                         >
                             {props.content.comments.map((comment: any) => (
-                                
                                 <Text
                                     as={Box}
                                     borderWidth={2}
@@ -106,7 +109,11 @@ export function ForumCard(props: {
                                             controls
                                             maxW={"full"}
                                         >
-                                            <source src={URL.createObjectURL(new Blob([comment.audio]))} />
+                                            <source
+                                                src={URL.createObjectURL(
+                                                    new Blob([comment.audio])
+                                                )}
+                                            />
                                         </Box>
                                     ) : (
                                         <>&nbsp;</>
@@ -151,7 +158,7 @@ export function ForumCard(props: {
                                 <IconButton
                                     onClick={async (e) => {
                                         await addComment(props.id, {
-                                            body: commentText
+                                            body: commentText,
                                         })
                                         setCommentText("")
                                         await props.triggerReload()

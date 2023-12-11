@@ -11,16 +11,16 @@
 
 ## Table of Contents
 
-* [Tesseract OCR](#tesseract-ocr)
-  * [About](#about)
-  * [Brief history](#brief-history)
-  * [Installing Tesseract](#installing-tesseract)
-  * [Running Tesseract](#running-tesseract)
-  * [For developers](#for-developers)
-  * [Support](#support)
-  * [License](#license)
-  * [Dependencies](#dependencies)
-  * [Latest Version of README](#latest-version-of-readme)
+- [Tesseract OCR](#tesseract-ocr)
+  - [About](#about)
+  - [Brief history](#brief-history)
+  - [Installing Tesseract](#installing-tesseract)
+  - [Running Tesseract](#running-tesseract)
+  - [For developers](#for-developers)
+  - [Support](#support)
+  - [License](#license)
+  - [Dependencies](#dependencies)
+  - [Latest Version of README](#latest-version-of-readme)
 
 ## About
 
@@ -95,8 +95,8 @@ If not, search the [Tesseract user forum](https://groups.google.com/g/tesseract-
 
 Mailing-lists:
 
-* [tesseract-ocr](https://groups.google.com/g/tesseract-ocr) - For tesseract users.
-* [tesseract-dev](https://groups.google.com/g/tesseract-dev) - For tesseract developers.
+- [tesseract-ocr](https://groups.google.com/g/tesseract-ocr) - For tesseract users.
+- [tesseract-dev](https://groups.google.com/g/tesseract-dev) - For tesseract developers.
 
 Please report an issue only for a **bug**, not for asking questions.
 

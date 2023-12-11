@@ -26,5 +26,5 @@ preprocessing:
     language: en
     max_length: 4096
     text_cleaners:
-    - english_cleaners
+      - english_cleaners
   val_size: 512

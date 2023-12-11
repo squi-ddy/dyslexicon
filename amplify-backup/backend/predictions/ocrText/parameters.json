@@ -1,16 +1,16 @@
 {
-    "resourceName": "ocrText",
-    "identifyPolicyName": "identifyPolicy1bfcaec4",
-    "authRoleName": {
-        "Ref": "AuthRoleName"
-    },
-    "unauthRoleName": {
-        "Ref": "UnauthRoleName"
-    },
-    "adminAuthProtected": "DISALLOW",
-    "adminGuestProtected": "DISALLOW",
-    "identifyType": "identifyText",
-    "access": "auth",
-    "identifyDoc": true,
-    "format": "ALL"
+  "resourceName": "ocrText",
+  "identifyPolicyName": "identifyPolicy1bfcaec4",
+  "authRoleName": {
+    "Ref": "AuthRoleName"
+  },
+  "unauthRoleName": {
+    "Ref": "UnauthRoleName"
+  },
+  "adminAuthProtected": "DISALLOW",
+  "adminGuestProtected": "DISALLOW",
+  "identifyType": "identifyText",
+  "access": "auth",
+  "identifyDoc": true,
+  "format": "ALL"
 }

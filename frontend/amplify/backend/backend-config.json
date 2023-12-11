@@ -1,93 +1,82 @@
 {
-  "api": {
-    "Dyslexicon": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "Dyslexicon"
-        }
-      ],
-      "output": {
-        "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
+    "api": {
+        "Dyslexicon": {
+            "dependsOn": [
+                {
+                    "attributes": ["UserPoolId"],
+                    "category": "auth",
+                    "resourceName": "Dyslexicon"
+                }
+            ],
+            "output": {
+                "authConfig": {
+                    "additionalAuthenticationProviders": [
+                        {
+                            "authenticationType": "AWS_IAM"
+                        },
+                        {
+                            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+                            "userPoolConfig": {
+                                "userPoolId": "authDyslexicon"
+                            }
+                        }
+                    ],
+                    "defaultAuthentication": {
+                        "apiKeyConfig": {
+                            "apiKeyExpirationDays": 30,
+                            "description": "api key description"
+                        },
+                        "authenticationType": "API_KEY"
+                    }
+                }
             },
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authDyslexicon"
-              }
-            }
-          ],
-          "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
-            },
-            "authenticationType": "API_KEY"
-          }
+            "providerPlugin": "awscloudformation",
+            "service": "AppSync"
         }
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "AppSync"
-    }
-  },
-  "auth": {
-    "Dyslexicon": {
-      "customAuth": false,
-      "dependsOn": [],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OPTIONAL",
-        "mfaTypes": [
-          "TOTP"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [
-            "REQUIRES_LOWERCASE",
-            "REQUIRES_NUMBERS",
-            "REQUIRES_SYMBOLS",
-            "REQUIRES_UPPERCASE"
-          ],
-          "passwordPolicyMinLength": 8
-        },
-        "signupAttributes": [
-          "PREFERRED_USERNAME",
-          "EMAIL"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito"
-    }
-  },
-  "predictions": {
-    "ocrText": {
-      "dependsOn": [],
-      "identifyType": "identifyText",
-      "providerPlugin": "awscloudformation",
-      "service": "RekognitionAndTextract"
     },
-    "speechText": {
-      "convertType": "speechGenerator",
-      "providerPlugin": "awscloudformation",
-      "service": "Polly"
+    "auth": {
+        "Dyslexicon": {
+            "customAuth": false,
+            "dependsOn": [],
+            "frontendAuthConfig": {
+                "mfaConfiguration": "OPTIONAL",
+                "mfaTypes": ["TOTP"],
+                "passwordProtectionSettings": {
+                    "passwordPolicyCharacters": [
+                        "REQUIRES_LOWERCASE",
+                        "REQUIRES_NUMBERS",
+                        "REQUIRES_SYMBOLS",
+                        "REQUIRES_UPPERCASE"
+                    ],
+                    "passwordPolicyMinLength": 8
+                },
+                "signupAttributes": ["PREFERRED_USERNAME", "EMAIL"],
+                "socialProviders": [],
+                "usernameAttributes": ["EMAIL"],
+                "verificationMechanisms": ["EMAIL"]
+            },
+            "providerPlugin": "awscloudformation",
+            "service": "Cognito"
+        }
+    },
+    "predictions": {
+        "ocrText": {
+            "dependsOn": [],
+            "identifyType": "identifyText",
+            "providerPlugin": "awscloudformation",
+            "service": "RekognitionAndTextract"
+        },
+        "speechText": {
+            "convertType": "speechGenerator",
+            "providerPlugin": "awscloudformation",
+            "service": "Polly"
+        }
+    },
+    "storage": {
+        "s3dyslexiconstorage": {
+            "dependsOn": [],
+            "providerPlugin": "awscloudformation",
+            "service": "S3"
+        }
     }
-  },
-  "storage": {
-    "s3dyslexiconstorage": {
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "S3"
-    }
-  }
 }

@@ -95,9 +95,7 @@
           "Statement": [
             {
               "Effect": "Allow",
-              "Action": [
-                "polly:SynthesizeSpeech"
-              ],
+              "Action": ["polly:SynthesizeSpeech"],
               "Resource": "*"
             }
           ]

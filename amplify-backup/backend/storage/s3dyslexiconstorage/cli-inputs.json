@@ -4,9 +4,5 @@
   "policyUUID": "42886808",
   "storageAccess": "auth",
   "guestAccess": [],
-  "authAccess": [
-    "CREATE_AND_UPDATE",
-    "READ",
-    "DELETE"
-  ]
+  "authAccess": ["CREATE_AND_UPDATE", "READ", "DELETE"]
 }

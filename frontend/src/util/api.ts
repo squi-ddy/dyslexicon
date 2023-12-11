@@ -1,11 +1,25 @@
-import { ForumCommentData, ForumContentData, RevisionCardData, UserContentData } from "./types"
+import {
+    ForumCommentData,
+    ForumContentData,
+    RevisionCardData,
+    UserContentData,
+} from "./types"
 import helloUrl from "/hello.mp3"
 import hello2Url from "/hello2.mp3"
 import { generateClient, get } from "aws-amplify/api"
-import { uploadData, downloadData, remove  } from "aws-amplify/storage"
+import { uploadData, downloadData, remove } from "aws-amplify/storage"
 import { Predictions } from "@aws-amplify/predictions"
 import { v4 as uuidv4 } from "uuid"
-import { getUser, audionotesByUserID, getAudionotes, listPosts, getPosts, commentsByPostsID, getRevisionCard, revisionCardsByUserID } from "../graphql/queries"
+import {
+    getUser,
+    audionotesByUserID,
+    getAudionotes,
+    listPosts,
+    getPosts,
+    commentsByPostsID,
+    getRevisionCard,
+    revisionCardsByUserID,
+} from "../graphql/queries"
 import {
     createAudionotes,
     updateAudionotes,
@@ -34,7 +48,7 @@ import {
 
 import { RevisionCard } from "../API"
 
-const client = generateClient();
+const client = generateClient()
 
 const forumContent: { [id: string]: ForumContentData } = {
     "1": {
@@ -73,7 +87,7 @@ let signUpPass: string = ""
 let signUpUser: string = ""
 const reviseWords: { [username: string]: RevisionCard[] } = {}
 
-const audioContext = new AudioContext();
+const audioContext = new AudioContext()
 
 const users: { [username: string]: string } = {
     user1: "user1",
@@ -85,52 +99,56 @@ const users: { [username: string]: string } = {
 
 export async function getForumContent() {
     const result = await client.graphql({
-        query: listPosts
+        query: listPosts,
     })
-    
+
     const lists = result.data.listPosts.items
     lists.forEach(async (element: any) => {
-        const user = await client.graphql({ 
+        const user = await client.graphql({
             query: getUser,
             variables: {
-                id: element.userID
+                id: element.userID,
             },
-            authMode: 'userPool'
+            authMode: "userPool",
         })
         const comments = await client.graphql({
             query: commentsByPostsID,
             variables: {
-                postsID: element.id
-            }
+                postsID: element.id,
+            },
         })
-        
+
         element.username = user.data.getUser!.username
         if (element.audioID !== "") {
-            const downloadResult = await downloadData({ 
-                key: element.audioID, options: {
-                accessLevel: 'private',
-            } }).result;
-            const text = await downloadResult.body.blob();
-            element.audio = text;
+            const downloadResult = await downloadData({
+                key: element.audioID,
+                options: {
+                    accessLevel: "private",
+                },
+            }).result
+            const text = await downloadResult.body.blob()
+            element.audio = text
         }
         element.comments = comments.data.commentsByPostsID.items
         if (element.comments === undefined) element.comments = []
         element.comments.forEach(async (comment: any) => {
-            const user = await client.graphql({ 
+            const user = await client.graphql({
                 query: getUser,
                 variables: {
-                    id: comment.userID
+                    id: comment.userID,
                 },
-                authMode: 'userPool'
+                authMode: "userPool",
             })
             comment.by = user.data.getUser!.username
             if (comment.audioID !== "") {
-                const downloadResult = await downloadData({ 
-                    key: comment.audioID, options: {
-                    accessLevel: 'private',
-                } }).result;
-                const text = await downloadResult.body.blob();
-                comment.audio = text;
+                const downloadResult = await downloadData({
+                    key: comment.audioID,
+                    options: {
+                        accessLevel: "private",
+                    },
+                }).result
+                const text = await downloadResult.body.blob()
+                comment.audio = text
             }
         })
     })
@@ -138,7 +156,6 @@ export async function getForumContent() {
 }
 
 export async function getUserContent() {
-
     const result = await client.graphql({
         query: audionotesByUserID,
         variables: {
@@ -154,11 +171,11 @@ export async function getUserContentById(id: string) {
     const result = await client.graphql({
         query: getAudionotes,
         variables: {
-            id: id
+            id: id,
         },
         authMode: "userPool",
     })
-    
+
     return result.data.getAudionotes
 }
 
@@ -166,183 +183,198 @@ export async function getForumContentById(id: string) {
     const result = await client.graphql({
         query: getPosts,
         variables: {
-            id: id
+            id: id,
         },
-        authMode: 'userPool'
+        authMode: "userPool",
     })
-    const result2: any = result.data.getPosts;
-    const user = await client.graphql({ 
+    const result2: any = result.data.getPosts
+    const user = await client.graphql({
         query: getUser,
         variables: {
-            id: result2.userID
+            id: result2.userID,
         },
-        authMode: 'userPool'
+        authMode: "userPool",
     })
     const comments = await client.graphql({
         query: commentsByPostsID,
         variables: {
-            postsID: result2.id
-        }
+            postsID: result2.id,
+        },
     })
     result2.username = user.data.getUser!.username
     if (result2.audioID !== "") {
-        const downloadResult = await downloadData({ 
-            key: result2.audioID, options: {
-            accessLevel: 'private',
-        } }).result;
-        const text = await downloadResult.body.blob();
-        result2.audio = text;
+        const downloadResult = await downloadData({
+            key: result2.audioID,
+            options: {
+                accessLevel: "private",
+            },
+        }).result
+        const text = await downloadResult.body.blob()
+        result2.audio = text
     }
     result2.comments = comments.data.commentsByPostsID.items
     if (result2.comments === undefined) result2.comments = []
     result2.comments.forEach(async (comment: any) => {
-        const user = await client.graphql({ 
+        const user = await client.graphql({
             query: getUser,
             variables: {
-                id: comment.userID
+                id: comment.userID,
             },
-            authMode: 'userPool'
+            authMode: "userPool",
         })
         comment.by = user.data.getUser!.username
         if (comment.audioID !== "") {
-            const downloadResult = await downloadData({ 
-                key: comment.audioID, options: {
-                accessLevel: 'private',
-            } }).result;
-            const text = await downloadResult.body.blob();
-            comment.audio = text;
+            const downloadResult = await downloadData({
+                key: comment.audioID,
+                options: {
+                    accessLevel: "private",
+                },
+            }).result
+            const text = await downloadResult.body.blob()
+            comment.audio = text
         }
     })
     return result2!
 }
 
 export async function addComment(contentId: string, comment: any) {
-    const user = await currentAuthenticatedUser();
+    const user = await currentAuthenticatedUser()
     await client.graphql({
         query: createComments,
         variables: {
-        input: {
-            content: comment.body,
-            userID: user!.id!,
-            audioID: "",
-            postsID: contentId
-        }  
+            input: {
+                content: comment.body,
+                userID: user!.id!,
+                audioID: "",
+                postsID: contentId,
+            },
         },
-        authMode: 'userPool' 
-    });
+        authMode: "userPool",
+    })
 }
 
 export async function addForumPost(content: any, audio: any) {
-    const user = await currentAuthenticatedUser();
-    if (audio) {    
-        
+    const user = await currentAuthenticatedUser()
+    if (audio) {
         const result = await uploadData({
             key: `${user!.id}/audio/posts/${uuidv4()}.wav`,
             data: audio,
             options: {
-                accessLevel: 'private',
-            }
-        }).result;
+                accessLevel: "private",
+            },
+        }).result
 
-    await client.graphql({
-                query: createPosts,
-                variables: {
+        await client.graphql({
+            query: createPosts,
+            variables: {
                 input: {
                     content: content.body,
                     title: content.title,
                     userID: user!.id!,
                     audioID: result.key,
-                }  
                 },
-                authMode: 'userPool' 
-            });
+            },
+            authMode: "userPool",
+        })
     } else {
         await client.graphql({
             query: createPosts,
             variables: {
-            input: {
-                content: content.body,
-                title: content.title,
-                userID: user!.id!,
-                audioID: "",
-            }  
+                input: {
+                    content: content.body,
+                    title: content.title,
+                    userID: user!.id!,
+                    audioID: "",
+                },
             },
-            authMode: 'userPool' 
-        });
+            authMode: "userPool",
+        })
     }
 }
 export async function deleteUserContent(id: string, filename: string) {
-    await remove({key: filename});
+    await remove({ key: filename })
     const result = await client.graphql({
         query: deleteAudionotes,
         variables: {
             input: {
-                id: id
-            }
+                id: id,
+            },
         },
-        authMode: 'userPool'
+        authMode: "userPool",
     })
     return result.data.deleteAudionotes
 }
-export async function addUserContent(content: UserContentData): Promise<boolean> {
+export async function addUserContent(
+    content: UserContentData
+): Promise<boolean> {
     // userContent[getLoggedInUser()][crypto.randomUUID()] = content
-    const user = await currentAuthenticatedUser();
+    const user = await currentAuthenticatedUser()
     Predictions.convert({
-    textToSpeech: {
-        source: {
-        text: content.body
+        textToSpeech: {
+            source: {
+                text: content.body,
+            },
+            voiceId: "Amy",
         },
-        voiceId: "Amy"
-    }
     })
-    .then(async (audio) => {
-        try {
-            const result = await uploadData({
-                key: `${user!.id}/audio/audionotes/${uuidv4()}.wav`,
-                data: audio.audioStream,
-                options: {
-                    accessLevel: 'private',
-                }
-            }).result;
-            let bufferToBase64 = function (buffer : any) {
-                let bytes = new Uint8Array(buffer);
-                let len = buffer.byteLength;
-                let binary = "";
-                for (let i = 0; i < len; i++) {
-                    binary += String.fromCharCode(bytes[i]);
-                }
-                return btoa(binary);
-            };
-            axios.post("http://18.136.208.218:8080/align", 
-            {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
-                const audionote = await client.graphql({
-                    
-                    query: createAudionotes,
-                    variables: {
-                      input: {
-                        content: content.body,
-                        title: content.title,
-                        userID: user!.id!,
-                        audioID: result.key,
-                        align: JSON.stringify(res.data.predictions.fragments),
-                      }  
+        .then(async (audio) => {
+            try {
+                const result = await uploadData({
+                    key: `${user!.id}/audio/audionotes/${uuidv4()}.wav`,
+                    data: audio.audioStream,
+                    options: {
+                        accessLevel: "private",
                     },
-                    authMode: 'userPool' 
-                  });
-                  
-             })
-             .catch((err) => {
-                console.log(err);
-                return false;
-             });
-            
-        } catch (error) {
-            console.log('Error : ', error);
-            return false;
-        }
-    })
-    .catch(err => {console.log(err); return false;});
-    return true;
+                }).result
+                let bufferToBase64 = function (buffer: any) {
+                    let bytes = new Uint8Array(buffer)
+                    let len = buffer.byteLength
+                    let binary = ""
+                    for (let i = 0; i < len; i++) {
+                        binary += String.fromCharCode(bytes[i])
+                    }
+                    return btoa(binary)
+                }
+                axios
+                    .post("http://18.136.208.218:8080/align", {
+                        instances: [
+                            {
+                                text: content.body,
+                                speech: bufferToBase64(audio.audioStream),
+                            },
+                        ],
+                    })
+                    .then(async (res) => {
+                        const audionote = await client.graphql({
+                            query: createAudionotes,
+                            variables: {
+                                input: {
+                                    content: content.body,
+                                    title: content.title,
+                                    userID: user!.id!,
+                                    audioID: result.key,
+                                    align: JSON.stringify(
+                                        res.data.predictions.fragments
+                                    ),
+                                },
+                            },
+                            authMode: "userPool",
+                        })
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        return false
+                    })
+            } catch (error) {
+                console.log("Error : ", error)
+                return false
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            return false
+        })
+    return true
 }
 
 export function getLoggedInUser() {
@@ -354,95 +386,113 @@ export function getNextReviseWord() {
         //reviseWords[getLoggedInUser()] = []
         return ""
     }
-    if (reviseWords[getLoggedInUser()].length==0) {
+    if (reviseWords[getLoggedInUser()].length == 0) {
         return ""
     }
     return reviseWords[getLoggedInUser()][0].front!!
 }
 
 export async function downloadAudio(audioID: string) {
-    const downloadResult = await downloadData({ 
-        key: audioID, options: {
-        accessLevel: 'private',
-    } }).result;
-    const text = await downloadResult.body.blob();
-    const arrayBuffer = await text.arrayBuffer();
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    const downloadResult = await downloadData({
+        key: audioID,
+        options: {
+            accessLevel: "private",
+        },
+    }).result
+    const text = await downloadResult.body.blob()
+    const arrayBuffer = await text.arrayBuffer()
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
 
-    return audioBuffer;
+    return audioBuffer
 }
 
-export async function editUserContent(id: string, content: UserContentData, audio: boolean, filename: string) {
+export async function editUserContent(
+    id: string,
+    content: UserContentData,
+    audio: boolean,
+    filename: string
+) {
     if (audio) {
-        const user = await currentAuthenticatedUser();
-        await remove({key: filename});
+        const user = await currentAuthenticatedUser()
+        await remove({ key: filename })
         Predictions.convert({
-        textToSpeech: {
-            source: {
-            text: content.body
+            textToSpeech: {
+                source: {
+                    text: content.body,
+                },
+                voiceId: "Amy",
             },
-            voiceId: "Amy"
-        }
         })
-        .then(async (audio) => {
-            try {
-                const result = await uploadData({
-                    key: `${user!.id}/audio/audionotes/${uuidv4()}.wav`,
-                    data: audio.audioStream,
-                    options: {
-                        accessLevel: 'private',
-                    }
-                }).result;
-                let bufferToBase64 = function (buffer : any) {
-                    let bytes = new Uint8Array(buffer);
-                    let len = buffer.byteLength;
-                    let binary = "";
-                    for (let i = 0; i < len; i++) {
-                        binary += String.fromCharCode(bytes[i]);
-                    }
-                    return btoa(binary);
-                };
-                axios.post("http://18.136.208.218:8080/align", 
-                {"instances": [{"text": content.body, "speech": bufferToBase64(audio.audioStream)}]}).then(async (res) => {
-                    const audionote = await client.graphql({
-                        
-                        query: updateAudionotes,
-                        variables: {
-                            input: {
-                                id: id,
-                                content: content.body,
-                                title: content.title,
-                                audioID: result.key,
-                                align: JSON.stringify(res.data.predictions.fragments),
-                            }  
+            .then(async (audio) => {
+                try {
+                    const result = await uploadData({
+                        key: `${user!.id}/audio/audionotes/${uuidv4()}.wav`,
+                        data: audio.audioStream,
+                        options: {
+                            accessLevel: "private",
                         },
-                        authMode: 'userPool' 
-                    });
-                    
-                })
-                .catch((err) => {
-                    console.log(err);
-                    return false;
-                });
-                
-            } catch (error) {
-                console.log('Error : ', error);
-                return false;
-            }
-        })
-        .catch(err => {console.log(err); return false;});}
-    else {
+                    }).result
+                    let bufferToBase64 = function (buffer: any) {
+                        let bytes = new Uint8Array(buffer)
+                        let len = buffer.byteLength
+                        let binary = ""
+                        for (let i = 0; i < len; i++) {
+                            binary += String.fromCharCode(bytes[i])
+                        }
+                        return btoa(binary)
+                    }
+                    axios
+                        .post("http://18.136.208.218:8080/align", {
+                            instances: [
+                                {
+                                    text: content.body,
+                                    speech: bufferToBase64(audio.audioStream),
+                                },
+                            ],
+                        })
+                        .then(async (res) => {
+                            const audionote = await client.graphql({
+                                query: updateAudionotes,
+                                variables: {
+                                    input: {
+                                        id: id,
+                                        content: content.body,
+                                        title: content.title,
+                                        audioID: result.key,
+                                        align: JSON.stringify(
+                                            res.data.predictions.fragments
+                                        ),
+                                    },
+                                },
+                                authMode: "userPool",
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            return false
+                        })
+                } catch (error) {
+                    console.log("Error : ", error)
+                    return false
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                return false
+            })
+    } else {
         const result = await client.graphql({
-        query: updateAudionotes,
-        variables: {
-            input: {
-                id: id,
-                title: content.title,
-                content: content.body
-            }
-        },
-        authMode: 'userPool'
-    })}
+            query: updateAudionotes,
+            variables: {
+                input: {
+                    id: id,
+                    title: content.title,
+                    content: content.body,
+                },
+            },
+            authMode: "userPool",
+        })
+    }
 }
 
 export function reviseFailure() {
@@ -463,19 +513,17 @@ export async function reviseSuccess() {
     if (Math.random() < 0.3) {
         // 30% chance of reinsertion
         reviseWords[getLoggedInUser()].push(word!)
-    }
-    else {
+    } else {
         // gg delete
         await client.graphql({
-                        
             query: deleteRevisionCard,
             variables: {
                 input: {
-                    id: word.id
-                }  
+                    id: word.id,
+                },
             },
-            authMode: 'userPool' 
-        });
+            authMode: "userPool",
+        })
     }
 }
 
@@ -511,7 +559,6 @@ export function logIn(username: string, password: string): boolean {
 //         return false
 //     }
 // }
-
 
 export type SignUpParameters = {
     username: string
@@ -560,20 +607,18 @@ export async function handleSignUp({
 
 export async function handleSignIn({ username, password }: SignInInput) {
     try {
-        let isSignedIn = false
-        await signIn({ username, password }).then(async (res) => { 
-            
-            if (res.nextStep.signInStep === "CONFIRM_SIGN_UP") {
-                signUpPass = password!
-                signUpUser = username
-                return false
-            }
-            isSignedIn = true
-            let details = await getUserDetails().then((res => user_name = res!.username))
-            
-        })
-       
-        
+        const { isSignedIn, nextStep } = await signIn({ username, password })
+
+        if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
+            signUpPass = password!
+            signUpUser = username
+            return false
+        }
+        const user = await currentAuthenticatedUser()
+        loggedInUser = user!.id!
+        let details = await getUserDetails()
+        user_name = details!.username
+
         return isSignedIn
     } catch (error) {
         throw error
@@ -582,8 +627,8 @@ export async function handleSignIn({ username, password }: SignInInput) {
 
 export async function handleSignUpConfirmation({
     username,
-    confirmationCode
-  }: ConfirmSignUpInput) {
+    confirmationCode,
+}: ConfirmSignUpInput) {
     try {
         const { isSignUpComplete, nextStep } = await confirmSignUp({
             username,
@@ -595,7 +640,7 @@ export async function handleSignUpConfirmation({
         await signIn({ username: username, password: signUpPass })
         const user = await currentAuthenticatedUser()
         const signupInput = user!
-        
+
         await client.graphql({
             query: createUser,
             variables: {
@@ -620,12 +665,12 @@ export function getSignUpUser() {
 
 export async function handleSignOut() {
     try {
-      await signOut(); 
-      loggedInUser = "";
+        await signOut()
+        loggedInUser = ""
     } catch (error) {
-        console.log('error signing out: ', error);
+        console.log("error signing out: ", error)
     }
-  }
+}
 
 export async function currentAuthenticatedUser() {
     try {
@@ -637,7 +682,8 @@ export async function currentAuthenticatedUser() {
             id: userId,
         }
     } catch (err) {
-        console.log(err)
+        return undefined
+        // console.log(err)
     }
 }
 
@@ -669,7 +715,7 @@ export async function doAutoSignIn() {
 }
 
 export async function currentWordAudio(): Promise<string | null> {
-    return wordToAudio(getNextReviseWord());
+    return wordToAudio(getNextReviseWord())
 }
 
 async function wordToAudio(word: string): Promise<string | null> {
@@ -678,68 +724,72 @@ async function wordToAudio(word: string): Promise<string | null> {
         const audio = await Predictions.convert({
             textToSpeech: {
                 source: {
-                    text: word
+                    text: word,
                 },
-                voiceId: "Amy"
-            }
-        });
+                voiceId: "Amy",
+            },
+        })
 
-        return arrayBufferToBase64(audio.audioStream); // Assuming that audioStream is the property you want to return
+        return arrayBufferToBase64(audio.audioStream) // Assuming that audioStream is the property you want to return
     } catch (err) {
-        console.error(err);
-        return null;
+        console.error(err)
+        return null
     }
 }
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
-    const binary = new Uint8Array(buffer);
-    return btoa(String.fromCharCode.apply(null, binary));
-  }
-
+    const binary = new Uint8Array(buffer)
+    return btoa(String.fromCharCode.apply(null, binary))
+}
 
 export async function addToRevision(word: string) {
     // push word to front of revision list
     reviseWords[getLoggedInUser()].unshift(word)
     const audio = await wordToAudio(word)
-    await uploadAudio({front: word, audio:audio||undefined, meaning:"meaning"})
+    await uploadAudio({
+        front: word,
+        audio: audio || undefined,
+        meaning: "meaning",
+    })
 }
 
 async function uploadAudio(content: RevisionCardData) {
-    const user = await currentAuthenticatedUser();
+    const user = await currentAuthenticatedUser()
     const result = await uploadData({
         key: `${user!.id}/audio/revise/${content.front}.wav`,
         data: content.audio,
         options: {
-            accessLevel: 'private',
-        }
-    }).result;
+            accessLevel: "private",
+        },
+    }).result
     await client.graphql({
-        
         query: createRevisionCard,
         variables: {
             input: {
                 front: content.front,
                 meaning: content.meaning,
                 audioID: result.key,
-                userID: user!.id!
-            }  
+                userID: user!.id!,
+            },
         },
-        authMode: 'userPool' 
-        });
+        authMode: "userPool",
+    })
 }
 
 export async function SyncRevisionCards() {
     console.log("starting sync")
-    await client.graphql({
-        query: revisionCardsByUserID,
-        variables: {
-            userID: loggedInUser
-        },
-        authMode: "userPool",
-    }).then((result) => {
-        console.log("ending sync")
-        console.log(result.data.revisionCardsByUserID.items)
-        reviseWords[loggedInUser] = result.data.revisionCardsByUserID.items
-        getNextReviseWord()
-    })
+    await client
+        .graphql({
+            query: revisionCardsByUserID,
+            variables: {
+                userID: loggedInUser,
+            },
+            authMode: "userPool",
+        })
+        .then((result) => {
+            console.log("ending sync")
+            console.log(result.data.revisionCardsByUserID.items)
+            reviseWords[loggedInUser] = result.data.revisionCardsByUserID.items
+            getNextReviseWord()
+        })
 }

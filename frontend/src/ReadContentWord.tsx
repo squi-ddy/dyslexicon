@@ -16,7 +16,7 @@ import {
 } from "react-icons/hi2"
 import { CustomTooltip } from "./CustomTooltip"
 import { addToRevision } from "./util/api"
-import { Predictions } from '@aws-amplify/predictions';
+import { Predictions } from "@aws-amplify/predictions"
 
 export function ReadContentWord(props: {
     word: string
@@ -70,23 +70,24 @@ export function ReadContentWord(props: {
                             <IconButton
                                 onClick={async () => {
                                     Predictions.convert({
-                                        textToSpeech: {                                     
-                                          source: {                                      
-                                            text: props.word                                     
-                                          },
-                                          voiceId: "Amy" 
-                                        }
-                                      })
-                                      .then(result => {
-                                        const aud = new AudioContext();
-                                        const source = aud.createBufferSource();
-                                        aud.decodeAudioData(result.audioStream, (buffer) => {
-                                            source.buffer = buffer;
-                                            source.connect(aud.destination);
-                                            source.start(0);
-                                            
-                                        })
-                                      })
+                                        textToSpeech: {
+                                            source: {
+                                                text: props.word,
+                                            },
+                                            voiceId: "Amy",
+                                        },
+                                    }).then((result) => {
+                                        const aud = new AudioContext()
+                                        const source = aud.createBufferSource()
+                                        aud.decodeAudioData(
+                                            result.audioStream,
+                                            (buffer) => {
+                                                source.buffer = buffer
+                                                source.connect(aud.destination)
+                                                source.start(0)
+                                            }
+                                        )
+                                    })
                                 }}
                                 aria-label="Play audio"
                                 icon={
