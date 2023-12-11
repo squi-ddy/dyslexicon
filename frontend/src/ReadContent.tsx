@@ -72,11 +72,11 @@ export function ReadContent() {
 
     useEffect (() => {console.log("Buffer");console.log(audioBufferSourceNode.buffer) }, [audioBufferSourceNode.buffer]);
     useEffect(() => {
-        const wordsOnly = body.split(/[^a-zA-Z0-9-]+/)
+        const wordsOnly = body.split(/[^a-zA-Z0-9-']+/)
         while (wordsOnly[wordsOnly.length - 1] === "") {
             wordsOnly.pop()
         }
-        const whitespaceOnly = body.split(/[a-zA-Z0-9-]+/)
+        const whitespaceOnly = body.split(/[a-zA-Z0-9-']+/)
         const processed = []
         for (
             let i = 0;
@@ -131,6 +131,7 @@ export function ReadContent() {
 
 
     useEffect(() => {
+        console.log(align)
         if (playing) {
             let temp = (currentWord - 1)/2
             let timeT = parseFloat(align[temp].end) - parseFloat(align[temp].begin)

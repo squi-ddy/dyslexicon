@@ -14,7 +14,7 @@ import {
     updateUser,
     deleteUser,
     createRevisionCard,
-    deleteRevisionCard
+    deleteRevisionCard,
     createPosts,
     createComments,
 } from "../graphql/mutations"
@@ -569,8 +569,8 @@ export async function handleSignIn({ username, password }: SignInInput) {
                 return false
             }
             isSignedIn = true
-            let details = await getUserDetails()
-            user_name = details!.username
+            let details = await getUserDetails().then((res => user_name = res!.username))
+            
         })
        
         
