@@ -158,7 +158,6 @@ export async function getForumContentById(id: string) {
         variables: {
             id: id,
         },
-        authMode: "userPool",
     })
     const result2: any = result.data.getPosts
     

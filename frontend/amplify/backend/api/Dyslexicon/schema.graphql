@@ -2,7 +2,7 @@ type Comments
     @model
     @auth(
         rules: [
-            { allow: public, operations: [read] }
+            { allow: public, operations: [create, read, update, delete] }
             { allow: owner, operations: [create, read, update, delete] }
         ]
     ) {
@@ -40,7 +40,7 @@ type Posts
     @model
     @auth(
         rules: [
-            { allow: public, operations: [read] }
+            { allow: public, operations: [create, read, update, delete] }
             { allow: owner, operations: [create, read, update, delete] }
         ]
     ) {
