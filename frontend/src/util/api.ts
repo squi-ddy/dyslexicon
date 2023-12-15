@@ -290,24 +290,15 @@ export async function addUserContent(
                         accessLevel: "private",
                     },
                 }).result
-                let bufferToBase64 = function (buffer: any) {
-                    let bytes = new Uint8Array(buffer)
-                    let len = buffer.byteLength
-                    let binary = ""
-                    for (let i = 0; i < len; i++) {
-                        binary += String.fromCharCode(bytes[i])
-                    }
-                    return btoa(binary)
-                }
+                const txtBlob = new Blob([content.body], { type: 'text/plain' });
+                const formData = new FormData();
+                formData.append('textFile', txtBlob, 'textFile.txt');
+
+    // Convert ArrayBuffer to a Blob for WAV file
+                const wavBlob = new Blob([new Uint8Array(audio.audioStream)], { type: 'audio/wav' });
+                formData.append('wavFile', wavBlob, 'audioFile.wav');
                 axios
-                    .post("http://18.136.208.218:8080/align", {
-                        instances: [
-                            {
-                                text: content.body,
-                                speech: bufferToBase64(audio.audioStream),
-                            },
-                        ],
-                    })
+                    .post("http://18.136.208.218:8080/align", formData)
                     .then(async (res) => {
                         const audionote = await client.graphql({
                             query: createAudionotes,
