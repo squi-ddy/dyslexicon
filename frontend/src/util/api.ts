@@ -50,6 +50,8 @@ import { RevisionCard } from "../API"
 
 const client = generateClient()
 
+
+
 const forumContent: { [id: string]: ForumContentData } = {
     "1": {
         title: "Help me with pronunciation",
@@ -113,9 +115,6 @@ export async function getForumContent() {
         if (element.audioID !== "") {
             const downloadResult = await downloadData({
                 key: element.audioID,
-                options: {
-                    accessLevel: "private",
-                },
             }).result
             const text = await downloadResult.body.blob()
             element.audio = text
@@ -170,9 +169,6 @@ export async function getForumContentById(id: string) {
     if (result2.audioID !== "") {
         const downloadResult = await downloadData({
             key: result2.audioID,
-            options: {
-                accessLevel: "private",
-            },
         }).result
         const text = await downloadResult.body.blob()
         result2.audio = text
@@ -220,9 +216,6 @@ export async function addForumPost(content: any, audio: any) {
         const result = await uploadData({
             key: `${user!.id}/audio/posts/${uuidv4()}.wav`,
             data: audio,
-            options: {
-                accessLevel: "private",
-            },
         }).result
 
         await client.graphql({
@@ -297,8 +290,9 @@ export async function addUserContent(
                 const wavBlob = new Blob([new Uint8Array(audio.audioStream)], { type: 'audio/wav' });
                 formData.append('wavFile', wavBlob, 'audioFile.wav');
                 axios
-                    .post("http://18.136.208.218:8080/align", formData)
+                    .post("http://18.141.228.215:8080/align", formData)
                     .then(async (res) => {
+                        console.log(res)
                         const audionote = await client.graphql({
                             query: createAudionotes,
                             variables: {
@@ -308,7 +302,7 @@ export async function addUserContent(
                                     userID: user!.id!,
                                     audioID: result.key,
                                     align: JSON.stringify(
-                                        res.data.predictions.fragments
+                                        res.data.words
                                     ),
                                 },
                             },

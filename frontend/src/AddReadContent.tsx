@@ -51,38 +51,59 @@ export function AddReadContent() {
         setInvalid(
             title === "" || (contentType !== "text" && contentType !== "image")
         )
-        if (title === "" || contentType !== "text") return
+        if (title === "" || (contentType !== "text"  && contentType !== "image")) return
         if (contentType === "text") {
+            toast.promise(
+                addUserContent({
+                    title,
+                    body,
+                }).then(() => {
+                    navigate(-1)
+                }),
+                {
+                    success: {
+                        title: "Success",
+                        description: "AudioNotes Created",
+                    },
+                    error: {
+                        title: "Failure",
+                        description: "Something went wrong",
+                    },
+                    loading: { title: "Loading", description: "Making AudioNotes" },
+                }
+            )
         } else if (contentType === "image") {
             // TODO: other content types
             if (fileUploaded === null) return
-            const response = await Predictions.identify({
-                text: { source: { file: fileUploaded } },
-            })
-
-            const body = String(response.text.fullText)
+            console.log(fileUploaded)
+                await Predictions.identify({
+                    text: { source: { file: fileUploaded } },
+                }).then((result) => {
+                    toast.promise(
+                            addUserContent({
+                                body: result.text.fullText,
+                                title,
+                            }).then(() => {
+                                navigate(-1)
+                            }),
+                            {
+                                success: {
+                                    title: "Success",
+                                    description: "AudioNotes Created",
+                                },
+                                error: {
+                                    title: "Failure",
+                                    description: "Something went wrong",
+                                },
+                                loading: { title: "Loading", description: "Making AudioNotes" },
+                            }
+                        )
+                })
+            
         } else if (contentType === "audio") {
             // TODO
         }
-        toast.promise(
-            addUserContent({
-                title,
-                body,
-            }).then(() => {
-                navigate(-1)
-            }),
-            {
-                success: {
-                    title: "Success",
-                    description: "AudioNotes Created",
-                },
-                error: {
-                    title: "Failure",
-                    description: "Something went wrong",
-                },
-                loading: { title: "Loading", description: "Making AudioNotes" },
-            }
-        )
+
     }
 
     return (

@@ -62,7 +62,7 @@ export function ReadContent() {
     const [audioPlaying, setAudioPlaying] = useBoolean(false)
 
     const playWord = (cw: number) => {
-        const time = parseFloat(align[(cw - 1) / 2].begin)
+        const time = parseFloat(align[(cw - 1) / 2].start)
         const endTime = parseFloat(align[(cw - 1) / 2].end)
         const audioContext = audioContextRef.current
         const audioBufferSourceNode = audioContext.createBufferSource()
@@ -136,7 +136,7 @@ export function ReadContent() {
         let audioBufferSourceNode = audioBufferSourceNodeRef.current
         if (playing) {
             setWordTick((currentWord - 1) / 2)
-            const time = parseFloat(align[(currentWord - 1) / 2].begin)
+            const time = parseFloat(align[(currentWord - 1) / 2].start)
             setAudioPlaying.on()
             audioBufferSourceNode = audioContext.createBufferSource()
             audioBufferSourceNodeRef.current = audioBufferSourceNode
@@ -160,7 +160,7 @@ export function ReadContent() {
         if (wordTick >= 0 && wordTick < align.length) {
             let timeT =
                 parseFloat(align[wordTick].end) -
-                parseFloat(align[wordTick].begin)
+                parseFloat(align[wordTick].start)
             setCurrentWordClicked(false)
             setPlayingTimeout(
                 setTimeout(() => {

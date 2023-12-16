@@ -1,4 +1,4 @@
-import { CloseIcon, Icon } from "@chakra-ui/icons"
+import { CloseIcon, Icon, SettingsIcon,} from "@chakra-ui/icons"
 import {
     Divider,
     HStack,
@@ -6,12 +6,25 @@ import {
     IconButton,
     Text,
     VStack,
+    Flex,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    Switch,
+    useDisclosure,
+    FormControl,
+    FormLabel
 } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { BsCheck2 } from "react-icons/bs"
 import {
     HiOutlineQuestionMarkCircle,
     HiOutlineSpeakerWave,
+    HiOutlineEye,
+    HiOutlineEyeSlash
 } from "react-icons/hi2"
 import { CustomTooltip } from "./CustomTooltip"
 import {
@@ -24,10 +37,19 @@ import {
 } from "./util/api"
 
 export function Revise() {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [study, setStudy] = useState(localStorage.getItem('study') ? localStorage.getItem('study') == 'true' : false);
+    const [show, setShow] = useState(false);
+
+
+  useEffect(() => {
+    // Save count to local storage whenever it changes
+    localStorage.setItem('study', study.toString());
+  }, [study]);
+
     const [flashcard, setFlashcard] = useState(getNextReviseWord())
 
     useEffect(() => {
-        console.log("SYNCED")
         async function sync() {
             try {
                 await SyncRevisionCards()
@@ -56,10 +78,34 @@ export function Revise() {
     }
 
     return (
+        <>
+            <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+            <ModalHeader>Setting</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody paddingBottom='6' display='flex' alignItems={"center"} justifyContent={"center"}>
+            <FormControl display='flex' alignItems={"center"} justifyContent={"center"}>
+                <FormLabel htmlFor='spelling' mb='0' display="flex" alignItems='center'>
+                    Spelling
+                </FormLabel>
+                <Switch defaultChecked={study} id='spelling' onChange={() => setStudy(!study)}/>
+                </FormControl>
+            </ModalBody>
+            </ModalContent>
+        </Modal>
         <VStack w={"full"} h={"full"} spacing={2}>
-            <HStack align={"center"} spacing={3} w={"full"}>
+            <Flex align={"center"} gap={3} w={"full"} justify={"space-between"}>
+            
                 <Heading textAlign={"center"}>Flashcards</Heading>
-            </HStack>
+                <CustomTooltip label={"Settings"} placement={"right"}>
+                                <IconButton
+                                    onClick={onOpen}
+                                    aria-label="Settings"
+                                    icon={<SettingsIcon boxSize={7} />}
+                                ></IconButton>
+                            </CustomTooltip>
+            </Flex>
             <Divider />
             {flashcard ? (
                 <VStack
@@ -72,9 +118,26 @@ export function Revise() {
                     spacing={2}
                 >
                     <HStack flexGrow={1}>
-                        <Text fontSize={["3xl", "5xl", "9xl"]}>
+                        {(!study || show) ? <Text fontSize={["3xl", "5xl", "9xl"]}>
                             {flashcard}
-                        </Text>
+                        </Text> :
+                        <CustomTooltip
+                            label={"Play audio"}
+                            placement={"bottom"}
+                        >
+                            <IconButton
+                                
+                                fontSize="2xl" 
+                                onClick={playAudio}
+                                aria-label="Play audio"
+                                icon={
+                                    <Icon
+                                        as={HiOutlineSpeakerWave}
+                                        // boxSize={20}
+                                    />
+                                }
+                            ></IconButton>
+                        </CustomTooltip>}
                     </HStack>
                     <HStack>
                         <CustomTooltip
@@ -83,6 +146,7 @@ export function Revise() {
                         >
                             <IconButton
                                 onClick={() => {
+                                    setShow(false)
                                     reviseSuccess()
                                     setFlashcard(getNextReviseWord())
                                 }}
@@ -90,7 +154,7 @@ export function Revise() {
                                 icon={<Icon as={BsCheck2} boxSize={7} />}
                             ></IconButton>
                         </CustomTooltip>
-                        <CustomTooltip
+                        {!study ? <CustomTooltip
                             label={"Play audio"}
                             placement={"bottom"}
                         >
@@ -105,24 +169,23 @@ export function Revise() {
                                 }
                             ></IconButton>
                         </CustomTooltip>
-                        <CustomTooltip
-                            label={"Show meaning"}
+                        : (<CustomTooltip
+                            label={"Show/Hide text"}
                             placement={"bottom"}
                         >
                             <IconButton
                                 onClick={() => {
-                                    alert("not implemented")
+                                    setShow(!show)
                                 }}
-                                aria-label="Show meaning"
+                                aria-label="Show/Hide text"
                                 icon={
                                     <Icon
-                                        as={HiOutlineQuestionMarkCircle}
+                                        as={show ? HiOutlineEye : HiOutlineEyeSlash}
                                         boxSize={5}
                                     />
                                 }
-                                isDisabled={true}
                             ></IconButton>
-                        </CustomTooltip>
+                        </CustomTooltip>) }
                         <CustomTooltip
                             label={"Don't understand"}
                             placement={"bottom"}
@@ -130,6 +193,7 @@ export function Revise() {
                             <IconButton
                                 aria-label="Don't understand"
                                 onClick={() => {
+                                    setShow(false)
                                     reviseFailure()
                                     setFlashcard(getNextReviseWord())
                                 }}
@@ -142,5 +206,6 @@ export function Revise() {
                 <Text fontSize={"xl"}>There's no more words for you!</Text>
             )}
         </VStack>
+        </>
     )
 }
