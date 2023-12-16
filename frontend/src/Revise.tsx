@@ -180,7 +180,7 @@ export function Revise() {
                                 aria-label="Show/Hide text"
                                 icon={
                                     <Icon
-                                        as={show ? HiOutlineEye : HiOutlineEyeSlash}
+                                        as={show ? HiOutlineEyeSlash : HiOutlineEye}
                                         boxSize={5}
                                     />
                                 }
