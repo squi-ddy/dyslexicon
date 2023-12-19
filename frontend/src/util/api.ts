@@ -290,7 +290,7 @@ export async function addUserContent(
                 const wavBlob = new Blob([new Uint8Array(audio.audioStream)], { type: 'audio/wav' });
                 formData.append('wavFile', wavBlob, 'audioFile.wav');
                 axios
-                    .post("http://18.141.228.215:8080/align", formData)
+                    .post("https://aws.dyslexicon.online", formData)
                     .then(async (res) => {
                         console.log(res)
                         const audionote = await client.graphql({
