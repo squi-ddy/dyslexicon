@@ -13,3 +13,4 @@ gunicorn
 pyfoal
 flask-restful
 unidecode
+flask-cors
