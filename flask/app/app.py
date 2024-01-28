@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
+from flask_cors import CORS
 from transformers import pipeline
 import pyfoal
 import base64
@@ -15,6 +16,7 @@ from pydub import AudioSegment
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 toxicPipe = pipeline("text-classification", model="facebook/roberta-hate-speech-dynabench-r4-target")
 cardPipe = pipeline("text-generation", model="stabilityai/StableBeluga-7B")
